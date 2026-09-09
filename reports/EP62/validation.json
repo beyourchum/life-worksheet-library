@@ -1,0 +1,18 @@
+{
+  "status": "warning",
+  "file": "output/EP62/EP62.html",
+  "machine_checks": "pass",
+  "visual_qa": "pending",
+  "errors": [],
+  "warnings": [
+    {
+      "code": "visual-qa-pending",
+      "message": "瀏覽器與列印 QA 尚未全部完成。",
+      "fix": "完成工作流列出的響應式、互動與 A4 列印預覽檢查。"
+    }
+  ],
+  "summary": {
+    "pages": 2,
+    "controls": 65
+  }
+}

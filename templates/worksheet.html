@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="fonts/ep62-fonts.css">
+<link rel="stylesheet" href="fonts/genki/swap/700.css">
+<title>{{TITLE}}</title>
+<style>
+{{STYLES}}
+</style>
+</head>
+<body>
+<div class="toolbar" aria-label="學習單工具">
+  <div class="toolbar-group" aria-label="閱讀模式">
+    <button class="toolbar-button" type="button" data-mode-choice="screen" aria-pressed="true">螢幕閱讀</button>
+    <button class="toolbar-button" type="button" data-mode-choice="print" aria-pressed="false">紙本預覽</button>
+  </div>
+  <div class="toolbar-group">
+    <span class="save-status" aria-live="polite" data-save-status>尚未填寫</span>
+    <button class="toolbar-button" id="clear-draft" data-clear type="button">清除本次暫存</button>
+    <button class="toolbar-button primary" data-print type="button">列印</button>
+  </div>
+</div>
+<main class="worksheet" data-worksheet-id="{{WORKSHEET_ID}}">
+{{BODY}}
+</main>
+<script>
+(() => {
+  const worksheet = document.querySelector(".worksheet");
+  const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
+  const controls = [...worksheet.querySelectorAll("input, textarea")];
+  const modeButtons = [...document.querySelectorAll("[data-mode-choice]")];
+  const saveStatus = document.querySelector("[data-save-status]");
+  const save = () => {
+    const state = Object.fromEntries(controls.map((control) => [
+      control.id,
+      control.type === "checkbox" || control.type === "radio"
+        ? { checked: control.checked }
+        : { value: control.value }
+    ]));
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify(state));
+      saveStatus.textContent = "已暫存";
+    } catch (_) {
+      saveStatus.textContent = "無法使用暫存";
+    }
+  };
+  const restore = () => {
+    try {
+      const state = JSON.parse(sessionStorage.getItem(storageKey) || "{}");
+      controls.forEach((control) => {
+        const saved = state[control.id];
+        if (!saved) return;
+        if (control.type === "checkbox" || control.type === "radio") control.checked = Boolean(saved.checked);
+        else control.value = saved.value || "";
+      });
+      saveStatus.textContent = "已還原本次暫存";
+    } catch (_) {}
+  };
+  const clearDraft = () => {
+    try { sessionStorage.removeItem(storageKey); } catch (_) {}
+    controls.forEach((control) => {
+      if (control.type === "checkbox" || control.type === "radio") control.checked = false;
+      else control.value = "";
+    });
+  };
+  modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.modeChoice;
+      worksheet.dataset.mode = mode;
+      modeButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+    });
+  });
+  controls.forEach((control) => {
+    control.addEventListener("change", save);
+    control.addEventListener("input", save);
+  });
+  document.querySelector("[data-print]").addEventListener("click", () => window.print());
+  document.getElementById("clear-draft").addEventListener("click", () => {
+    if (!window.confirm("確定要清除這個分頁中的所有作答嗎？")) return;
+    clearDraft();
+    saveStatus.textContent = "本次暫存已清除";
+  });
+  restore();
+})();
+</script>
+</body>
+</html>

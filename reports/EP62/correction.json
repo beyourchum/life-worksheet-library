@@ -1,0 +1,63 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "frontmatter",
+      "before": "ep、source_title、source_document、normalization_status",
+      "after": "id、document_role、audience、source_document、series_title 與 hero 欄位",
+      "reason": "改為格式契約規定的建置欄位"
+    },
+    {
+      "type": "format",
+      "location": "主要區塊與分頁",
+      "before": "未編號的主要區塊",
+      "after": "01–04 連續編號與 <!-- page-break -->",
+      "reason": "符合 Markdown 格式契約"
+    },
+    {
+      "type": "format",
+      "location": "題型與選項",
+      "before": "行內方框、巢狀選項與尾端底線",
+      "after": "固定單選、複選、矩陣及短答標記",
+      "reason": "讓 Script 能確定映射 HTML 控制項"
+    },
+    {
+      "type": "content",
+      "location": "開頭說明",
+      "before": "學習目標：區辨工作對自己的價值",
+      "after": "補上作答流程、使用方式與沒有標準答案的使用說明",
+      "reason": "經使用者確認，讓學生不看影片也能理解如何完成學習單"
+    },
+    {
+      "type": "content",
+      "location": "02 我投入什麼，也得到什麼？",
+      "before": "三組可以／不可以題目及其巢狀選項",
+      "after": "整合為成果、延續性、主要目標與目標符合度，並加入不確定選項",
+      "reason": "經使用者確認，降低重複並讓選項可直接作答"
+    },
+    {
+      "type": "content",
+      "location": "03 我的職場底線",
+      "before": "原稿未提供此區塊",
+      "after": "新增不可長期接受的情況與最需要改善項目",
+      "reason": "經使用者確認，補充目前工作條件的判斷依據"
+    },
+    {
+      "type": "content",
+      "location": "04 我接下來想怎麼做？",
+      "before": "我有在投資自己嗎、我有需要換工作嗎兩組是非題",
+      "after": "改為目前選擇、下一小步與預計完成時間",
+      "reason": "經使用者確認，將抽象判斷改為可執行的後續行動"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒",
+      "before": "工作是一場交換，記得保護自己的權益，但也別忘了自己的初衷哦！",
+      "after": "工作不只是在交換薪水，也可以一起整理投入、所得與不能長期接受的條件。",
+      "reason": "經使用者確認，使結尾與修訂後的作答內容一致"
+    }
+  ],
+  "needs_confirmation": []
+}
