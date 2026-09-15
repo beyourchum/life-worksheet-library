@@ -51,7 +51,7 @@ function createResult(item, query) {
   detailLabel.className = 'detail-label';
   detailLabel.textContent = 'Topic / Format';
   const detail = document.createElement('p');
-  detail.append(document.createTextNode(item.category), document.createElement('br'), document.createTextNode('VIDEO + WORKSHEET'));
+  detail.append(document.createTextNode(item.category));
   detailCell.append(detailLabel, detail);
   const links = document.createElement('div');
   links.className = 'result-cell result-links';
