@@ -3,43 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>碩碩說：解決學生問題的影音頻道</title>
+  <meta name="description" content="從最近的煩惱出發，搜尋碩說說影片與互動式學習單，找到可以開始行動的下一步。">
+  <meta name="theme-color" content="#f3f1eb">
+  <title>影片與互動式學習單｜碩說說</title>
+  <link rel="stylesheet" href="worksheets/EP62/fonts/ep62-fonts.css">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
+  <a class="skip-link" href="#search">跳到搜尋</a>
+  <header class="site-header">
+    <a class="wordmark" href="./" aria-label="碩說說首頁">碩說說<span aria-hidden="true">↗</span></a>
+    <nav class="site-nav" aria-label="主要導覽"><a href="#explore">探索內容</a><a href="#about">關於本站</a></nav>
+    <p class="edition">VIDEO / WORKSHEET<br>TAIPEI · 2026</p>
+  </header>
   <main>
-    <header>
-      <p class="eyebrow">碩碩說｜解決學生問題的影音頻道</p>
-      <h1>一起設計出自己的煩惱解決方案</h1>
-      <p>簡單說說你最近的煩惱，我們會推薦適合的影片，並提供學習單，跟著我們一起找到下一步。</p>
-    </header>
-
-    <section class="search-panel" aria-label="搜尋工具">
-      <label for="search">最近有什麼事情讓你感到困擾？</label>
-      <div class="search-row">
-        <input id="search" type="search" placeholder="也可以輸入：失戀、拖延、沒朋友、讀書分心、找不到未來方向" autocomplete="off">
-        <button id="search-button" type="button">找影片</button>
-      </div>
-      <p id="status" role="status" aria-live="polite"></p>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="hero-index" aria-hidden="true">001</p>
+      <div><p class="kicker">SOCIALTALK KNOWLEDGE INDEX</p><h1 id="hero-title"><span>碩說說</span><span>把煩惱，</span><span>變成下一步。</span></h1></div>
+      <p class="hero-deck">影片、觀點與互動式學習。<br>從一個真實問題開始，找到你現在用得上的內容。</p>
     </section>
-
-    <section class="category-section" aria-labelledby="category-title">
-      <h2 id="category-title">你現在最想解決哪一類問題？</h2>
-      <div id="categories" class="categories"></div>
+    <section id="explore" class="search-section" aria-labelledby="search-label">
+      <div class="section-label"><span>01</span><p>SEARCH / 搜尋</p></div>
+      <form id="search-form" class="search-form" role="search">
+        <label id="search-label" for="search">你最近在煩惱什麼？</label>
+        <div class="search-control"><input id="search" type="search" placeholder="輸入一個問題或關鍵字" autocomplete="off" aria-describedby="search-hint"><button id="search-button" type="submit" aria-label="搜尋"><span>SEARCH</span><span aria-hidden="true">→</span></button></div>
+        <p id="search-hint">例如：拖延、焦慮、職場、規則、找不到方向。搜尋內容不會被儲存。</p>
+      </form>
     </section>
-
-    <section>
-      <h2 class="results-title">推薦內容</h2>
+    <section class="filter-section" aria-labelledby="filter-title">
+      <div class="section-label"><span>02</span><p id="filter-title">FILTER / 主題</p></div>
+      <div id="categories" class="categories" aria-label="依主題篩選"></div>
+    </section>
+    <section class="result-section" aria-labelledby="results-title">
+      <div class="result-heading"><div class="section-label"><span>03</span><h2 id="results-title">INDEX / 內容索引</h2></div><p id="status" role="status" aria-live="polite">正在載入內容…</p></div>
+      <div class="list-header" aria-hidden="true"><span>EP.</span><span>QUESTION / 問題</span><span>DETAIL</span><span>OPEN</span></div>
       <div id="results" class="results"></div>
-      <p id="empty" class="empty" hidden>目前沒有符合的內容，請換一個關鍵字。</p>
+      <p id="empty" class="empty" hidden>沒有找到符合的內容。<br><button id="reset-button" type="button">清除搜尋與篩選 →</button></p>
+      <noscript><p class="empty">請啟用 JavaScript，以搜尋影片與學習單。</p></noscript>
     </section>
-
-    <footer class="site-footer">
-      <p>本頁提供教育影片推薦，不是心理診斷或緊急服務。</p>
-      <p>如果你有傷害自己或他人的想法，請立即聯絡可信任的人、學校諮商中心、資源教室或當地緊急求助單位。</p>
-      <p class="privacy-note">你的文字不會被儲存。準備好時，就說說最近的困擾吧。</p>
-    </footer>
   </main>
+  <footer id="about" class="site-footer">
+    <p class="footer-mark">碩說說</p>
+    <p>陪台灣大學生把生活裡的問題慢慢想清楚，<br>再把想法變成一個可以實作的下一步。</p>
+    <div class="footer-note"><p>EDUCATIONAL USE</p><p>本站提供教育內容，不是心理診斷或緊急服務。如有傷害自己或他人的想法，請立即聯絡可信任的人、學校諮商中心、資源教室或當地緊急求助單位。</p></div>
+  </footer>
   <script src="assets/site.js" defer></script>
 </body>
 </html>
