@@ -51,7 +51,11 @@ function createResult(item, query) {
   detailLabel.className = 'detail-label';
   detailLabel.textContent = 'Topic / Format';
   const detail = document.createElement('p');
-  detail.append(document.createTextNode(item.category));
+  if (item.category !== '避開職場常見問題與陷阱') {
+    detail.append(document.createTextNode(item.category));
+  } else {
+    detailCell.hidden = true;
+  }
   detailCell.append(detailLabel, detail);
   const links = document.createElement('div');
   links.className = 'result-cell result-links';
