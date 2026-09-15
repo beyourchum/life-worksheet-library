@@ -1,0 +1,66 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文",
+      "before": "原稿的段落、勾選框、底線與 AI 提示文字",
+      "after": "依格式契約轉為 H2／H3、單選與可複選標記、短答欄位、提示框與提示語引用框",
+      "reason": "供 HTML 建置與數位填答"
+    },
+    {
+      "type": "content",
+      "location": "全文",
+      "before": "部分句子較長，標點與中英文空格不一致",
+      "after": "統一標點、空格與字詞呈現，並在不改變意思下拆分長句",
+      "reason": "提升台灣大專生與初入職場者的閱讀明確性與可執行性"
+    },
+    {
+      "type": "format",
+      "location": "理性檢核的八組評分項目",
+      "before": "每組以未標示題型的勾選框呈現",
+      "after": "標示為單選，保留各組原有的三個分數選項",
+      "reason": "每組為 3、2、1 分的互斥自我檢核，明確標示作答方式"
+    },
+    {
+      "type": "format",
+      "location": "總得分",
+      "before": "手動填寫總得分欄位",
+      "after": "依已選單選題的 1、2、3 分自動加總並顯示結果",
+      "reason": "使用者要求電子檔自動計分；不改變題目、選項或計分規則"
+    },
+    {
+      "type": "format",
+      "location": "AI 來幫忙提示語",
+      "before": "提示語僅能手動選取與複製",
+      "after": "提示語引用框附加一鍵複製按鈕",
+      "reason": "使用者要求；按鈕只複製提示語文字，不傳送作答資料"
+    },
+    {
+      "type": "format",
+      "location": "三段分數解讀",
+      "before": "套用帶箭頭的提示框",
+      "after": "套用保留框線的無箭頭提示框",
+      "reason": "使用者指定分數解讀不使用箭頭；小提醒、最後鼓勵與 AI 協助說明仍保留箭頭"
+    },
+    {
+      "type": "format",
+      "location": "全文舉例內容",
+      "before": "例子置於句內或段落末尾",
+      "after": "使用 example 標記獨立換行，顯示為灰色「例如：」文字",
+      "reason": "使用者指定的共通舉例呈現方式；不改變原有例子內容"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP113/EP113_source.md",
+      "sha256": "5c2b4b39ae6e90cfbf19d9fc28c36f1adf5b740b06c5b88e2f2890e6f296e467"
+    },
+    "corrected": {
+      "path": "content/EP113/EP113_corrected.md",
+      "sha256": "09396b7a489f7a2edc57de94e74ac2cc7c79f8bacd41ecf0de94c2a566561ff6"
+    }
+  }
+}

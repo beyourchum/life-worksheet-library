@@ -1,0 +1,38 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "文件 frontmatter 與標題結構",
+      "before": "原稿使用來源快照欄位、中文段落編號與未標記的題型。",
+      "after": "補齊學生版必要 frontmatter，並轉為連續 H2 區塊、H3 題目與固定題型標記。",
+      "reason": "符合 HTML 建置格式契約。"
+    },
+    {
+      "type": "format",
+      "location": "所有勾選與填空欄位",
+      "before": "使用 Unicode 方框與底線填空。",
+      "after": "使用可複選選項與具標籤的短答欄位；「其他」保留為可填寫選項。",
+      "reason": "讓電子版提供可辨識、可暫存的互動控制項，且不改變原有選項。"
+    },
+    {
+      "type": "content",
+      "location": "第一區各卡關狀態",
+      "before": "例子與選項分列，對應關係不夠直接。",
+      "after": "將既有例子附於對應選項後，並統一標點與語句。",
+      "reason": "降低閱讀時來回對照的負擔，未新增內容或選項。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP115/EP115_source.md",
+      "sha256": "9c98b8318cb06896868a63116b59a3c93d9648b5d4acb496e213b748e4cefc81"
+    },
+    "corrected": {
+      "path": "content/EP115/EP115_corrected.md",
+      "sha256": "cc5d16931c4f2368b9d2e20e15dfd442372f27221e64b6ca388c10ba91259686"
+    }
+  }
+}

@@ -14,5 +14,11 @@
   "summary": {
     "pages": 2,
     "controls": 65
+  },
+  "fingerprints": {
+    "html": {
+      "path": "output/EP62/EP62.html",
+      "sha256": "161a320a1d80855c567f5be9bcc266b908085db3229b88de3b0df3574c1c8221"
+    }
   }
 }

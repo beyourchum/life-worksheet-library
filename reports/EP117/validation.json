@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "file": "output/EP117/EP117.html",
+  "machine_checks": "pass",
+  "visual_qa": "passed",
+  "errors": [],
+  "warnings": [],
+  "summary": {
+    "pages": 2,
+    "controls": 27
+  },
+  "fingerprints": {
+    "html": {
+      "path": "output/EP117/EP117.html",
+      "sha256": "c64a6fc16a70388e20fc344a154172c3953f864c3d36473d40fd1d489ce45ea7"
+    }
+  }
+}

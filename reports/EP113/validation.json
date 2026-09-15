@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "file": "output/EP113/EP113.html",
+  "machine_checks": "pass",
+  "visual_qa": "passed",
+  "errors": [],
+  "warnings": [],
+  "summary": {
+    "pages": 2,
+    "controls": 31
+  },
+  "fingerprints": {
+    "html": {
+      "path": "output/EP113/EP113.html",
+      "sha256": "702a2ba8044475fee2aabbe02fee13ec0abd9241f4699c626648234bce7c6a2e"
+    }
+  }
+}

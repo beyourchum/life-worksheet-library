@@ -1,0 +1,45 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "文件 frontmatter 與標題結構",
+      "before": "來源快照只有 source-preserving frontmatter，段落使用中文編號與未標記的題型。",
+      "after": "補齊學生版必要 frontmatter，並轉為連續 H2 區塊、H3 題目與固定題型標記。",
+      "reason": "符合 HTML 建置格式契約。"
+    },
+    {
+      "type": "format",
+      "location": "第一區選項與第二區填答欄位",
+      "before": "使用 Unicode 方框與底線填空。",
+      "after": "使用單選選項與具標籤的 short-answer 欄位；例子改為獨立 example 標記。",
+      "reason": "讓電子版提供可辨識、可暫存的互動控制項，且保留原有題意與內容。"
+    },
+    {
+      "type": "content",
+      "location": "第一區與第二區說明",
+      "before": "部分指令與例子標點不一致，且「有被我影用在生活中」有錯字。",
+      "after": "統一標點與句型，修正為「有被我實際用在生活中」，並將例子直接附於對應選項。",
+      "reason": "修正明顯錯字並降低閱讀時來回對照的負擔，不改變原意。"
+    },
+    {
+      "type": "format",
+      "location": "AI 來幫忙",
+      "before": "AI 說明與長提示語未使用核准的提示框標記。",
+      "after": "轉為帶箭頭的單行提示框與可複製的 prompt-quote 引用框。",
+      "reason": "符合提示框與複製提示詞的格式契約，未新增或刪除提示語內容。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP112/EP112_source.md",
+      "sha256": "452b3bb41c91ca984115accec9b081c92658de0b78feaa71d12337a152d4fd05"
+    },
+    "corrected": {
+      "path": "content/EP112/EP112_corrected.md",
+      "sha256": "b51678d0a4473a015118c6c735288f4c51eb62f0736323e05dcaab44363c7e18"
+    }
+  }
+}

@@ -5,59 +5,139 @@
     {
       "type": "format",
       "location": "frontmatter",
-      "before": "ep、source_title、source_document、normalization_status",
-      "after": "id、document_role、audience、source_document、series_title 與 hero 欄位",
-      "reason": "改為格式契約規定的建置欄位"
+      "before": "ep: 62\nsource_title: EP62_學習單_區辨工作對自己的價值\nsource_document: https://docs.google.com/document/d/1aiJe10Te2q2aUpIDVYNPJKmeu-GzvflEXLNX5c1T6Zg/edit\nnormalization_status: source-preserving",
+      "after": "id: EP62\ndocument_role: student_worksheet\naudience: 台灣大專生與初入職場者\nsource_document: https://docs.google.com/document/d/1aiJe10Te2q2aUpIDVYNPJKmeu-GzvflEXLNX5c1T6Zg/edit\nseries_title: 職場生存攻略\nhero_kicker: 這點薪水憑什麼要我拚？\nhero_title: 努力，有回報嗎？\nhero_accent: 有回報嗎？\nhero_question: 工作薪水和付出不成比例，該繼續努力、溝通，還是換工作？",
+      "reason": "沿用既有建置欄位與主視覺文字，來源連結保持一致；未重新核准或改寫主視覺。"
     },
     {
       "type": "format",
-      "location": "主要區塊與分頁",
-      "before": "未編號的主要區塊",
-      "after": "01–04 連續編號與 <!-- page-break -->",
-      "reason": "符合 Markdown 格式契約"
+      "location": "區塊標題",
+      "before": "## 一、先看看我的現況",
+      "after": "## 01 先看看我的現況",
+      "reason": "沿用符合格式契約的連續編號。"
     },
     {
       "type": "format",
-      "location": "題型與選項",
-      "before": "行內方框、巢狀選項與尾端底線",
-      "after": "固定單選、複選、矩陣及短答標記",
-      "reason": "讓 Script 能確定映射 HTML 控制項"
+      "location": "區塊標題",
+      "before": "## 二、我投入什麼，也得到什麼？",
+      "after": "## 02 我投入什麼，也得到什麼？",
+      "reason": "沿用符合格式契約的連續編號。"
+    },
+    {
+      "type": "format",
+      "location": "區塊標題",
+      "before": "## 三、我的職場底線",
+      "after": "## 03 我的職場底線",
+      "reason": "沿用符合格式契約的連續編號。"
+    },
+    {
+      "type": "format",
+      "location": "區塊標題",
+      "before": "## 四、我接下來想怎麼做？",
+      "after": "## 04 我接下來想怎麼做？",
+      "reason": "沿用符合格式契約的連續編號。"
+    },
+    {
+      "type": "format",
+      "location": "第一區現況矩陣",
+      "before": "目前的薪水　☐ 滿意　☐ 普通　☐ 不滿意\n\n目前的工作內容　☐ 滿意　☐ 普通　☐ 不滿意\n\n目前的工作環境　☐ 滿意　☐ 普通　☐ 不滿意\n\n目前的同事關係　☐ 滿意　☐ 普通　☐ 不滿意\n\n目前的通勤距離　☐ 滿意　☐ 普通　☐ 不滿意",
+      "after": "<!-- matrix-single: 滿意 | 普通 | 不滿意 -->\n- 目前的薪水\n- 目前的工作內容\n- 目前的工作環境\n- 目前的同事關係\n- 目前的通勤距離\n<!-- end-matrix -->",
+      "reason": "保留五列及原有三個選項，沿用每列單選的矩陣標記。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "如果這份工作需要改善，我最在意的是（可複選）：",
+      "after": "### 如果這份工作需要改善，我最在意的是（可複選）",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "### 2. 這些經驗能延續到下一份工作嗎？",
+      "after": "### 2. 這些經驗能延續到下一份工作嗎？（單選）",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "### 3. 我做這份工作最主要的目標是（單選）：",
+      "after": "### 3. 我做這份工作最主要的目標是（單選）",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "這份工作有符合這個目標嗎？　☐ 符合　☐ 不符合　☐ 不確定",
+      "after": "### 這份工作有符合這個目標嗎？（單選）\n\n- [ ] 符合\n- [ ] 不符合\n- [ ] 不確定",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "下列哪些情況是我不能長期接受的？（可複選）",
+      "after": "### 下列哪些情況是我不能長期接受的？（可複選）",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "題目標記",
+      "before": "我接下來的一小步是（可複選）：",
+      "after": "### 我接下來的一小步是（可複選）",
+      "reason": "沿用題目層級與可明確判定的作答模式，保留原選項及題意。"
+    },
+    {
+      "type": "format",
+      "location": "第二區延續經驗的類別",
+      "before": "如果可以，主要是：☐ 能力　☐ 作品或紀錄　☐ 解決問題的方法　☐ 人脈　☐ 其他（請填寫）",
+      "after": "### 如果可以，主要是（可複選）\n\n- [ ] 能力\n- [ ] 作品或紀錄\n- [ ] 解決問題的方法\n- [ ] 人脈\n- [ ] 其他（請填寫）",
+      "reason": "本輪使用者明確確認保留可複選；五個原選項不變。"
+    },
+    {
+      "type": "format",
+      "location": "第三區前分頁",
+      "before": "## 三、我的職場底線",
+      "after": "<!-- page-break -->\n\n## 03 我的職場底線",
+      "reason": "沿用既有分頁標記；實際 A4 版面仍待重新 QA。"
+    },
+    {
+      "type": "format",
+      "location": "第三區短答",
+      "before": "目前最需要改善的一項是：＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿",
+      "after": "<!-- short-answer: 目前最需要改善的一項是 -->",
+      "reason": "沿用短答標記，取代手動底線。"
     },
     {
       "type": "content",
-      "location": "開頭說明",
-      "before": "學習目標：區辨工作對自己的價值",
-      "after": "補上作答流程、使用方式與沒有標準答案的使用說明",
-      "reason": "經使用者確認，讓學生不看影片也能理解如何完成學習單"
+      "location": "第四區目前選擇",
+      "before": "我目前比較想（單選）：",
+      "after": "### 我目前比較想怎麼做？（單選）",
+      "reason": "沿用補完整的問句，不改變單選題意或選項。"
     },
     {
-      "type": "content",
-      "location": "02 我投入什麼，也得到什麼？",
-      "before": "三組可以／不可以題目及其巢狀選項",
-      "after": "整合為成果、延續性、主要目標與目標符合度，並加入不確定選項",
-      "reason": "經使用者確認，降低重複並讓選項可直接作答"
+      "type": "format",
+      "location": "第四區完成期限",
+      "before": "我預計在＿＿＿＿＿＿前完成這一步。",
+      "after": "<!-- short-answer: 預計完成期限（年／月／日） -->",
+      "reason": "本輪依使用者確認補充日期格式，保留預計期限的意思，不指定實際日期。"
     },
     {
-      "type": "content",
-      "location": "03 我的職場底線",
-      "before": "原稿未提供此區塊",
-      "after": "新增不可長期接受的情況與最需要改善項目",
-      "reason": "經使用者確認，補充目前工作條件的判斷依據"
-    },
-    {
-      "type": "content",
-      "location": "04 我接下來想怎麼做？",
-      "before": "我有在投資自己嗎、我有需要換工作嗎兩組是非題",
-      "after": "改為目前選擇、下一小步與預計完成時間",
-      "reason": "經使用者確認，將抽象判斷改為可執行的後續行動"
-    },
-    {
-      "type": "content",
-      "location": "結尾提醒",
-      "before": "工作是一場交換，記得保護自己的權益，但也別忘了自己的初衷哦！",
-      "after": "工作不只是在交換薪水，也可以一起整理投入、所得與不能長期接受的條件。",
-      "reason": "經使用者確認，使結尾與修訂後的作答內容一致"
+      "type": "format",
+      "location": "結語",
+      "before": "工作不只是在交換薪水，也可以一起整理：我投入了什麼、得到了什麼，以及什麼是我不能長期接受的。",
+      "after": "> 工作不只是在交換薪水，也可以一起整理：我投入了什麼、得到了什麼，以及什麼是我不能長期接受的。",
+      "reason": "文字與目前來源一致，僅沿用引用標記。"
     }
   ],
-  "needs_confirmation": []
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP62/EP62_source.md",
+      "sha256": "586410333c57cc5f9e61aa94de63d7c299444ad412cacb54d5d2f838fb1ee5ac"
+    },
+    "corrected": {
+      "path": "content/EP62/EP62_corrected.md",
+      "sha256": "edaef8fecba7c9b5b89ab958832fc7620eb6b16a1903f04d289999250a06d5e3"
+    }
+  }
 }

@@ -1,0 +1,80 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生",
+  "changes": [
+    {
+      "type": "format",
+      "location": "frontmatter",
+      "before": "舊版來源欄位",
+      "after": "補齊 EP117 電子版建置所需欄位",
+      "reason": "符合 Markdown 與 HTML 格式契約"
+    },
+    {
+      "type": "format",
+      "location": "全文題目與填答區",
+      "before": "底線填答區與行內方框",
+      "after": "short-answer、long-answer 與單選題標記",
+      "reason": "轉換成可數位填寫且可由 Script 建置的固定標記"
+    },
+    {
+      "type": "format",
+      "location": "萬用句型",
+      "before": "底線提示",
+      "after": "方括號提示",
+      "reason": "保留句型示範功能，避免被誤認為未轉換的填答欄"
+    },
+    {
+      "type": "format",
+      "location": "主要區塊",
+      "before": "一、三、四",
+      "after": "01、02、03",
+      "reason": "修正不連續編號並符合格式契約"
+    },
+    {
+      "type": "content",
+      "location": "情境模擬小提醒",
+      "before": "前者／後者指稱",
+      "after": "明示為個人違規與老師管理方式",
+      "reason": "降低指稱歧義，不改變原意"
+    },
+    {
+      "type": "content",
+      "location": "全文",
+      "before": "部分長句、空格與標點不一致",
+      "after": "拆分長句並統一繁體中文標點與空格",
+      "reason": "提高明確性與閱讀可執行性"
+    },
+    {
+      "type": "format",
+      "location": "AI 溝通教練幫幫忙",
+      "before": "H3 標題加一般段落",
+      "after": "帶箭頭的提示框加左側直線提示語引用框",
+      "reason": "提示說明與小提醒共用格式，可複製的提示語另以引用框呈現"
+    },
+    {
+      "type": "format",
+      "location": "題目內小標題",
+      "before": "與一般題目相同的純文字標題",
+      "after": "淺灰底色加左側深綠色線條",
+      "reason": "區分『先看自己／再看規則』等題內分組與實際作答題目"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "僅有精簡學習目標",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "使用者選擇比照 EP62 的完整前言版本"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP117/EP117_source.md",
+      "sha256": "05c147c6bbd9b450c42a92ede3cfc7883fb3c341b2a81c22b5c71434fcd68abb"
+    },
+    "corrected": {
+      "path": "content/EP117/EP117_corrected.md",
+      "sha256": "9c5995d4a213a5855af76d942e894185586454b219c6f15b1e4574136185767b"
+    }
+  }
+}
