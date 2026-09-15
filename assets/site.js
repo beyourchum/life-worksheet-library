@@ -1,112 +1,122 @@
 const search = document.querySelector('#search');
+const searchForm = document.querySelector('#search-form');
 const results = document.querySelector('#results');
 const status = document.querySelector('#status');
 const empty = document.querySelector('#empty');
 const categories = document.querySelector('#categories');
-const searchButton = document.querySelector('#search-button');
-
+const resetButton = document.querySelector('#reset-button');
 let worksheets = [];
 let selectedCategory = '';
+const categoryLabels = ['學會和別人相處、不互相傷害', '處理情緒低落、焦慮和壓力', '看懂社會為什麼這樣運作', '避開職場常見問題與陷阱', '找到自己的特質與使用方式', '改善生活習慣、提升效率'];
 
-const categoryLabels = [
-  '學會和別人相處、不互相傷害',
-  '處理情緒低落、焦慮和壓力',
-  '看懂社會為什麼這樣運作',
-  '避開職場常見問題與陷阱',
-  '找到自己的特質與使用方式',
-  '改善生活習慣、提升效率'
-];
+function appendHighlightedText(element, text, query) {
+  if (!query) { element.textContent = text; return; }
+  const source = text.toLocaleLowerCase('zh-Hant');
+  const needle = query.toLocaleLowerCase('zh-Hant');
+  let cursor = 0;
+  let matchIndex = source.indexOf(needle);
+  while (matchIndex !== -1) {
+    element.append(document.createTextNode(text.slice(cursor, matchIndex)));
+    const mark = document.createElement('mark');
+    mark.textContent = text.slice(matchIndex, matchIndex + query.length);
+    element.append(mark);
+    cursor = matchIndex + query.length;
+    matchIndex = source.indexOf(needle, cursor);
+  }
+  element.append(document.createTextNode(text.slice(cursor)));
+}
 
-function render(query = '') {
-  const needle = query.trim().toLocaleLowerCase('zh-Hant');
+function createResult(item, query) {
+  const article = document.createElement('article');
+  article.className = 'result-row';
+  const epCell = document.createElement('div');
+  epCell.className = 'result-cell result-ep';
+  epCell.textContent = item.ep.replace('EP', '');
+  const mainCell = document.createElement('div');
+  mainCell.className = 'result-cell result-main';
+  const title = document.createElement('h3');
+  title.className = 'result-title';
+  const titleLink = document.createElement('a');
+  titleLink.href = item.worksheetUrl;
+  titleLink.setAttribute('aria-label', `${item.title}：開啟互動式學習單`);
+  appendHighlightedText(titleLink, item.title, query);
+  title.append(titleLink);
+  const summary = document.createElement('p');
+  summary.className = 'result-summary';
+  appendHighlightedText(summary, item.summary || '', query);
+  mainCell.append(title, summary);
+  const detailCell = document.createElement('div');
+  detailCell.className = 'result-cell result-detail';
+  const detailLabel = document.createElement('span');
+  detailLabel.className = 'detail-label';
+  detailLabel.textContent = 'Topic / Format';
+  const detail = document.createElement('p');
+  detail.append(document.createTextNode(item.category), document.createElement('br'), document.createTextNode('VIDEO + WORKSHEET'));
+  detailCell.append(detailLabel, detail);
+  const links = document.createElement('div');
+  links.className = 'result-cell result-links';
+  const worksheetLink = document.createElement('a');
+  worksheetLink.href = item.worksheetUrl;
+  worksheetLink.textContent = '學習單';
+  links.append(worksheetLink);
+  if (item.videoUrl) {
+    const videoLink = document.createElement('a');
+    videoLink.href = item.videoUrl;
+    videoLink.textContent = '影片';
+    videoLink.target = '_blank';
+    videoLink.rel = 'noopener noreferrer';
+    links.append(videoLink);
+  }
+  article.append(epCell, mainCell, detailCell, links);
+  return article;
+}
+
+function render() {
+  const query = search.value.trim();
+  const needle = query.toLocaleLowerCase('zh-Hant');
   const matches = worksheets.filter((item) => {
-    const text = [item.ep, item.title, item.summary, ...(item.keywords || [])].join(' ');
-    const matchesQuery = text.toLocaleLowerCase('zh-Hant').includes(needle);
-    const matchesCategory = !selectedCategory || item.category === selectedCategory;
-    return matchesQuery && matchesCategory;
+    const searchableText = [item.ep, item.title, item.summary, item.category, ...(item.keywords || [])].join(' ');
+    return searchableText.toLocaleLowerCase('zh-Hant').includes(needle) && (!selectedCategory || item.category === selectedCategory);
   });
-
-  results.replaceChildren(...matches.map((item) => {
-    const card = document.createElement('article');
-    card.className = 'card';
-
-    const ep = document.createElement('span');
-    ep.className = 'ep';
-    ep.textContent = item.ep;
-
-    const meta = document.createElement('div');
-    meta.className = 'card-meta';
-    const type = document.createElement('span');
-    type.className = 'card-type';
-    type.textContent = '生活練習 / 學習單';
-    meta.append(ep, type);
-
-    const title = document.createElement('h3');
-    title.textContent = item.title;
-
-    const summary = document.createElement('p');
-    summary.textContent = item.summary || '';
-
-    const actions = document.createElement('div');
-    actions.className = 'actions';
-
-    const worksheetLink = document.createElement('a');
-    worksheetLink.href = item.worksheetUrl;
-    worksheetLink.textContent = '開啟學習單';
-    actions.append(worksheetLink);
-
-    if (item.videoUrl) {
-      const videoLink = document.createElement('a');
-      videoLink.href = item.videoUrl;
-      videoLink.className = 'secondary';
-      videoLink.textContent = '觀看影片';
-      videoLink.target = '_blank';
-      videoLink.rel = 'noopener';
-      actions.append(videoLink);
-    }
-
-    card.append(meta, title, summary, actions);
-    return card;
-  }));
-
-  status.textContent = `共 ${matches.length} 份學習單`;
+  results.replaceChildren(...matches.map((item) => createResult(item, query)));
+  status.textContent = `${String(matches.length).padStart(2, '0')} RESULTS / ${worksheets.length} TOTAL`;
   empty.hidden = matches.length !== 0;
 }
 
+function updateCategoryState() {
+  for (const button of categories.children) {
+    const active = button.dataset.category === selectedCategory;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  }
+}
+
 function renderCategories() {
-  categories.replaceChildren(...categoryLabels.map((label) => {
+  categories.replaceChildren(...['', ...categoryLabels].map((label) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'category-button';
-    button.textContent = label;
+    button.dataset.category = label;
+    button.textContent = label || '全部';
     button.setAttribute('aria-pressed', String(selectedCategory === label));
     if (selectedCategory === label) button.classList.add('active');
-    button.addEventListener('click', () => {
-      selectedCategory = selectedCategory === label ? '' : label;
-      for (const categoryButton of categories.children) {
-        const active = categoryButton.textContent === selectedCategory;
-        categoryButton.classList.toggle('active', active);
-        categoryButton.setAttribute('aria-pressed', String(active));
-      }
-      render(search.value);
-    });
+    button.addEventListener('click', () => { selectedCategory = label; updateCategoryState(); render(); });
     return button;
   }));
 }
 
-fetch('worksheets.json')
-  .then((response) => {
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
-  })
-  .then((data) => {
-    worksheets = data;
-    renderCategories();
-    render(search.value);
-  })
-  .catch(() => {
-    status.textContent = '索引載入失敗，請稍後再試。';
-  });
+function resetSearch() {
+  search.value = '';
+  selectedCategory = '';
+  updateCategoryState();
+  render();
+  search.focus();
+}
 
-search.addEventListener('input', () => render(search.value));
-searchButton.addEventListener('click', () => render(search.value));
+fetch('worksheets.json')
+  .then((response) => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+  .then((data) => { worksheets = data; renderCategories(); render(); })
+  .catch(() => { status.textContent = '索引載入失敗，請稍後再試。'; });
+search.addEventListener('input', render);
+searchForm.addEventListener('submit', (event) => { event.preventDefault(); render(); });
+resetButton.addEventListener('click', resetSearch);
