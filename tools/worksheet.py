@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import html
 import json
 import re
@@ -32,6 +33,11 @@ H3_RE = re.compile(r"^### (?!#)(.+)$")
 MATRIX_RE = re.compile(r"^<!-- matrix-single:\s*(.+?)\s*-->$")
 SHORT_RE = re.compile(r"^<!-- short-answer:\s*(.+?)\s*-->$")
 LONG_RE = re.compile(r"^<!-- long-answer:\s*(.+?)\s*-->$")
+SCORE_TOTAL_RE = re.compile(r"^<!-- score-total:\s*(.+?)\s*-->$")
+EXAMPLE_RE = re.compile(r"^<!-- example:\s*(.+?)\s*-->$")
+PROMPT_QUOTE_START = "<!-- prompt-quote -->"
+PROMPT_QUOTE_END = "<!-- end-prompt-quote -->"
+WITH_ARROW_MARKER = "<!-- with-arrow -->"
 CSS_URL_RE = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.I)
 
 
@@ -45,6 +51,63 @@ def display_path(path):
         return resolved.relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
         return str(resolved)
+
+
+def file_fingerprint(path):
+    return {"path": display_path(path), "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
+
+
+def check_report_versions(report):
+    fingerprints = report.get("fingerprints")
+    required = {"source", "corrected"} if "changes" in report else {"html"}
+    if not isinstance(fingerprints, dict) or not required.issubset(fingerprints):
+        return {"status": "unverified", "issues": ["報告缺少必要檔案指紋，須重新審查或驗證。"]}
+    issues = []
+    for role, saved in fingerprints.items():
+        if not isinstance(saved, dict) or not isinstance(saved.get("path"), str) or not isinstance(saved.get("sha256"), str):
+            issues.append(f"{role} 指紋格式不完整。")
+            continue
+        path = Path(saved["path"])
+        if not path.is_absolute():
+            path = PROJECT_ROOT / path
+        try:
+            current = file_fingerprint(path)
+        except OSError:
+            issues.append(f"{role} 檔案無法讀取：{saved['path']}")
+            continue
+        if current["sha256"] != saved["sha256"]:
+            issues.append(f"{role} 已變更：{saved['path']}")
+    return {"status": "stale" if issues else "current", "issues": issues}
+
+
+def command_check_report(args):
+    try:
+        report = json.loads(args.input.read_text(encoding="utf-8-sig"))
+        if not isinstance(report, dict):
+            raise ValueError("報告根節點須為物件。")
+        result = check_report_versions(report)
+    except (OSError, ValueError) as error:
+        emit({"status": "fail", "file": display_path(args.input), "error": str(error)})
+        return 2
+    emit({"file": display_path(args.input), **result})
+    return 0 if result["status"] == "current" else 1
+
+
+def command_bind_correction(args):
+    try:
+        report = json.loads(args.input.read_text(encoding="utf-8-sig"))
+        if not isinstance(report, dict) or not isinstance(report.get("changes"), list) or not isinstance(report.get("needs_confirmation"), list):
+            raise ValueError("校正報告須包含 changes 與 needs_confirmation 陣列。")
+        report["fingerprints"] = {
+            "source": file_fingerprint(args.source),
+            "corrected": file_fingerprint(args.corrected),
+        }
+        args.input.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    except (OSError, ValueError) as error:
+        emit({"status": "fail", "file": display_path(args.input), "error": str(error)})
+        return 2
+    emit({"status": "bound", "file": display_path(args.input)})
+    return 0
 
 
 def normalize_text(text):
@@ -154,6 +217,19 @@ def lint_text(text, source="<memory>"):
 
     for offset, raw in enumerate(lines[body_start:], start=body_start + 1):
         line = raw.strip()
+        previous_line = lines[offset - 2].strip() if offset > body_start + 1 else ""
+        table_cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if (
+            "|" in line
+            and "|" in previous_line
+            and all(re.fullmatch(r":?-+:?", cell) for cell in table_cells)
+        ):
+            errors.append({
+                "code": "unsupported-table",
+                "line": offset - 1,
+                "message": "目前不支援 Markdown 表格，無法依表格結構建置。",
+                "fix": "保留表格原文，先確認適合的呈現方式；需要表格時先擴充格式契約與建置工具，涉及題型或原意變更時先取得確認。",
+            })
         if "☐" in line or "☑" in line:
             errors.append({
                 "code": "raw-checkbox-symbol",
@@ -168,6 +244,21 @@ def lint_text(text, source="<memory>"):
                 "message": "發現以底線控制的填答空間。",
                 "fix": "改用 short-answer 或 long-answer 標記。",
             })
+
+        if (
+            matrix is not None
+            and line
+            and line != "<!-- end-matrix -->"
+            and not MATRIX_RE.match(line)
+            and not line.startswith("- ")
+        ):
+            errors.append({
+                "code": "unsupported-matrix-content",
+                "line": offset,
+                "message": "矩陣內含有無法建置的內容，繼續建置會遺漏文字。",
+                "fix": "保留原文，依題意將說明移至矩陣標記外；矩陣內只保留 - 列題目及空白行。位置或題意不明時先確認，不要直接刪除。",
+            })
+            continue
 
         h1 = H1_RE.match(line)
         if h1:
@@ -265,6 +356,12 @@ def lint_text(text, source="<memory>"):
                 })
             continue
 
+        if EXAMPLE_RE.match(line):
+            continue
+
+        if SCORE_TOTAL_RE.match(line):
+            continue
+
         if line.startswith("<!-- section-note:"):
             errors.append({
                 "code": "removed-section-note",
@@ -274,7 +371,12 @@ def lint_text(text, source="<memory>"):
             })
             continue
         if line.startswith("<!--") and line.endswith("-->"):
-            if not SHORT_RE.match(line) and not LONG_RE.match(line):
+            if (
+                not SHORT_RE.match(line)
+                and not LONG_RE.match(line)
+                and not EXAMPLE_RE.match(line)
+                and line not in (PROMPT_QUOTE_START, PROMPT_QUOTE_END, WITH_ARROW_MARKER)
+            ):
                 warnings.append({
                     "code": "unknown-directive",
                     "line": offset,
@@ -325,7 +427,7 @@ def lint_text(text, source="<memory>"):
             "code": "page-limit",
             "line": 1,
             "message": f"預設最多兩頁，目前有 {page_breaks + 1} 頁。",
-            "fix": "刪減內容，使文件不超過兩頁。",
+            "fix": "先檢查分頁標記與版面配置；若需刪減內容或調整頁數限制，先取得使用者確認，不要直接刪題。",
         })
     for group in choice_groups:
         if group["kind"] and group["count"] < 2:
@@ -440,7 +542,7 @@ def render_document(text):
                     parts.append(f'<span class="answer-mode">{answer_mode}</span>')
                     parts.append("</div>")
                 else:
-                    parts.append(f"<h3>{render_inline(heading)}</h3>")
+                    parts.append(f'<h3 class="subheading">{render_inline(heading)}</h3>')
                 index += 1
                 continue
             matrix = MATRIX_RE.match(line)
@@ -473,8 +575,34 @@ def render_document(text):
             if choice:
                 group_index += 1
                 group_name = f"group-{group_index}"
-                parts.append('<div class="choices">')
+                choice_labels = []
+                choice_cursor = index
+                while choice_cursor < len(page_lines):
+                    candidate = page_lines[choice_cursor].strip()
+                    if not candidate:
+                        choice_cursor += 1
+                        continue
+                    if EXAMPLE_RE.match(candidate):
+                        choice_cursor += 1
+                        continue
+                    candidate_choice = CHOICE_RE.match(candidate)
+                    if not candidate_choice:
+                        break
+                    choice_labels.append(candidate_choice.group(1).strip())
+                    choice_cursor += 1
+                stacked_class = " choices-stacked" if any(
+                    len(re.sub(r"\s+", "", label)) > 12 for label in choice_labels
+                ) else ""
+                parts.append(f'<div class="choices{stacked_class}">')
                 while index < len(page_lines):
+                    if not page_lines[index].strip():
+                        index += 1
+                        continue
+                    example = EXAMPLE_RE.match(page_lines[index].strip())
+                    if example:
+                        parts.append(f'<p class="choice-example">例如：{render_inline(example.group(1))}</p>')
+                        index += 1
+                        continue
                     item = CHOICE_RE.match(page_lines[index].strip())
                     if not item:
                         break
@@ -490,28 +618,41 @@ def render_document(text):
                             f'aria-label="其他選項內容" autocomplete="off"></div>'
                         )
                     else:
+                        score_match = re.search(r"（\s*(\d+)\s*分\s*）", label)
+                        score_attribute = (
+                            f' data-score="{score_match.group(1)}"' if question_kind == "radio" and score_match else ""
+                        )
                         parts.append(
                             f'<label class="choice" for="{control_id}"><input id="{control_id}" type="{question_kind}" '
-                            f'name="{group_name}" value="{html.escape(label)}"><span>{render_inline(label)}</span></label>'
+                            f'name="{group_name}" value="{html.escape(label)}"{score_attribute}><span>{render_inline(label)}</span></label>'
                         )
                     index += 1
                 parts.append("</div>")
+                continue
+            example = EXAMPLE_RE.match(line)
+            if example:
+                parts.append(f'<p class="example-note">例如：{render_inline(example.group(1))}</p>')
+                index += 1
                 continue
             short_answer = SHORT_RE.match(line)
             if short_answer:
                 control_id = next_control("short")
                 label = short_answer.group(1)
-                if "完成時間" in label:
-                    parts.append(
-                        f'<label class="inline-answer" for="{control_id}"><span>我預計在</span>'
-                        f'<input id="{control_id}" type="text" aria-label="{html.escape(label)}" autocomplete="off">'
-                        f'<span>前完成這一步。</span></label>'
-                    )
-                else:
-                    parts.append(
-                        f'<div class="answer-field"><label for="{control_id}">{render_inline(label)}：</label>'
-                        f'<input class="short-answer" id="{control_id}" type="text" autocomplete="off"></div>'
-                    )
+                parts.append(
+                    f'<div class="answer-field"><label for="{control_id}">{render_inline(label)}：</label>'
+                    f'<input class="short-answer" id="{control_id}" type="text" autocomplete="off"></div>'
+                )
+                index += 1
+                continue
+            score_total = SCORE_TOTAL_RE.match(line)
+            if score_total:
+                control_id = next_control("score-total")
+                label = score_total.group(1)
+                parts.append(
+                    f'<div class="answer-field"><label for="{control_id}">{render_inline(label)}：</label>'
+                    f'<input class="short-answer" id="{control_id}" type="text" autocomplete="off" '
+                    f'data-score-total readonly aria-live="polite"></div>'
+                )
                 index += 1
                 continue
             long_answer = LONG_RE.match(line)
@@ -524,8 +665,46 @@ def render_document(text):
                 )
                 index += 1
                 continue
+            if line == PROMPT_QUOTE_START:
+                parts.append('<aside class="prompt-quote">')
+                parts.append('<div class="prompt-copy-text" data-prompt-text>')
+                index += 1
+                while index < len(page_lines) and page_lines[index].strip() != PROMPT_QUOTE_END:
+                    prompt_line = page_lines[index].strip()
+                    if not prompt_line:
+                        index += 1
+                        continue
+                    example = EXAMPLE_RE.match(prompt_line)
+                    if example:
+                        parts.append(f'<p class="example-note">例如：{render_inline(example.group(1))}</p>')
+                        index += 1
+                        continue
+                    if prompt_line.startswith("- "):
+                        parts.append("<ul>")
+                        while index < len(page_lines) and page_lines[index].strip().startswith("- "):
+                            parts.append(f"<li>{render_inline(page_lines[index].strip()[2:].strip())}</li>")
+                            index += 1
+                        parts.append("</ul>")
+                        continue
+                    parts.append(f"<p>{render_inline(prompt_line)}</p>")
+                    index += 1
+                if index < len(page_lines):
+                    index += 1
+                parts.append('</div><button class="prompt-copy-button" type="button" data-prompt-copy>複製提示詞</button></aside>')
+                question_kind = None
+                continue
             if line.startswith("> "):
-                parts.append('<aside class="closing"><span class="closing-mark">→</span>')
+                with_arrow = index > 0 and page_lines[index - 1].strip() == WITH_ARROW_MARKER
+                following_index = next_nonblank(index + 1)
+                closing_class = "closing prompt-intro" if (
+                    following_index < len(page_lines)
+                    and page_lines[following_index].strip() == PROMPT_QUOTE_START
+                ) else "closing"
+                if not with_arrow:
+                    closing_class += " no-arrow"
+                parts.append(f'<aside class="{closing_class}">')
+                if with_arrow:
+                    parts.append('<span class="closing-mark">→</span>')
                 parts.append(f"<p>{render_inline(line[2:].strip())}</p></aside>")
                 question_kind = None
                 index += 1
@@ -575,6 +754,8 @@ class ValidationParser(HTMLParser):
         self.local_assets = []
         self.label_depth = 0
         self.has_clear_draft = False
+        self.has_prompt_quote = False
+        self.has_prompt_copy = False
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -600,6 +781,10 @@ class ValidationParser(HTMLParser):
             })
         if tag == "button" and (attrs.get("id") == "clear-draft" or "data-clear" in attrs):
             self.has_clear_draft = True
+        if "prompt-quote" in classes:
+            self.has_prompt_quote = True
+        if tag == "button" and "data-prompt-copy" in attrs:
+            self.has_prompt_copy = True
         for attribute in ("src", "href"):
             value = attrs.get(attribute, "")
             if value.startswith(("http://", "https://", "//")):
@@ -659,7 +844,7 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
     require(parser.has_viewport, "viewport", "缺少 viewport。", "加入 width=device-width 的 viewport meta。")
     require(parser.has_title, "title", "缺少 title。", "在 head 加入 title。")
     require(parser.page_count >= 1, "page-container", "找不到 .page 容器。", "每頁使用一個 .page。")
-    require(parser.page_count <= 2, "page-limit", f"HTML 有 {parser.page_count} 頁，超過兩頁上限。", "刪減內容，使文件不超過兩頁。")
+    require(parser.page_count <= 2, "page-limit", f"HTML 有 {parser.page_count} 頁，超過兩頁上限。", "回到 Markdown 與模板檢查分頁配置後重新 build；若需刪減內容或調整頁數限制，先取得使用者確認。")
     require(len(parser.controls) >= 1, "controls", "找不到填答控制項。", "確認題型標記與 build 輸出。")
     unlabeled = [
         item for item in parser.controls
@@ -678,6 +863,9 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
             })
     require("sessionStorage" in text, "session-storage", "缺少 sessionStorage 暫存。", "使用共用 worksheet template。")
     require(parser.has_clear_draft, "clear-draft", "缺少清除暫存按鈕。", "加入 id=\"clear-draft\" 或 data-clear 的按鈕。")
+    if parser.has_prompt_quote:
+        require(parser.has_prompt_copy, "prompt-copy", "提示語引用框缺少複製按鈕。", "使用共用 renderer 重新 build。")
+        require("navigator.clipboard.writeText" in text, "prompt-copy-script", "缺少提示詞複製功能。", "使用共用 worksheet template。")
     require(re.search(r"@page\s*\{[^}]*size:\s*A4\s+portrait", text, re.S | re.I), "a4-print", "缺少 A4 直式列印設定。", "在 CSS 設定 @page size: A4 portrait。")
     require("@media print" in text, "print-media", "缺少列印樣式。", "加入 @media print。")
     require(re.search(r"@media\s+print\s*\{.*?\.(?:worksheet-)?toolbar\s*\{\s*display:\s*none", text, re.S), "print-toolbar", "列印時未明確隱藏工具列。", "在 print media 中隱藏工具列。")
@@ -693,6 +881,7 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
     require("{{" not in text and "}}" not in text, "template-markers", "HTML 留有未解析模板標記。", "檢查 build 的模板替換。")
     require(not re.search(r"\b(fetch|XMLHttpRequest|sendBeacon)\b", text), "network-upload", "HTML 含有可能傳送答案的網路 API。", "移除網路傳輸程式。")
 
+    machine_checks = "fail" if errors else "pass"
     if visual_qa == "pending":
         warnings.append({
             "code": "visual-qa-pending",
@@ -710,7 +899,7 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
     return {
         "status": status,
         "file": source,
-        "machine_checks": "fail" if errors else "pass",
+        "machine_checks": machine_checks,
         "visual_qa": visual_qa,
         "errors": errors,
         "warnings": warnings,
@@ -806,6 +995,7 @@ def command_validate(args):
         args.visual_qa,
         source_path=source,
     )
+    result["fingerprints"] = {"html": file_fingerprint(source)}
     if args.report:
         report = args.report.resolve()
         report.parent.mkdir(parents=True, exist_ok=True)
@@ -839,6 +1029,16 @@ def build_parser():
     validate.add_argument("--report", type=Path)
     validate.add_argument("--visual-qa", choices=("pending", "passed", "failed"), default="pending")
     validate.set_defaults(handler=command_validate)
+
+    bind = commands.add_parser("bind-correction", help="Record file versions after reviewing a correction report; does not approve content.")
+    bind.add_argument("input", type=Path)
+    bind.add_argument("--source", type=Path, required=True)
+    bind.add_argument("--corrected", type=Path, required=True)
+    bind.set_defaults(handler=command_bind_correction)
+
+    check = commands.add_parser("check-report", help="Check whether report file fingerprints still match; does not run QA.")
+    check.add_argument("input", type=Path)
+    check.set_defaults(handler=command_check_report)
     return parser
 
 

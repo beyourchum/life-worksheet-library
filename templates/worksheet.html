@@ -13,14 +13,13 @@
 </head>
 <body>
 <div class="toolbar" aria-label="學習單工具">
-  <div class="toolbar-group" aria-label="閱讀模式">
-    <button class="toolbar-button" type="button" data-mode-choice="screen" aria-pressed="true">螢幕閱讀</button>
-    <button class="toolbar-button" type="button" data-mode-choice="print" aria-pressed="false">紙本預覽</button>
-  </div>
   <div class="toolbar-group">
     <span class="save-status" aria-live="polite" data-save-status>尚未填寫</span>
     <button class="toolbar-button" id="clear-draft" data-clear type="button">清除本次暫存</button>
-    <button class="toolbar-button primary" data-print type="button">列印</button>
+  </div>
+  <div class="print-actions">
+    <p class="print-hint" id="print-hint">請在目的地選擇「另存為 PDF」再列印</p>
+    <button class="toolbar-button primary" data-print type="button" aria-describedby="print-hint">列印</button>
   </div>
 </div>
 <main class="worksheet" data-worksheet-id="{{WORKSHEET_ID}}">
@@ -31,8 +30,34 @@
   const worksheet = document.querySelector(".worksheet");
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   const controls = [...worksheet.querySelectorAll("input, textarea")];
-  const modeButtons = [...document.querySelectorAll("[data-mode-choice]")];
+  const scoreTotal = worksheet.querySelector("[data-score-total]");
   const saveStatus = document.querySelector("[data-save-status]");
+  const copyPrompt = async (button) => {
+    const prompt = button.closest(".prompt-quote")?.querySelector("[data-prompt-text]")?.innerText.trim();
+    if (!prompt) return;
+    try {
+      await navigator.clipboard.writeText(prompt);
+    } catch (_) {
+      const helper = document.createElement("textarea");
+      helper.value = prompt;
+      helper.setAttribute("readonly", "");
+      helper.style.position = "fixed";
+      helper.style.opacity = "0";
+      document.body.append(helper);
+      helper.select();
+      document.execCommand("copy");
+      helper.remove();
+    }
+    const original = button.textContent;
+    button.textContent = "已複製";
+    window.setTimeout(() => { button.textContent = original; }, 1800);
+  };
+  const updateScore = () => {
+    if (!scoreTotal) return;
+    const total = [...worksheet.querySelectorAll("input[data-score]:checked")]
+      .reduce((sum, control) => sum + Number(control.dataset.score), 0);
+    scoreTotal.value = total ? String(total) : "";
+  };
   const save = () => {
     const state = Object.fromEntries(controls.map((control) => [
       control.id,
@@ -65,25 +90,23 @@
       if (control.type === "checkbox" || control.type === "radio") control.checked = false;
       else control.value = "";
     });
+    updateScore();
   };
-  modeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const mode = button.dataset.modeChoice;
-      worksheet.dataset.mode = mode;
-      modeButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-    });
-  });
   controls.forEach((control) => {
-    control.addEventListener("change", save);
+    control.addEventListener("change", () => { updateScore(); save(); });
     control.addEventListener("input", save);
   });
   document.querySelector("[data-print]").addEventListener("click", () => window.print());
+  document.querySelectorAll("[data-prompt-copy]").forEach((button) => {
+    button.addEventListener("click", () => { copyPrompt(button); });
+  });
   document.getElementById("clear-draft").addEventListener("click", () => {
     if (!window.confirm("確定要清除這個分頁中的所有作答嗎？")) return;
     clearDraft();
     saveStatus.textContent = "本次暫存已清除";
   });
   restore();
+  updateScore();
 })();
 </script>
 </body>

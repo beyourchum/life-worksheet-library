@@ -7,6 +7,7 @@
   --muted: #626962;
   --green: #28755b;
   --soft-green: #e5eee8;
+  --soft-gray: #f0f1ef;
   --font-heading: "Glow Sans TC", "Microsoft JhengHei", sans-serif;
   --font-subheading: "Genki Gothic TC", "GenYo Gothic TC", "Microsoft JhengHei", sans-serif;
   --font-body: "GenYo Gothic TC", "Microsoft JhengHei", sans-serif;
@@ -54,6 +55,23 @@ button, input, textarea { font: inherit; }
 .toolbar-group { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
 .toolbar-group .save-status { min-width: 6.5rem; margin-right: 0; color: #d8ddd8; text-align: right; }
 .toolbar-button.primary { background: #fffefa; color: var(--foreground); }
+.print-actions {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin-left: auto;
+  max-width: 100%;
+  min-width: 0;
+  text-align: right;
+}
+.print-hint {
+  min-width: 0;
+  margin: 0;
+  color: #d8ddd8;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+.print-actions .toolbar-button { flex-shrink: 0; }
 button {
   min-height: 2.5rem;
   padding: .45rem .8rem;
@@ -66,8 +84,6 @@ button {
 button:hover { background: #28755b66; }
 
 .worksheet { max-width: 58rem; margin: 0 auto 2rem; }
-.worksheet[data-mode="print"] { padding: .75rem; }
-.worksheet[data-mode="print"] .page { max-width: 210mm; margin-right: auto; margin-left: auto; box-shadow: none; }
 .page {
   position: relative;
   min-height: 1120px;
@@ -168,6 +184,12 @@ button:hover { background: #28755b66; }
   margin: 1.35rem 0 .75rem;
 }
 h3 { margin: 0; font-family: var(--font-subheading); font-size: 1.05rem; font-weight: 700; line-height: 1.45; }
+.subheading {
+  margin: 1.15rem 0 .65rem;
+  padding: .45rem .7rem;
+  border-left: .28rem solid var(--green);
+  background: var(--soft-gray);
+}
 .matrix-heading { margin-top: .95rem; }
 .matrix-heading .section-instruction { margin: 0; }
 p { margin: .6rem 0; }
@@ -178,6 +200,7 @@ p { margin: .6rem 0; }
   gap: .55rem;
   margin: .5rem 0 1rem;
 }
+.choices.choices-stacked { grid-template-columns: 1fr; }
 .choice {
   display: flex;
   min-height: 3rem;
@@ -201,6 +224,14 @@ p { margin: .6rem 0; }
 }
 .other-input { min-width: 7rem; flex: 1; padding: .3rem .2rem; }
 .choice:has(.other-input) { flex-wrap: wrap; }
+.example-note,
+.choice-example {
+  margin: .35rem 0 .75rem;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+.choice-example { grid-column: 1 / -1; margin-top: -.2rem; }
 
 .matrix { width: 100%; margin: .35rem 0 1.2rem; border: 0; }
 .matrix-row {
@@ -251,11 +282,34 @@ p { margin: .6rem 0; }
   border-bottom: 1px solid var(--foreground);
 }
 .closing-mark { color: var(--green); font-family: var(--font-heading); font-size: 2.2rem; line-height: 1; }
+.closing.prompt-intro { border-bottom: 0; }
+/* 相鄰提示框共用一條分隔線；若粗細規則衝突，保留前一框的細底線。 */
+.closing + .closing { border-top: 0; }
 .closing p {
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.65;
 }
+.closing.no-arrow { grid-template-columns: 1fr; }
+.prompt-quote {
+  margin: 1rem 0 0;
+  padding: .15rem 0 .15rem 1rem;
+  border-left: .35rem solid var(--green);
+}
+.prompt-quote p { margin: 0 0 1rem; }
+.prompt-quote p:last-child, .prompt-quote ul:last-child { margin-bottom: 0; }
+.prompt-copy-button {
+  margin-top: .9rem;
+  padding: .45rem .7rem;
+  border: 1px solid var(--green);
+  border-radius: .3rem;
+  background: #fff;
+  color: var(--foreground);
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.prompt-copy-button:hover, .prompt-copy-button:focus-visible { background: var(--soft-green); }
 .page-footer {
   position: absolute;
   right: clamp(1.5rem, 5vw, 3.5rem);
@@ -295,6 +349,7 @@ p { margin: .6rem 0; }
     line-height: 1.28;
   }
   .toolbar { display: none; }
+  .prompt-copy-button { display: none; }
   .worksheet {
     max-width: none;
     margin: 0;
@@ -366,6 +421,11 @@ p { margin: .6rem 0; }
     font-size: 9pt;
     line-height: 1.3;
   }
+  .subheading {
+    margin: 2mm 0 1.5mm;
+    padding: 1mm 2mm;
+    border-left-width: .8mm;
+  }
   .choices {
     gap: 1.2mm;
     margin: 1.5mm 0 2mm;
@@ -410,6 +470,11 @@ p { margin: .6rem 0; }
   .closing p {
     font-size: 9pt;
     line-height: 1.35;
+  }
+  .prompt-quote {
+    margin-top: 2mm;
+    padding: .5mm 0 .5mm 3mm;
+    border-left-width: 1mm;
   }
   .page-footer {
     right: 12mm;

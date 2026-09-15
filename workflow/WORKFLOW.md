@@ -5,9 +5,7 @@
 ## 流程
 
 ```text
-Google Docs 初稿
-  ↓
-normalize
+既有 source.md
   ↓
 correct：Script 格式檢查 + 模型內容校正
   ↓
@@ -20,7 +18,7 @@ validate：Script 驗證 + 最小視覺 QA
 
 ## 1. 準備資料
 
-開始前取得 EP 編號、原稿、目標客群與特殊輸出限制。不需要資料庫中的情境問題或引導目標。
+開始前依 [`../AGENTS.md`](../AGENTS.md#開始前必須確認) 取得 EP 編號。原稿、目標客群與未指定的 operation 採用該文件所列預設值，不另行詢問。
 
 每份學習單使用：
 
@@ -36,19 +34,33 @@ reports/EPxx/validation.json
 
 ## 2. Normalize
 
+只有來源檔不存在或使用者要求重新匯入時才執行本階段；既有 EP 直接進入 Correct。
+
 輸入是從 Google Docs 取得的 Markdown 或純文字原稿。執行：
 
 ```powershell
 python tools/worksheet.py normalize INPUT --output content/EPxx/EPxx_source.md
 ```
 
-Script 只統一換行、移除行尾空白、收斂過多空白行及補上結尾換行，不改寫文字。若來源不是可解析的 Markdown，先由 Codex 依格式契約整理標記，再執行 lint。
+Script 只統一換行、移除行尾空白、收斂過多空白行及補上結尾換行，不改寫文字或 Markdown 標記。需要整理 Markdown 標記時，在 Correct 階段處理 `corrected.md`。
 
-完成條件：`source.md` 可逐段對回原稿，沒有內容增刪。
+完成條件：`source.md` 可逐段對回原稿，沒有內容增刪，並已依 [來源快照與更新規則](../rules/CONTENT_CORRECTION_RULES.md#來源快照與更新) 保存 Git 版本。
+
+### 重新匯入既有來源
+
+先依 [來源快照與更新規則](../rules/CONTENT_CORRECTION_RULES.md#來源快照與更新) 檢查重新匯入授權與舊版保存狀態。符合條件後，執行：
+
+```powershell
+python tools/worksheet.py normalize INPUT --output content/EPxx/EPxx_source.md --force
+```
+
+完成後進入 Correct，比對新來源與既有校正及報告。`--force` 只允許 Script 覆寫檔案，不會檢查 Git 保存狀態，也不代表重新校正或驗證已完成。
 
 ## 3. Correct
 
-先複製 `source.md` 為 `corrected.md`，再依下列順序處理。
+首次處理且尚無 `corrected.md` 時，先複製 `source.md` 為 `corrected.md`。已有 `corrected.md` 時，依 [逐份驗收規則](../rules/CONTENT_CORRECTION_RULES.md#ep62-參考標準與逐份驗收) 比對來源與既有校正，不重新複製覆蓋。
+
+`correct` 是工作階段，沒有獨立的 CLI 指令。Script 使用 `lint` 回報格式問題，Codex 在 `corrected.md` 修正後重新執行 lint，再完成內容校正。
 
 ### 3.1 格式校正
 
@@ -66,11 +78,25 @@ Script 回報格式契約的 `fail` 與 `warning`。可確定不影響意思的�
 
 校正結果寫入 `reports/EPxx/correction.json`，只記錄實際變更與待確認事項。
 
+完成本輪來源、校正版與報告比對後，依 [校正輸出規則](../rules/CONTENT_CORRECTION_RULES.md#校正輸出) 綁定檔案版本：
+
+```powershell
+python tools/worksheet.py bind-correction reports/EPxx/correction.json --source content/EPxx/EPxx_source.md --corrected content/EPxx/EPxx_corrected.md
+```
+
 完成條件：lint 沒有 `fail`，且待確認項目已由使用者決定。
 
 ## 4. Build
 
-輸入必須是通過 lint 的 `corrected.md`。執行：
+輸入必須是通過 lint 的 `corrected.md`。
+
+先檢查校正報告版本；非 `current` 時回到 Correct，不能直接補指紋沿用舊結論：
+
+```powershell
+python tools/worksheet.py check-report reports/EPxx/correction.json
+```
+
+版本一致且 Correct 完成後建置：
 
 ```powershell
 python tools/worksheet.py build content/EPxx/EPxx_corrected.md --output output/EPxx/EPxx.html
@@ -108,9 +134,16 @@ Script 檢查：
 
 Script 無法證明實際互動與版面品質，因此瀏覽器與列印 QA 尚未全部完成時，validation 報告必須保留 `visual_qa: pending`。
 
-## 6. 同步與交付
+## 6. 交付
 
-內容校正完成後，依使用者要求同步回原生 Google Docs。同步後重新讀取受影響段落，確認文字與題型標記沒有改變。
+交付前檢查校正與驗證報告版本，依 [報告版本辨識](../rules/FORMAT_CONTRACT.md#報告版本辨識) 判讀。版本過期或未確認時回到對應階段：
+
+```powershell
+python tools/worksheet.py check-report reports/EPxx/correction.json
+python tools/worksheet.py check-report reports/EPxx/validation.json
+```
+
+內容變更只保存在 `corrected.md`，不回寫原生 Google Docs。若使用者明確要求例外，Google Docs 同步須視為獨立操作；完成後重新讀取受影響段落，確認文字與題型標記沒有改變。
 
 交付時回報：
 
@@ -118,4 +151,8 @@ Script 無法證明實際互動與版面品質，因此瀏覽器與列印 QA 尚
 - 直接修正與經確認後修正的項目。
 - lint、build、validate 結果。
 - 視覺 QA 是否完成。
-- 是否已同步 Google Docs。
+- Google Docs 是否維持未修改；若有明確要求的例外，列出同步結果。
+
+## 7. 網站發布
+
+網站發布是交付後的獨立操作，不包含在 `normalize`、`correct`、`build` 或 `validate` 的預設流程內。只有使用者另外明確要求發布時，才依 [`GITHUB_PUBLISHING.md`](GITHUB_PUBLISHING.md) 執行；完成 HTML 建置與驗證不等於已發布上線。
