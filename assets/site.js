@@ -58,11 +58,21 @@ function createResult(item, query) {
   const worksheetLink = document.createElement('a');
   worksheetLink.href = item.worksheetUrl;
   worksheetLink.textContent = '學習單';
+  const worksheetArrow = document.createElement('span');
+  worksheetArrow.className = 'action-arrow';
+  worksheetArrow.setAttribute('aria-hidden', 'true');
+  worksheetArrow.textContent = '↗︎';
+  worksheetLink.append(worksheetArrow);
   links.append(worksheetLink);
   if (item.videoUrl) {
     const videoLink = document.createElement('a');
     videoLink.href = item.videoUrl;
     videoLink.textContent = '影片';
+    const videoArrow = document.createElement('span');
+    videoArrow.className = 'action-arrow';
+    videoArrow.setAttribute('aria-hidden', 'true');
+    videoArrow.textContent = '↗︎';
+    videoLink.append(videoArrow);
     videoLink.target = '_blank';
     videoLink.rel = 'noopener noreferrer';
     links.append(videoLink);
