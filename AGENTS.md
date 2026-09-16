@@ -53,3 +53,5 @@ GitHub Pages 發布是完整工作流的 `publish` 階段，但不包含在未�
 ## 完成回報
 
 回報 operation、變更檔案、Script 檢查結果、待人工確認項目、風險分級 QA 結果，以及是否執行 `publish`。若執行發布，另外回報影片連結是否同步更新與驗證結果。Google Docs 預設不修改；只有使用者明確要求例外且已執行時，才另外回報 Google Docs 變更。應做的局部或完整 QA 未完成時，不得描述為可正式發布。
+
+每完成一個 operation 階段，必須主動提醒使用者目前有未提交的 Git 修改，並詢問是否要 commit。至少在 `correct`、`build`、`validate` 與 `publish` 完成後提醒；未經使用者明確要求，不得自行 commit。
