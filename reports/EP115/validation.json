@@ -1,24 +1,18 @@
 {
-  "status": "warning",
-  "file": "output/EP115/EP115.html",
+  "status": "pass",
+  "file": "site/worksheets/EP115/index.html",
   "machine_checks": "pass",
-  "visual_qa": "pending",
+  "visual_qa": "passed",
   "errors": [],
-  "warnings": [
-    {
-      "code": "visual-qa-pending",
-      "message": "適用的風險分級瀏覽器 QA 尚未完成。",
-      "fix": "完成 WORKFLOW.md 規定的風險分級瀏覽器 QA。"
-    }
-  ],
+  "warnings": [],
   "summary": {
     "pages": 2,
     "controls": 35
   },
   "fingerprints": {
     "html": {
-      "path": "output/EP115/EP115.html",
-      "sha256": "e4a5f14363a5cf74537d099959fc0227c184a1214600b386ed951c80a19940c2"
+      "path": "site/worksheets/EP115/index.html",
+      "sha256": "45ac015635e85dc93007cdcc832d1215a3eaa7615ba4e86b06a98718cf82b100"
     }
   }
 }
