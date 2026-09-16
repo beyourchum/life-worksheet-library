@@ -135,17 +135,11 @@ function createResult(match) {
   summary.className = 'result-summary';
   appendHighlightedText(summary, item.summary || '', highlightTerms);
   mainCell.append(title, summary);
-  const detailCell = document.createElement('div');
-  detailCell.className = 'result-cell result-detail';
   if (reasons.length) {
-    const detailLabel = document.createElement('span');
-    detailLabel.className = 'detail-label';
-    detailLabel.textContent = 'MATCH / 符合';
-    const detailText = document.createElement('p');
-    detailText.textContent = reasons.slice(0, 3).join('、');
-    detailCell.append(detailLabel, detailText);
-  } else {
-    detailCell.hidden = true;
+    const matchDetail = document.createElement('p');
+    matchDetail.className = 'result-match';
+    matchDetail.textContent = `MATCH / 符合：${reasons.slice(0, 3).join('、')}`;
+    mainCell.append(matchDetail);
   }
   const links = document.createElement('div');
   links.className = 'result-cell result-links';
@@ -171,7 +165,7 @@ function createResult(match) {
     videoLink.rel = 'noopener noreferrer';
     links.append(videoLink);
   }
-  article.append(epCell, mainCell, detailCell, links);
+  article.append(epCell, mainCell, links);
   return article;
 }
 

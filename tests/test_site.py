@@ -15,6 +15,15 @@ class SiteContractTests(unittest.TestCase):
 
         self.assertNotIn("item.category", create_result)
 
+    def test_index_has_no_empty_detail_column(self):
+        script = SITE_SCRIPT.read_text(encoding="utf-8")
+        index = SITE_INDEX.read_text(encoding="utf-8")
+        create_result = script.split("function createResult", 1)[1].split("function render()", 1)[0]
+
+        self.assertNotIn("<span>DETAIL</span>", index)
+        self.assertNotIn("result-detail", create_result)
+        self.assertIn("result-match", create_result)
+
     def test_category_remains_search_and_filter_metadata(self):
         source = SITE_SCRIPT.read_text(encoding="utf-8")
 
