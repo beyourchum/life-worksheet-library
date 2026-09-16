@@ -59,6 +59,7 @@ h1 span:last-child { color: var(--accent); }
   padding-bottom: .4em;
   font-size: var(--step-0);
   line-height: 1.7;
+  text-align: right;
 }
 .search-section, .filter-section { display: grid; grid-template-columns: 2fr 10fr; border-bottom: 1px solid var(--ink); }
 .section-label { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 24px 24px 24px 0; text-transform: uppercase; }
@@ -129,6 +130,7 @@ mark { padding: 0 .04em; color: inherit; background: transparent; box-shadow: in
   margin-top: 54px;
   margin-left: auto;
   margin-right: 0;
+  text-align: right;
 }
   .search-section, .filter-section { grid-template-columns: 3fr 9fr; }
   .list-header, .result-row { grid-template-columns: 1fr 7fr 4fr; }
@@ -159,6 +161,7 @@ mark { padding: 0 .04em; color: inherit; background: transparent; box-shadow: in
   margin-right: 0;
   padding-left: 0;
   font-size: .88rem;
+  text-align: left;
 }
   .search-section, .filter-section { display: block; }
   .section-label, .result-heading .section-label { grid-template-columns: 42px 1fr; padding: 16px 0; }
