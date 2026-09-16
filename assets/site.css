@@ -120,7 +120,7 @@ mark { padding: 0 .04em; color: inherit; background: transparent; box-shadow: in
 @media (min-width: 901px) {
   .site-footer > p:nth-child(2),
   .footer-note {
-    transform: translateY(24px);
+    transform: translateY(32px);
   }
 }
 @media (max-width: 900px) {
