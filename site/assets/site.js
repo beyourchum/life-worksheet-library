@@ -47,16 +47,7 @@ function createResult(item, query) {
   mainCell.append(title, summary);
   const detailCell = document.createElement('div');
   detailCell.className = 'result-cell result-detail';
-  const detailLabel = document.createElement('span');
-  detailLabel.className = 'detail-label';
-  detailLabel.textContent = 'Topic / Format';
-  const detail = document.createElement('p');
-  if (item.category !== '避開職場常見問題與陷阱') {
-    detail.append(document.createTextNode(item.category));
-  } else {
-    detailCell.hidden = true;
-  }
-  detailCell.append(detailLabel, detail);
+  detailCell.hidden = true;
   const links = document.createElement('div');
   links.className = 'result-cell result-links';
   const worksheetLink = document.createElement('a');
