@@ -27,7 +27,7 @@
     } else {
       tokens.push(...normalized.split(' ').filter((token) => token && !ignored.has(token)));
     }
-    return [...new Set(tokens.length ? tokens : [normalized])];
+    return [...new Set(tokens)];
   }
 
   function expandToken(token, synonymGroups = []) {
@@ -84,15 +84,27 @@
 
   function searchWorksheets(worksheets, query, selectedCategory, config) {
     const queryGroups = getQueryGroups(query, config);
+    const hasQuery = Boolean(normalizeText(query));
     const candidates = worksheets
       .filter((item) => !selectedCategory || item.category === selectedCategory)
       .map((item, originalIndex) => evaluateItem(item, query, queryGroups, originalIndex, config));
     let matchMode = 'all';
-    let matches = queryGroups.length
+    let matches = !hasQuery
+      ? candidates
+      : queryGroups.length
       ? candidates.filter((match) => match.matchedGroups.length === queryGroups.length)
-      : candidates;
+      : [];
     if (!matches.length && queryGroups.length > 1) {
-      const relatedMatches = candidates.filter((match) => match.matchedGroups.length > 0);
+      const relatedMatch = config.relatedMatch || {};
+      const minimumGroups = relatedMatch.minimumGroups ?? 2;
+      const minimumCoverage = relatedMatch.minimumCoverage ?? 0.6;
+      const minimumScore = relatedMatch.minimumScore ?? 0;
+      const relatedMatches = candidates.filter((match) => {
+        const coverage = match.matchedGroups.length / queryGroups.length;
+        return match.matchedGroups.length >= minimumGroups
+          && coverage >= minimumCoverage
+          && match.score >= minimumScore;
+      });
       if (relatedMatches.length) {
         matchMode = 'related';
         matches = relatedMatches;
