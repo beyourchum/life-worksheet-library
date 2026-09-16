@@ -14,4 +14,16 @@ for (const testCase of cases) {
   assert.equal(matches[0].item.ep, testCase.expectedFirst, `「${testCase.query}」第一名應為 ${testCase.expectedFirst}，實際為 ${matches[0].item.ep}`);
 }
 
+assert.deepEqual(
+  SearchCore.tokenizeQuery('被老師罵', config.ignoredQueryWords),
+  ['老師', '罵'],
+  '語法詞不應成為有效搜尋詞',
+);
+
+const noisyFallback = SearchCore.searchWorksheets(worksheets, '被老師罵', '', config);
+assert.equal(noisyFallback.matches.length, 0, '單一低覆蓋詞不得產生相關結果');
+
+const ignoredOnly = SearchCore.searchWorksheets(worksheets, '被', '', config);
+assert.equal(ignoredOnly.matches.length, 0, '只有停用詞的查詢不得顯示全部內容');
+
 console.log(`Verified ${cases.length} search ranking cases.`);

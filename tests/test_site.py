@@ -52,6 +52,9 @@ class SiteContractTests(unittest.TestCase):
         self.assertIn("synonymGroups", source)
         self.assertIn("weights.searchTerms", source)
         self.assertIn("matchMode = 'related'", source)
+        self.assertIn("minimumGroups", source)
+        self.assertIn("minimumCoverage", source)
+        self.assertIn("minimumScore", source)
 
     def test_search_copy_explains_multiple_terms_and_empty_recovery(self):
         source = SITE_INDEX.read_text(encoding="utf-8")
@@ -81,6 +84,9 @@ class SiteContractTests(unittest.TestCase):
             set(config["weights"]["searchTerms"]),
             {"situations", "feelings", "decisions", "phrases", "concepts"},
         )
+        self.assertIn("被", config["ignoredQueryWords"])
+        self.assertGreaterEqual(config["relatedMatch"]["minimumGroups"], 2)
+        self.assertGreaterEqual(config["relatedMatch"]["minimumCoverage"], 0.6)
 
     def test_search_ranking_cases_use_the_production_algorithm(self):
         node = shutil.which("node")
