@@ -14,8 +14,10 @@
 
 - 校正報告與驗證報告皆為目前檔案版本。
 - lint、build 與機械驗證通過。
-- 瀏覽器、互動及 A4 列印 QA 已完成。
+- 已依 [`WORKFLOW.md`](WORKFLOW.md#5-validate) 完成適用的風險分級瀏覽器 QA；沒有待處理的 `visual_qa: pending` 或 `failed`。A4 列印沿用固定版型與 Script 檢查結果，預設通過。
 - 沒有待使用者確認的內容變更。
+- 已確認該 EP 對應的影片連結；新增或變更影片時，已取得正確的公開網址。
+- corrected Markdown 的 `category` 與 `site/worksheets.json` 該 EP 的 `category` 完全一致，且建置後每頁頁首均顯示此固定分類名稱。
 
 若任一條件未完成，停止發布並回報缺少的項目；不要以發布操作取代校正或驗證。
 
@@ -28,16 +30,16 @@ site/worksheets/EPxx/index.html
 site/worksheets/EPxx/fonts/
 ```
 
-新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
+新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。發布學習單時，必須同時檢查該 EP 的 `videoUrl`：若影片連結新增或變更，更新同一個 EP 項目的 `videoUrl`；若影片尚未提供，停止發布並回報，不以空白或未確認的網址代替。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
 
-準備完成後，再對 `site/worksheets/EPxx/index.html` 執行機械驗證與最小瀏覽器 QA，確認首頁連結可以開啟該學習單，且本機字型等相對資產可正常載入。
+準備完成後，對 `site/worksheets/EPxx/index.html` 執行機械驗證，並比對每頁頁首分類與 `site/worksheets.json`。若只是把已驗證的 HTML 與未變更的資產複製到既有路徑，不重做完整瀏覽器 QA；只確認首頁資料指向正確 EP、檔案存在且相對資產可解析。網站介面、路徑、共用資產或版型有變更時，才依工作流的觸發條件執行瀏覽器 QA。
 
 ## 3. 限定 Git 變更
 
 發布前檢視 Git 差異，只納入：
 
 - 本次指定的 `site/worksheets/EPxx/`。
-- 本次需要的 `site/worksheets.json` 項目。
+- 本次需要的 `site/worksheets.json` 項目，包含該 EP 的影片連結更新。
 - 使用者明確要求的共用網站檔案。
 
 不得使用涵蓋整個工作目錄的加入方式。內容 Markdown、報告、工具與模板可依其開發需要另行提交，但不因網站發布而自動納入。
@@ -66,8 +68,9 @@ git push origin publish-EPxx-YYYYMMDD-HHMM:main
 
 1. GitHub Pages 的 Actions 執行成功。
 2. 由該次部署結果提供的網站網址開啟首頁。
-3. 首頁可找到本次 EP，搜尋與分類仍可使用。
-4. 學習單頁面、字型、填答暫存、清除與列印功能正常。
+3. 首頁可找到本次 EP，且學習單網址可開啟。
+4. 本次 EP 的「影片」連結存在且可開啟，並指向本次確認的影片。
+5. 本次若修改首頁、搜尋、分類、共用資產、互動或列印功能，再檢查受影響功能；未修改的固定功能沿用既有 QA 基準。
 
 完成以上檢查後才能回報「已發布」。若 Actions 或線上檢查失敗，回報失敗位置與下一步，不把成功推送描述為成功發布。
 
@@ -79,4 +82,5 @@ git push origin publish-EPxx-YYYYMMDD-HHMM:main
 - 推送到 `origin/main` 的提交識別碼。
 - GitHub Pages Actions 結果。
 - 線上首頁與學習單頁面的檢查結果。
+- 本次 EP 影片連結的檢查結果。
 - 未納入發布的其他工作目錄變更。

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "file": "output/EP115/EP115.html",
+  "file": "site/worksheets/EP115/index.html",
   "machine_checks": "pass",
   "visual_qa": "passed",
   "errors": [],
@@ -11,8 +11,8 @@
   },
   "fingerprints": {
     "html": {
-      "path": "output/EP115/EP115.html",
-      "sha256": "c91dcc320fcedb22868ddbc906111ecb8dd01789b64103dd2cf496b1e87ce497"
+      "path": "site/worksheets/EP115/index.html",
+      "sha256": "96466b8c1de020af380192d28753732f64d90ee61718d8f67f19c8ebfa6174eb"
     }
   }
 }

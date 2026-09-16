@@ -3,7 +3,7 @@ id: EP62
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/1aiJe10Te2q2aUpIDVYNPJKmeu-GzvflEXLNX5c1T6Zg/edit
-series_title: 職場生存攻略
+category: 避開職場常見問題與陷阱
 hero_kicker: 這點薪水憑什麼要我拚？
 hero_title: 努力，有回報嗎？
 hero_accent: 有回報嗎？

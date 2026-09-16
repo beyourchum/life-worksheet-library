@@ -33,9 +33,16 @@
     {
       "type": "format",
       "location": "02 幫消費配上後續／範例",
-      "before": "範例以獨立小標題呈現，未明確說明它對應前面的四個填答欄位。",
-      "after": "標題改為「範例：幫消費配上後續」，並補充這是對應四個填答欄位的示範。",
-      "reason": "讓範例與第二區題目建立明確對應，不改變範例內容。"
+      "before": "四句範例集中在獨立小標題下，學生需要在題目與範例之間來回對照。",
+      "after": "將四句既有範例分別放在「我的支出是」、「具體動作」、「重複的可能」與「留下痕跡」下方，作為對應欄位的舉例。",
+      "reason": "降低作答時的對照負擔，保留原有四個填答欄位與範例內容。"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 讓消費在日常行動中累積複利",
+      "after": "category: 改善生活習慣、提升效率",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -46,7 +53,7 @@
     },
     "corrected": {
       "path": "content/EP112/EP112_corrected.md",
-      "sha256": "85625111dc788c236a738bae1b016a8b1de2405db3ff4f344cfb664f39ee2476"
+      "sha256": "be7d3e061dcfdc746d42ac3073af0ac48d47c8bfb6c4511a7fe88a53b57e7cd2"
     }
   }
 }

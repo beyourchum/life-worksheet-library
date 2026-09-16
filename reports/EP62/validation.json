@@ -1,24 +1,18 @@
 {
-  "status": "warning",
-  "file": "output/EP62/EP62.html",
+  "status": "pass",
+  "file": "site/worksheets/EP62/index.html",
   "machine_checks": "pass",
-  "visual_qa": "pending",
+  "visual_qa": "passed",
   "errors": [],
-  "warnings": [
-    {
-      "code": "visual-qa-pending",
-      "message": "瀏覽器與列印 QA 尚未全部完成。",
-      "fix": "完成工作流列出的響應式、互動與 A4 列印預覽檢查。"
-    }
-  ],
+  "warnings": [],
   "summary": {
     "pages": 2,
     "controls": 65
   },
   "fingerprints": {
     "html": {
-      "path": "output/EP62/EP62.html",
-      "sha256": "161a320a1d80855c567f5be9bcc266b908085db3229b88de3b0df3574c1c8221"
+      "path": "site/worksheets/EP62/index.html",
+      "sha256": "8c4caa6cd04d42cfee140e1e38e9deb31e4a6acbd119464ffa3a86f0e003ebb7"
     }
   }
 }

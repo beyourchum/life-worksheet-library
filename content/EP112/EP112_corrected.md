@@ -3,7 +3,7 @@ id: EP112
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/13tr0H_coCxwEZhDVAB5NoHaDJ1gnkBO4wbGWrBEHuY0/edit
-series_title: 讓消費在日常行動中累積複利
+category: 改善生活習慣、提升效率
 hero_kicker: 花大錢改善自己
 hero_title: 是投資，還是浪費？
 hero_accent: 投資
@@ -44,34 +44,27 @@ hero_question: 這筆支出要如何透過日常行動，真正帶來改變？
 為了不讓剛才的支出變成浪費，請幫這筆消費配上後續行為。這個行為要有具體動作、有重複的可能，也能留下痕跡。
 
 <!-- short-answer: 我的支出是 -->
+<!-- example: 到診所諮商 -->
 
 ### 具體動作
 
 這筆錢花完後，我要怎麼使用或照顧它？
+
+<!-- example: 開始寫情緒日記 -->
 
 <!-- short-answer: 我決定要 -->
 
 ### 重複的可能
 
 <!-- short-answer: 我會在每週的哪個時間點執行這件事 -->
+<!-- example: 每天睡前執行這件事 -->
 
 ### 留下痕跡
 
 一個月後，我要留下什麼證據，證明我真的有進步？
 
 <!-- short-answer: 一個月後，我希望 -->
-
-### 範例：幫消費配上後續
-
-以下示範如何對應上面的四個填答欄位。
-
-我的支出是：到診所諮商
-
-具體動作：我決定要開始寫情緒日記
-
-重複的可能：我會在每天睡前執行這件事。
-
-留下痕跡：一個月後，我希望可以更清楚地跟諮商師說我的感受。
+<!-- example: 更清楚地跟諮商師說我的感受 -->
 
 <!-- with-arrow -->
 > AI 來幫忙：請把下方提示語中的支出例子換成你的實際支出，再複製給 AI。

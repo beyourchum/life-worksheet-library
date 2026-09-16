@@ -3,7 +3,7 @@ id: EP114
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/1UdD4QY3EBUsz6y-TGHKaxW4QHAv9wrr-7T7CPzZftr4/edit
-series_title: 重新制定生活中的規則
+category: 處理情緒低落、焦慮和壓力
 hero_kicker: 寵愛但不寵壞「內在小孩」
 hero_title: 重養自己，最重要的四件事情
 hero_accent: 重養自己

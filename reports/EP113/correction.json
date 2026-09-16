@@ -50,6 +50,13 @@
       "before": "例子置於句內或段落末尾",
       "after": "使用 example 標記獨立換行，顯示為灰色「例如：」文字",
       "reason": "使用者指定的共通舉例呈現方式；不改變原有例子內容"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 學習理性求助",
+      "after": "category: 找到自己的特質與使用方式",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -60,7 +67,7 @@
     },
     "corrected": {
       "path": "content/EP113/EP113_corrected.md",
-      "sha256": "09396b7a489f7a2edc57de94e74ac2cc7c79f8bacd41ecf0de94c2a566561ff6"
+      "sha256": "412532db514630f7bca342dd4865a0b259fb0f64841149358b18548d542b785f"
     }
   }
 }

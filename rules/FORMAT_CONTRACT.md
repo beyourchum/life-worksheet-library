@@ -12,7 +12,7 @@ id: EP62
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/...
-series_title: 職場生存攻略
+category: 避開職場常見問題與陷阱
 hero_kicker: 這點薪水憑什麼要我拚？
 hero_title: 努力，有回報嗎？
 hero_accent: 有回報嗎？
@@ -24,13 +24,21 @@ hero_question: 工作薪水和付出不成比例，該繼續努力、溝通，�
 - `document_role`：學生版固定為 `student_worksheet`。
 - `audience`：實際目標客群，不得留白。
 - `source_document`：原生 Google Docs 連結或可定位來源的字串。
-- `series_title`：顯示在每頁頁首的系列名稱。
+- `category`：顯示在每頁頁首的網站分類名稱，只能使用下列六種固定值之一：
+  - `學會和別人相處、不互相傷害`
+  - `處理情緒低落、焦慮和壓力`
+  - `看懂社會為什麼這樣運作`
+  - `避開職場常見問題與陷阱`
+  - `找到自己的特質與使用方式`
+  - `改善生活習慣、提升效率`
+
+  不得填入單篇主題、學習目標或另創系列名稱。已列入 `site/worksheets.json` 的學習單，`category` 必須與該 EP 的網站分類完全一致。
 - `hero_kicker`：主視覺上方的小標。
 - `hero_title`：主視覺的大標題。
 - `hero_accent`：`hero_title` 中使用深綠色強調的完整文字，必須是大標題的一部分。
 - `hero_question`：大標題下方的一句核心提問。
 
-只使用這一組欄位與共用版型。舊欄位 `font_profile` 與舊註解 `section-note` 已移除；lint 會直接拒絕，避免退回不同樣式。
+只使用這一組欄位與共用版型。舊欄位 `series_title`、`font_profile` 與舊註解 `section-note` 已移除；lint 會直接拒絕，避免頁首誤用自訂文字或退回不同樣式。
 
 ## 最小可建置範例
 
@@ -42,7 +50,7 @@ id: EP63
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/...
-series_title: 職場生存攻略
+category: 避開職場常見問題與陷阱
 hero_kicker: 影片主題小標
 hero_title: 一句大標題
 hero_accent: 大標題
@@ -203,7 +211,7 @@ Markdown 表格（表頭後接以 `|` 分隔的連字號對齊列）目前不支
 ## HTML 輸出要求
 
 - 一律套用 `templates/worksheet.html` 與 `templates/worksheet.css` 的核准樣式，不提供簡化版或樣式切換欄位。
-- 頁首顯示 EP 編號、系列名稱與頁數；頁尾顯示 EP 編號及影片標題，不顯示頁碼。
+- 頁首顯示 EP 編號、固定網站分類名稱與頁數；頁尾顯示 EP 編號及影片標題，不顯示頁碼。
 - 主標題保留核准字體與深綠色強調，區塊編號使用深綠色。
 - 每道單選、複選與矩陣題都在題目右側顯示灰色作答模式。
 - 選項使用淺綠色塊，不以底線取代色塊；A4 列印亦同。
@@ -229,7 +237,7 @@ Markdown 表格（表頭後接以 `|` 分隔的連字號對齊列）目前不支
 ## HTML 驗證狀態
 
 - `machine_checks`：只依 Script 的機械檢查判定 `pass` 或 `fail`，不受視覺 QA 結果影響。
-- `visual_qa`：記錄人工檢查結果 `pending`、`passed` 或 `failed`；Script 不會自動執行瀏覽器與列印 QA。
+- `visual_qa`：記錄風險分級瀏覽器 QA 結果 `pending`、`passed` 或 `failed`；`passed` 的適用條件與檢查範圍依 [工作流](../workflow/WORKFLOW.md#5-validate)。A4 列印以固定版型及 Script 檢查為準，預設通過，不另要求人工列印 QA。
 - 整體 `status`：機械檢查或視覺 QA 任一失敗為 `fail`；機械通過但視覺待驗為 `warning`；兩者皆通過才為 `pass`。
 - `errors` 與 `warnings` 保留各項原因；視覺結果以 `visual-qa-failed` 或 `visual-qa-pending` 識別。
 
@@ -237,4 +245,4 @@ Markdown 表格（表頭後接以 `|` 分隔的連字號對齊列）目前不支
 
 `validate` 自動記錄 `fingerprints.html`，包含 HTML 的 `path` 與原始位元組 SHA-256 `sha256`；專案內路徑相對於專案根目錄。`check-report` 只讀取報告並比對檔案，回報 `current`（一致）、`stale`（變更或無法讀取）、`unverified`（缺少必要指紋）。只有 `current` 的結束碼為 0，其餘版本狀態為 1；報告無法解析為 2。
 
-版本一致不代表驗收通過，仍須檢查報告原有結果。HTML 指紋不涵蓋外連的本機字型等資產；資產改動後仍須重新 validate 與視覺 QA。模板或 corrected 更新後，先重新 build，再驗證；不能僅憑舊 HTML 指紋一致判定產物已更新。
+版本一致不代表驗收通過，仍須檢查報告原有結果。HTML 指紋不涵蓋外連的本機字型等資產；資產改動後仍須重新 validate，並依工作流觸發完整視覺 QA。模板或 corrected 更新後，先重新 build，再驗證；不能僅憑舊 HTML 指紋一致判定產物已更新。

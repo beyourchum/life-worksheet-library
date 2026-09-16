@@ -3,7 +3,7 @@ id: EP115
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/1uiOU4imivsga-E0DzXWZ2FzHY5pkyPGPPb6TlOps6wc/edit
-series_title: 認識自己為什麼卡關
+category: 看懂社會為什麼這樣運作
 hero_kicker: 「網路確診」之後
 hero_title: 正常由誰定義？
 hero_accent: 正常

@@ -234,6 +234,14 @@ p { margin: .6rem 0; }
 }
 .other-input { min-width: 7rem; flex: 1; padding: .3rem .2rem; }
 .choice:has(.other-input) { flex-wrap: wrap; }
+.example-note,
+.choice-example {
+  margin: .35rem 0 .75rem;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+.choice-example { grid-column: 1 / -1; margin-top: -.2rem; }
 
 .matrix { width: 100%; margin: .35rem 0 1.2rem; border: 0; }
 .matrix-row {
@@ -285,11 +293,14 @@ p { margin: .6rem 0; }
 }
 .closing-mark { color: var(--green); font-family: var(--font-heading); font-size: 2.2rem; line-height: 1; }
 .closing.prompt-intro { border-bottom: 0; }
+/* 相鄰提示框共用一條分隔線；若粗細規則衝突，保留前一框的細底線。 */
+.closing + .closing { border-top: 0; }
 .closing p {
   margin: 0;
   font-size: 1.05rem;
   line-height: 1.65;
 }
+.closing.no-arrow { grid-template-columns: 1fr; }
 .prompt-quote {
   margin: 1rem 0 0;
   padding: .15rem 0 .15rem 1rem;
@@ -297,6 +308,18 @@ p { margin: .6rem 0; }
 }
 .prompt-quote p { margin: 0 0 1rem; }
 .prompt-quote p:last-child, .prompt-quote ul:last-child { margin-bottom: 0; }
+.prompt-copy-button {
+  margin-top: .9rem;
+  padding: .45rem .7rem;
+  border: 1px solid var(--green);
+  border-radius: .3rem;
+  background: #fff;
+  color: var(--foreground);
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.prompt-copy-button:hover, .prompt-copy-button:focus-visible { background: var(--soft-green); }
 .page-footer {
   position: absolute;
   right: clamp(1.5rem, 5vw, 3.5rem);
@@ -336,6 +359,7 @@ p { margin: .6rem 0; }
     line-height: 1.28;
   }
   .toolbar { display: none; }
+  .prompt-copy-button { display: none; }
   .worksheet {
     max-width: none;
     margin: 0;
@@ -493,14 +517,41 @@ p { margin: .6rem 0; }
   </div>
 </div>
 <main class="worksheet" data-worksheet-id="EP115">
-<article class="page worksheet-page" aria-label="第 1 頁"><header class="page-meta"><strong>EP115</strong><span>認識自己為什麼卡關</span><span class="page-count">01 / 02</span></header><div class="worksheet-hero"><p class="hero-kicker">「網路確診」之後</p><h1><em>正常</em>由誰定義？</h1><div class="hero-copy"><p class="hero-question">面對不想處理的任務時，我卡在哪裡？</p></div></div><p><strong>學習目標：</strong> 認識自己為什麼卡關</p><div class="section-heading"><span class="section-number">01</span><h2>我卡住了！</h2></div><p>請勾選出你在面對不想面對的任務（例如寫期末報告、準備考試）時，最常出現的卡關狀態。</p><div class="question-heading"><h3>執行功能</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-1"><input id="choice-1" type="checkbox" name="group-1" value="目標很大，不知道怎麼變成任務（例：想把英文變好，卻不知道聽、說、讀、寫中需要加強哪一項，以及要做什麼）"><span>目標很大，不知道怎麼變成任務（例：想把英文變好，卻不知道聽、說、讀、寫中需要加強哪一項，以及要做什麼）</span></label><label class="choice" for="choice-2"><input id="choice-2" type="checkbox" name="group-1" value="知道任務是什麼，但不知道怎麼開始（例：知道要寫報告，卻不知道從哪裡著手）"><span>知道任務是什麼，但不知道怎麼開始（例：知道要寫報告，卻不知道從哪裡著手）</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-3"><input id="choice-3" type="checkbox" name="group-1" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-4" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>動機與狀態調節</h3><span class="answer-mode">可複選</span></div><p>我知道這件事情很重要，但我……</p><div class="choices choices-stacked"><label class="choice" for="choice-5"><input id="choice-5" type="checkbox" name="group-2" value="需要有人陪我一起做"><span>需要有人陪我一起做</span></label><label class="choice" for="choice-6"><input id="choice-6" type="checkbox" name="group-2" value="需要一點時間壓力"><span>需要一點時間壓力</span></label><label class="choice" for="choice-7"><input id="choice-7" type="checkbox" name="group-2" value="覺得太難了"><span>覺得太難了</span></label><label class="choice" for="choice-8"><input id="choice-8" type="checkbox" name="group-2" value="現在沒有急迫的需求（例如我知道英文很重要，但現在英文不好也活得很好，所以懶得真的去學）"><span>現在沒有急迫的需求（例如我知道英文很重要，但現在英文不好也活得很好，所以懶得真的去學）</span></label></div><div class="question-heading"><h3>感官負荷</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-9"><input id="choice-9" type="checkbox" name="group-3" value="總是會被其他東西吸引（例：其實沒有很想滑手機，但想透過滑手機逃避寫報告）"><span>總是會被其他東西吸引（例：其實沒有很想滑手機，但想透過滑手機逃避寫報告）</span></label><label class="choice" for="choice-10"><input id="choice-10" type="checkbox" name="group-3" value="旁邊只要有一點聲音，我就沒辦法專心（例：準備專心時，旁邊的所有聲音都會被放大，而且都很吸引我）"><span>旁邊只要有一點聲音，我就沒辦法專心（例：準備專心時，旁邊的所有聲音都會被放大，而且都很吸引我）</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-11"><input id="choice-11" type="checkbox" name="group-3" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-12" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><footer class="page-footer"><strong>EP115</strong><span>不是每個人都有一點ADHD｜「網路確診」之後，正常由誰定義？</span></footer></article><article class="page worksheet-page" aria-label="第 2 頁"><header class="page-meta"><strong>EP115</strong><span>認識自己為什麼卡關</span><span class="page-count">02 / 02</span></header><div class="section-heading"><span class="section-number">02</span><h2>我的新選擇</h2></div><div class="question-heading"><h3>我卡關的原因是</h3><span class="answer-mode">可複選</span></div><div class="choices"><label class="choice" for="choice-13"><input id="choice-13" type="checkbox" name="group-4" value="執行功能"><span>執行功能</span></label><label class="choice" for="choice-14"><input id="choice-14" type="checkbox" name="group-4" value="狀態調節"><span>狀態調節</span></label><label class="choice" for="choice-15"><input id="choice-15" type="checkbox" name="group-4" value="感官負荷"><span>感官負荷</span></label></div><div class="answer-field"><label for="short-16">最近一個月，我卡關的任務是：</label><input class="short-answer" id="short-16" type="text" autocomplete="off"></div><div class="answer-field"><label for="short-17">我目前的進度停在：</label><input class="short-answer" id="short-17" type="text" autocomplete="off"></div><div class="question-heading"><h3>停下來後，我通常會</h3><span class="answer-mode">可複選</span></div><div class="choices"><label class="choice" for="choice-18"><input id="choice-18" type="checkbox" name="group-5" value="滑手機"><span>滑手機</span></label><label class="choice" for="choice-19"><input id="choice-19" type="checkbox" name="group-5" value="發呆"><span>發呆</span></label><label class="choice" for="choice-20"><input id="choice-20" type="checkbox" name="group-5" value="出去玩"><span>出去玩</span></label><label class="choice" for="choice-21"><input id="choice-21" type="checkbox" name="group-5" value="睡覺"><span>睡覺</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-22"><input id="choice-22" type="checkbox" name="group-5" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-23" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><h3 class="subheading">我可以……</h3><p>請針對你卡關的原因，勾選適合的行動。</p><div class="question-heading"><h3>感官負荷</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-24"><input id="choice-24" type="checkbox" name="group-6" value="把手機開勿擾模式，放到拿不到的地方"><span>把手機開勿擾模式，放到拿不到的地方</span></label><label class="choice" for="choice-25"><input id="choice-25" type="checkbox" name="group-6" value="戴上耳塞，或換到安靜的地方"><span>戴上耳塞，或換到安靜的地方</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-26"><input id="choice-26" type="checkbox" name="group-6" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-27" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>動機調節</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-28"><input id="choice-28" type="checkbox" name="group-7" value="計時八分鐘，時間到了就停下來"><span>計時八分鐘，時間到了就停下來</span></label><label class="choice" for="choice-29"><input id="choice-29" type="checkbox" name="group-7" value="把桌面清空，從坐在桌子前面開始"><span>把桌面清空，從坐在桌子前面開始</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-30"><input id="choice-30" type="checkbox" name="group-7" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-31" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>執行功能</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-32"><input id="choice-32" type="checkbox" name="group-8" value="不要想著「寫報告」，先把作業要求貼進文件裡"><span>不要想著「寫報告」，先把作業要求貼進文件裡</span></label><label class="choice" for="choice-33"><input id="choice-33" type="checkbox" name="group-8" value="把題目改寫成三個小標題"><span>把題目改寫成三個小標題</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-34"><input id="choice-34" type="checkbox" name="group-8" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-35" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><footer class="page-footer"><strong>EP115</strong><span>不是每個人都有一點ADHD｜「網路確診」之後，正常由誰定義？</span></footer></article>
+<article class="page worksheet-page" aria-label="第 1 頁"><header class="page-meta"><strong>EP115</strong><span>看懂社會為什麼這樣運作</span><span class="page-count">01 / 02</span></header><div class="worksheet-hero"><p class="hero-kicker">「網路確診」之後</p><h1><em>正常</em>由誰定義？</h1><div class="hero-copy"><p class="hero-question">面對不想處理的任務時，我卡在哪裡？</p></div></div><p><strong>學習目標：</strong> 認識自己為什麼卡關</p><div class="section-heading"><span class="section-number">01</span><h2>我卡住了！</h2></div><p>請勾選出你在面對不想面對的任務（例如寫期末報告、準備考試）時，最常出現的卡關狀態。</p><div class="question-heading"><h3>執行功能</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-1"><input id="choice-1" type="checkbox" name="group-1" value="目標很大，不知道怎麼變成任務（例：想把英文變好，卻不知道聽、說、讀、寫中需要加強哪一項，以及要做什麼）"><span>目標很大，不知道怎麼變成任務（例：想把英文變好，卻不知道聽、說、讀、寫中需要加強哪一項，以及要做什麼）</span></label><label class="choice" for="choice-2"><input id="choice-2" type="checkbox" name="group-1" value="知道任務是什麼，但不知道怎麼開始（例：知道要寫報告，卻不知道從哪裡著手）"><span>知道任務是什麼，但不知道怎麼開始（例：知道要寫報告，卻不知道從哪裡著手）</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-3"><input id="choice-3" type="checkbox" name="group-1" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-4" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>動機與狀態調節</h3><span class="answer-mode">可複選</span></div><p>我知道這件事情很重要，但我……</p><div class="choices choices-stacked"><label class="choice" for="choice-5"><input id="choice-5" type="checkbox" name="group-2" value="需要有人陪我一起做"><span>需要有人陪我一起做</span></label><label class="choice" for="choice-6"><input id="choice-6" type="checkbox" name="group-2" value="需要一點時間壓力"><span>需要一點時間壓力</span></label><label class="choice" for="choice-7"><input id="choice-7" type="checkbox" name="group-2" value="覺得太難了"><span>覺得太難了</span></label><label class="choice" for="choice-8"><input id="choice-8" type="checkbox" name="group-2" value="現在沒有急迫的需求（例如我知道英文很重要，但現在英文不好也活得很好，所以懶得真的去學）"><span>現在沒有急迫的需求（例如我知道英文很重要，但現在英文不好也活得很好，所以懶得真的去學）</span></label></div><div class="question-heading"><h3>感官負荷</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-9"><input id="choice-9" type="checkbox" name="group-3" value="總是會被其他東西吸引（例：其實沒有很想滑手機，但想透過滑手機逃避寫報告）"><span>總是會被其他東西吸引（例：其實沒有很想滑手機，但想透過滑手機逃避寫報告）</span></label><label class="choice" for="choice-10"><input id="choice-10" type="checkbox" name="group-3" value="旁邊只要有一點聲音，我就沒辦法專心（例：準備專心時，旁邊的所有聲音都會被放大，而且都很吸引我）"><span>旁邊只要有一點聲音，我就沒辦法專心（例：準備專心時，旁邊的所有聲音都會被放大，而且都很吸引我）</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-11"><input id="choice-11" type="checkbox" name="group-3" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-12" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><footer class="page-footer"><strong>EP115</strong><span>不是每個人都有一點ADHD｜「網路確診」之後，正常由誰定義？</span></footer></article><article class="page worksheet-page" aria-label="第 2 頁"><header class="page-meta"><strong>EP115</strong><span>看懂社會為什麼這樣運作</span><span class="page-count">02 / 02</span></header><div class="section-heading"><span class="section-number">02</span><h2>我的新選擇</h2></div><div class="question-heading"><h3>我卡關的原因是</h3><span class="answer-mode">可複選</span></div><div class="choices"><label class="choice" for="choice-13"><input id="choice-13" type="checkbox" name="group-4" value="執行功能"><span>執行功能</span></label><label class="choice" for="choice-14"><input id="choice-14" type="checkbox" name="group-4" value="狀態調節"><span>狀態調節</span></label><label class="choice" for="choice-15"><input id="choice-15" type="checkbox" name="group-4" value="感官負荷"><span>感官負荷</span></label></div><div class="answer-field"><label for="short-16">最近一個月，我卡關的任務是：</label><input class="short-answer" id="short-16" type="text" autocomplete="off"></div><div class="answer-field"><label for="short-17">我目前的進度停在：</label><input class="short-answer" id="short-17" type="text" autocomplete="off"></div><div class="question-heading"><h3>停下來後，我通常會</h3><span class="answer-mode">可複選</span></div><div class="choices"><label class="choice" for="choice-18"><input id="choice-18" type="checkbox" name="group-5" value="滑手機"><span>滑手機</span></label><label class="choice" for="choice-19"><input id="choice-19" type="checkbox" name="group-5" value="發呆"><span>發呆</span></label><label class="choice" for="choice-20"><input id="choice-20" type="checkbox" name="group-5" value="出去玩"><span>出去玩</span></label><label class="choice" for="choice-21"><input id="choice-21" type="checkbox" name="group-5" value="睡覺"><span>睡覺</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-22"><input id="choice-22" type="checkbox" name="group-5" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-23" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><h3 class="subheading">我可以……</h3><p>請針對你卡關的原因，勾選適合的行動。</p><div class="question-heading"><h3>感官負荷</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-24"><input id="choice-24" type="checkbox" name="group-6" value="把手機開勿擾模式，放到拿不到的地方"><span>把手機開勿擾模式，放到拿不到的地方</span></label><label class="choice" for="choice-25"><input id="choice-25" type="checkbox" name="group-6" value="戴上耳塞，或換到安靜的地方"><span>戴上耳塞，或換到安靜的地方</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-26"><input id="choice-26" type="checkbox" name="group-6" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-27" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>動機調節</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-28"><input id="choice-28" type="checkbox" name="group-7" value="計時八分鐘，時間到了就停下來"><span>計時八分鐘，時間到了就停下來</span></label><label class="choice" for="choice-29"><input id="choice-29" type="checkbox" name="group-7" value="把桌面清空，從坐在桌子前面開始"><span>把桌面清空，從坐在桌子前面開始</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-30"><input id="choice-30" type="checkbox" name="group-7" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-31" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><div class="question-heading"><h3>執行功能</h3><span class="answer-mode">可複選</span></div><div class="choices choices-stacked"><label class="choice" for="choice-32"><input id="choice-32" type="checkbox" name="group-8" value="不要想著「寫報告」，先把作業要求貼進文件裡"><span>不要想著「寫報告」，先把作業要求貼進文件裡</span></label><label class="choice" for="choice-33"><input id="choice-33" type="checkbox" name="group-8" value="把題目改寫成三個小標題"><span>把題目改寫成三個小標題</span></label><div class="choice other-choice"><label class="choice-toggle" for="choice-34"><input id="choice-34" type="checkbox" name="group-8" value="其他（請填寫）"><span>其他</span></label><input class="other-input" id="other-35" type="text" aria-label="其他選項內容" autocomplete="off"></div></div><footer class="page-footer"><strong>EP115</strong><span>不是每個人都有一點ADHD｜「網路確診」之後，正常由誰定義？</span></footer></article>
 </main>
 <script>
 (() => {
   const worksheet = document.querySelector(".worksheet");
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   const controls = [...worksheet.querySelectorAll("input, textarea")];
+  const scoreTotal = worksheet.querySelector("[data-score-total]");
   const saveStatus = document.querySelector("[data-save-status]");
+  const copyPrompt = async (button) => {
+    const prompt = button.closest(".prompt-quote")?.querySelector("[data-prompt-text]")?.innerText.trim();
+    if (!prompt) return;
+    try {
+      await navigator.clipboard.writeText(prompt);
+    } catch (_) {
+      const helper = document.createElement("textarea");
+      helper.value = prompt;
+      helper.setAttribute("readonly", "");
+      helper.style.position = "fixed";
+      helper.style.opacity = "0";
+      document.body.append(helper);
+      helper.select();
+      document.execCommand("copy");
+      helper.remove();
+    }
+    const original = button.textContent;
+    button.textContent = "已複製";
+    window.setTimeout(() => { button.textContent = original; }, 1800);
+  };
+  const updateScore = () => {
+    if (!scoreTotal) return;
+    const total = [...worksheet.querySelectorAll("input[data-score]:checked")]
+      .reduce((sum, control) => sum + Number(control.dataset.score), 0);
+    scoreTotal.value = total ? String(total) : "";
+  };
   const save = () => {
     const state = Object.fromEntries(controls.map((control) => [
       control.id,
@@ -533,18 +584,23 @@ p { margin: .6rem 0; }
       if (control.type === "checkbox" || control.type === "radio") control.checked = false;
       else control.value = "";
     });
+    updateScore();
   };
   controls.forEach((control) => {
-    control.addEventListener("change", save);
+    control.addEventListener("change", () => { updateScore(); save(); });
     control.addEventListener("input", save);
   });
   document.querySelector("[data-print]").addEventListener("click", () => window.print());
+  document.querySelectorAll("[data-prompt-copy]").forEach((button) => {
+    button.addEventListener("click", () => { copyPrompt(button); });
+  });
   document.getElementById("clear-draft").addEventListener("click", () => {
     if (!window.confirm("確定要清除這個分頁中的所有作答嗎？")) return;
     clearDraft();
     saveStatus.textContent = "本次暫存已清除";
   });
   restore();
+  updateScore();
 })();
 </script>
 </body>

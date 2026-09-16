@@ -19,13 +19,21 @@ REQUIRED_METADATA = (
     "document_role",
     "audience",
     "source_document",
-    "series_title",
+    "category",
     "hero_kicker",
     "hero_title",
     "hero_accent",
     "hero_question",
 )
-REMOVED_METADATA = ("font_profile",)
+REMOVED_METADATA = ("font_profile", "series_title")
+APPROVED_CATEGORIES = (
+    "學會和別人相處、不互相傷害",
+    "處理情緒低落、焦慮和壓力",
+    "看懂社會為什麼這樣運作",
+    "避開職場常見問題與陷阱",
+    "找到自己的特質與使用方式",
+    "改善生活習慣、提升效率",
+)
 CHOICE_RE = re.compile(r"^- \[ \] (.+)$")
 H1_RE = re.compile(r"^# (?!#)(.+)$")
 H2_RE = re.compile(r"^## (?!#)(\d{2})\s+(.+)$")
@@ -188,6 +196,13 @@ def lint_text(text, source="<memory>"):
             "line": 1,
             "message": "學生版的 document_role 必須是 student_worksheet。",
             "fix": "修正角色，或把非學生版內容移到獨立檔案。",
+        })
+    if metadata.get("category") and metadata["category"] not in APPROVED_CATEGORIES:
+        errors.append({
+            "code": "invalid-category",
+            "line": 1,
+            "message": "category 不是網站現行的固定分類名稱。",
+            "fix": "依 FORMAT_CONTRACT.md 改用六種核准分類之一；不要填入單篇主題、學習目標或自訂系列名稱。",
         })
     if metadata.get("id") and metadata["id"] != metadata["id"].upper():
         errors.append({
@@ -479,7 +494,7 @@ def render_document(text):
 
     def render_page(page_lines, page_number):
         nonlocal group_index
-        page_label = metadata["series_title"]
+        page_label = metadata["category"]
         video_title = re.sub(r"^Ep\.\d+\s*", "", title, flags=re.IGNORECASE)
         parts = [f'<article class="page worksheet-page" aria-label="第 {page_number} 頁">']
         parts.append(

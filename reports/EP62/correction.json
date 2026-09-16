@@ -127,6 +127,13 @@
       "before": "工作不只是在交換薪水，也可以一起整理：我投入了什麼、得到了什麼，以及什麼是我不能長期接受的。",
       "after": "> 工作不只是在交換薪水，也可以一起整理：我投入了什麼、得到了什麼，以及什麼是我不能長期接受的。",
       "reason": "文字與目前來源一致，僅沿用引用標記。"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 職場生存攻略",
+      "after": "category: 避開職場常見問題與陷阱",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -137,7 +144,7 @@
     },
     "corrected": {
       "path": "content/EP62/EP62_corrected.md",
-      "sha256": "edaef8fecba7c9b5b89ab958832fc7620eb6b16a1903f04d289999250a06d5e3"
+      "sha256": "cf8f5d304b0f93b4dd7693c14ec27260e9de28a94acd7800ca86ad8f983cc84f"
     }
   }
 }

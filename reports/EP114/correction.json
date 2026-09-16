@@ -43,6 +43,13 @@
       "before": "箭頭提示框中的情境描述",
       "after": "重新回應法底下的一般說明文字與獨立灰色舉例",
       "reason": "使用者指定的呈現格式"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 重新制定生活中的規則",
+      "after": "category: 處理情緒低落、焦慮和壓力",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -53,7 +60,7 @@
     },
     "corrected": {
       "path": "content/EP114/EP114_corrected.md",
-      "sha256": "0656cf7691a2b67900acd3920ae9d81b3c23f170569fcc466259e366eb59d9f4"
+      "sha256": "893e036d317ab69f6a46fa0519f1b481cca91757d59e374c5e77f4f18389d06d"
     }
   }
 }

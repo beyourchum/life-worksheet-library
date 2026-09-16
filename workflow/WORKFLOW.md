@@ -13,7 +13,7 @@ correct：Script 格式檢查 + 模型內容校正
   ↓
 build：Script 產生 HTML
   ↓
-validate：Script 驗證 + 最小視覺 QA
+validate：Script 驗證 + 風險分級 QA
 ```
 
 ## 1. 準備資料
@@ -72,6 +72,8 @@ python tools/worksheet.py lint content/EPxx/EPxx_corrected.md
 
 Script 回報格式契約的 `fail` 與 `warning`。可確定不影響意思的格式問題直接修正，包括標題層級、題型標記、選項標記、編號、分頁標記與自由填答標記。
 
+`category` 必須使用格式契約列出的固定網站分類名稱；已發布或已列入網站清單的 EP，另與 `site/worksheets.json` 的 `category` 逐字比對。單篇主題、學習目標或自訂系列名稱不得放入頁首。
+
 ### 3.2 內容校正
 
 模型只檢查明確性、可執行性與客群適切性，不核對教材目標。依規則可直接修改的項目直接修正；可能改變題意、題型或選項內容的項目列為待確認。
@@ -124,15 +126,32 @@ Script 檢查：
 - A4 列印設定、列印時隱藏工具列及頁面分隔。
 - 外部網路資產、本機資產是否缺漏及未解析模板標記。
 
-最小瀏覽器 QA 檢查：
+每次建置都執行 Script 驗證。瀏覽器 QA 採風險分級，不因 corrected 文字或題目內容更新而自動重做完整檢查。A4 列印由固定版型與 Script 的列印設定檢查作為驗收依據，預設視為通過，不再要求人工開啟列印預覽或另外確認。
+
+符合以下全部條件時，可沿用固定版型的既有 QA 基準：
+
+- `templates/worksheet.html`、`templates/worksheet.css`、建置或互動程式及字型資產未變更。
+- 本份 HTML 使用既有支援的題型與最多兩頁的固定結構。
+- Script 驗證通過，且沒有未解析標記、缺漏資產或其他新的 warning。
+- 內容沒有異常長標題、長選項、密集題目或其他明顯可能造成溢出的版面風險。
+
+沿用基準時，只需檢查本份內容可能受影響的區塊；沒有版面風險時，不另開瀏覽器重驗固定的互動、RWD、黑白列印與共用樣式。
+
+出現以下任一情況時，才執行完整瀏覽器 QA：
+
+- 修改 HTML 範本、CSS、字型、本機資產、建置程式、互動程式或列印設定。
+- 新增或修改題型、控制項、頁面結構或共用網站介面。
+- Script 出現新 warning，或內容長度、分頁密度可能造成溢出、截斷或不合理斷行。
+- 首次建立 QA 基準，或既有基準已知失效。
+
+完整瀏覽器 QA 檢查：
 
 - 320 px、390 px 與桌面寬度沒有水平溢出。
-- A4 列印預覽沒有內容被截斷，頁數符合需求。
 - 黑白列印仍能辨認層級。
 - 填答空間、標題斷行與字體顯示合理。
 - 填答後重新載入仍可還原本次暫存，且清除功能可移除所有作答。
 
-Script 無法證明實際互動與版面品質，因此瀏覽器與列印 QA 尚未全部完成時，validation 報告必須保留 `visual_qa: pending`。
+`visual_qa: passed` 表示依本節完成適用的風險分級瀏覽器 QA；A4 列印不另設人工待確認狀態。無法確認基準適用性、應做的局部檢查尚未完成，或觸發完整瀏覽器 QA 而尚未完成時，validation 報告保留 `visual_qa: pending`。
 
 ## 6. 交付
 
@@ -155,4 +174,4 @@ python tools/worksheet.py check-report reports/EPxx/validation.json
 
 ## 7. 網站發布
 
-網站發布是交付後的獨立操作，不包含在 `normalize`、`correct`、`build` 或 `validate` 的預設流程內。只有使用者另外明確要求發布時，才依 [`GITHUB_PUBLISHING.md`](GITHUB_PUBLISHING.md) 執行；完成 HTML 建置與驗證不等於已發布上線。
+網站發布是交付後的獨立操作，不包含在 `normalize`、`correct`、`build` 或 `validate` 的預設流程內。只有使用者另外明確要求發布時，才依 [`GITHUB_PUBLISHING.md`](GITHUB_PUBLISHING.md) 執行。發布學習單時，必須一併確認並更新該 EP 的影片連結；完成 HTML 建置與驗證不等於已發布上線。

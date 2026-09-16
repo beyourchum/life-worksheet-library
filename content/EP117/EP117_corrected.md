@@ -3,7 +3,7 @@ id: EP117
 document_role: student_worksheet
 audience: 台灣大專生
 source_document: https://docs.google.com/document/d/1l9ebmnWw-tHnV_cTstzw6PhNvjko329x5jgX9ux5o1g/edit
-series_title: 校園生活攻略
+category: 學會和別人相處、不互相傷害
 hero_kicker: 當你覺得「這不公平」
 hero_title: 如何質疑規則又承擔責任？
 hero_accent: 質疑規則又承擔責任

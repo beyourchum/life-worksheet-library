@@ -213,12 +213,31 @@ class WorksheetTests(unittest.TestCase):
 
     def test_legacy_style_metadata_fails(self):
         text = SOURCE.read_text(encoding="utf-8").replace(
-            "series_title: 職場生存攻略\n",
-            "series_title: 職場生存攻略\nfont_profile: ep62\n",
+            "category: 避開職場常見問題與陷阱\n",
+            "category: 避開職場常見問題與陷阱\nfont_profile: ep62\n",
         )
         result = worksheet.lint_text(text, "legacy-style.md")
         self.assertEqual("fail", result["status"])
         self.assertIn("removed-style-metadata", {item["code"] for item in result["errors"]})
+
+    def test_legacy_series_title_fails(self):
+        text = SOURCE.read_text(encoding="utf-8").replace(
+            "category: 避開職場常見問題與陷阱\n",
+            "series_title: 職場生存攻略\n",
+        )
+        result = worksheet.lint_text(text, "legacy-series-title.md")
+        self.assertEqual("fail", result["status"])
+        self.assertIn("missing-metadata", {item["code"] for item in result["errors"]})
+        self.assertIn("removed-style-metadata", {item["code"] for item in result["errors"]})
+
+    def test_custom_category_fails(self):
+        text = SOURCE.read_text(encoding="utf-8").replace(
+            "category: 避開職場常見問題與陷阱",
+            "category: 職場生存攻略",
+        )
+        result = worksheet.lint_text(text, "custom-category.md")
+        self.assertEqual("fail", result["status"])
+        self.assertIn("invalid-category", {item["code"] for item in result["errors"]})
 
     def test_removed_section_note_fails(self):
         text = SOURCE.read_text(encoding="utf-8").replace(
@@ -244,7 +263,7 @@ id: EP63
 document_role: student_worksheet
 audience: 台灣大專生
 source_document: local-test
-series_title: 職場生存攻略
+category: 避開職場常見問題與陷阱
 hero_kicker: 新影片的小標
 hero_title: 新主題，有選擇嗎？
 hero_accent: 有選擇嗎？
@@ -265,7 +284,7 @@ hero_question: 我可以怎麼選？
         result = worksheet.lint_text(text, "EP63_corrected.md")
         self.assertEqual("pass", result["status"])
         _, _, body, controls, pages = worksheet.render_document(text)
-        self.assertIn("<strong>EP63</strong><span>職場生存攻略</span>", body)
+        self.assertIn("<strong>EP63</strong><span>避開職場常見問題與陷阱</span>", body)
         self.assertIn('<h1>新主題，<em>有選擇嗎？</em></h1>', body)
         self.assertIn("<footer class=\"page-footer\"><strong>EP63</strong><span>新影片完整標題</span></footer>", body)
         self.assertNotIn("EP62", body)

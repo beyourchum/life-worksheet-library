@@ -3,7 +3,7 @@ id: EP113
 document_role: student_worksheet
 audience: 台灣大專生與初入職場者
 source_document: https://docs.google.com/document/d/1BzTcHLd8xnUHJmZq2f8-e_WGqsmUeNTY4Slj8eSsjOg/edit
-series_title: 學習理性求助
+category: 找到自己的特質與使用方式
 hero_kicker: 神諭、科學、AI，誰有資格定義理性？
 hero_title: 卡住時，如何理性求助？
 hero_accent: 理性求助

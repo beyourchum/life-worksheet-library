@@ -22,6 +22,13 @@
       "before": "例子與選項分列，對應關係不夠直接。",
       "after": "將既有例子附於對應選項後，並統一標點與語句。",
       "reason": "降低閱讀時來回對照的負擔，未新增內容或選項。"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 認識自己為什麼卡關",
+      "after": "category: 看懂社會為什麼這樣運作",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -32,7 +39,7 @@
     },
     "corrected": {
       "path": "content/EP115/EP115_corrected.md",
-      "sha256": "cc5d16931c4f2368b9d2e20e15dfd442372f27221e64b6ca388c10ba91259686"
+      "sha256": "a279a5ccc19de7084a882719551a128e9b77675d3f7407e7d1e8221cdda454c5"
     }
   }
 }

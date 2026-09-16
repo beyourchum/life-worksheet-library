@@ -64,6 +64,13 @@
       "before": "僅有精簡學習目標",
       "after": "具體學習目標與完整使用說明",
       "reason": "使用者選擇比照 EP62 的完整前言版本"
+    },
+    {
+      "type": "format",
+      "location": "frontmatter／每頁頁首",
+      "before": "series_title: 校園生活攻略",
+      "after": "category: 學會和別人相處、不互相傷害",
+      "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
     }
   ],
   "needs_confirmation": [],
@@ -74,7 +81,7 @@
     },
     "corrected": {
       "path": "content/EP117/EP117_corrected.md",
-      "sha256": "9c5995d4a213a5855af76d942e894185586454b219c6f15b1e4574136185767b"
+      "sha256": "34d5a69cfa32d32af740c6ead09d165aa9ae9e61f97c38f72a9d2fcee80bfaf9"
     }
   }
 }
