@@ -27,7 +27,7 @@
       <form id="search-form" class="search-form" role="search">
         <label id="search-label" for="search">你最近在煩惱什麼？</label>
         <div class="search-control"><input id="search" type="search" placeholder="輸入一個問題或關鍵字" autocomplete="off" aria-describedby="search-hint"><button id="search-button" type="submit" aria-label="搜尋"><span>SEARCH</span><span aria-hidden="true">→</span></button></div>
-        <p id="search-hint">例如：拖延、焦慮、職場、規則、找不到方向。搜尋內容不會被儲存。</p>
+        <p id="search-hint">可輸入多個詞，例如：工作 焦慮、拖延、規則。搜尋內容不會被儲存。</p>
       </form>
     </section>
     <section class="filter-section" aria-labelledby="filter-title">
@@ -38,7 +38,7 @@
       <div class="result-heading"><div class="section-label"><span>03</span><h2 id="results-title">INDEX / 內容索引</h2></div><p id="status" role="status" aria-live="polite">正在載入內容…</p></div>
       <div class="list-header" aria-hidden="true"><span>EP.</span><span>QUESTION / 問題</span><span>DETAIL</span><span>OPEN</span></div>
       <div id="results" class="results"></div>
-      <p id="empty" class="empty" hidden>沒有找到符合的內容。<br><button id="reset-button" type="button">清除搜尋與篩選 →</button></p>
+      <p id="empty" class="empty" hidden><span id="empty-message">找不到符合的內容，請換個說法或改選主題。</span><br><button id="reset-button" type="button">清除搜尋與篩選 →</button></p>
       <noscript><p class="empty">請啟用 JavaScript，以搜尋影片與學習單。</p></noscript>
     </section>
   </main>
