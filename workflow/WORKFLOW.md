@@ -171,7 +171,7 @@ Script 檢查：
 
 `publish` 是完整工作流中位於 Validate 之後的發布階段，但只有使用者明確指定 `publish` 或要求發布時才執行。未指定時，Validate 完成後直接進入交付，不推送遠端。
 
-發布前，校正與驗證報告必須是目前版本，內容確認、機械檢查及適用的風險分級視覺 QA 均已完成。發布時主動從權威資料表以 EP 編號唯一配對影片連結，不要求使用者重複提供表內已有的網址；資料來源、失敗條件、Git 變更範圍、GitHub Pages 推送及線上驗證依 [`GITHUB_PUBLISHING.md`](GITHUB_PUBLISHING.md#影片連結配對規則) 執行。
+發布前，校正與驗證報告必須是目前版本，內容確認、機械檢查及適用的風險分級視覺 QA 均已完成。發布時主動從權威資料表以 EP 編號唯一配對影片連結，不要求使用者重複提供表內已有的網址；新增或變更 Index 搜尋資料時，依 [`FORMAT_CONTRACT.md` 的搜尋資料規則](../rules/FORMAT_CONTRACT.md#公開網站-index-的搜尋資料) 更新使用者問題詞及排名案例。資料來源、失敗條件、Git 變更範圍、GitHub Pages 推送及線上驗證依 [`GITHUB_PUBLISHING.md`](GITHUB_PUBLISHING.md#影片連結配對規則) 執行。
 
 完成條件：指定 EP 已更新至公開網站，GitHub Pages 部署成功，首頁、學習單及影片連結均已完成線上驗證。若部署或線上驗證失敗，保留失敗狀態並回報，不得描述為已發布。
 
@@ -193,4 +193,5 @@ python tools/worksheet.py check-report reports/EPxx/validation.json
 - lint、build、validate 結果。
 - 視覺 QA 是否完成。
 - 是否執行 `publish`；若有，列出 GitHub Pages 部署、線上頁面及影片連結的驗證結果。
+- 若更新 Index 搜尋資料，列出受影響 EP、新增或修改的排名案例、實際排名結果及待確認的競爭結果。
 - Google Docs 是否維持未修改；若有明確要求的例外，列出同步結果。

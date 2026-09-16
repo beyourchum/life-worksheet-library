@@ -43,9 +43,13 @@ site/assets/fonts/worksheet/
 
 新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。發布學習單時，依本文件的「影片連結配對規則」主動查詢並比對該 EP 的 `videoUrl`：若影片連結新增或變更，更新同一個 EP 項目的 `videoUrl`；若資料表尚未提供可確認的影片，停止發布並回報，不以空白或未確認的網址代替。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
 
+新增 EP 或修改既有 EP 的標題、摘要、核心問題或 Index 搜尋資料時，發布前依 [`FORMAT_CONTRACT.md` 的搜尋資料規則](../rules/FORMAT_CONTRACT.md#公開網站-index-的搜尋資料) 更新該 EP 的 `searchTerms`。搜尋詞從最終 `corrected.md`、標題、摘要與學習單內容整理，不讀取或核對資料庫的情境問題與引導目標。一般搜尋詞可直接更新並在完成回報列出；若同一使用者問題可能明確指向多篇內容、需要決定第一名，或搜尋詞超出影片實際處理範圍，先列為待確認。
+
+每個受影響 EP 至少新增或更新兩個排名案例，涵蓋簡短查詢及自然語句。所有案例必須使用正式搜尋演算法通過後才能推送。只修改影片網址、學習單 HTML 或不影響 Index 內容的資產時，不必重寫既有搜尋詞或案例。
+
 準備完成後，對 `site/worksheets/EPxx/index.html` 執行機械驗證，並比對每頁頁首分類與 `site/worksheets.json`。所有 EP 共用 `site/assets/fonts/worksheet/`，學習單頁面引用 `../../assets/fonts/worksheet/`，不得在各 EP 目錄重複複製字型。若只是把已驗證的 HTML 與未變更的資產複製到既有路徑，不重做完整瀏覽器 QA，也不重驗其他未受影響的 EP；只確認首頁資料指向正確 EP、檔案存在且相對資產可解析。只有網站介面、路徑、共用視覺資產、版型、renderer 或瀏覽器互動有變更時，才依工作流的觸發條件執行完整瀏覽器 QA。
 
-發布前執行全套自動測試；Index 分類規則由 `tests/test_site.py` 檢查，不以人工逐筆確認取代。
+發布前執行全套自動測試；Index 分類及搜尋資料契約與正式演算法排名案例由 `tests/test_site.py` 檢查，不以人工逐筆確認取代。測試環境必須提供 Node.js，供 Python 測試呼叫瀏覽器共用的搜尋模組。
 
 ```powershell
 python -m unittest discover -s tests -p "test*.py"
