@@ -51,11 +51,12 @@ h1 { margin: 0; font-family: var(--display); font-size: var(--display-size); fon
 h1 span { display: block; width: max-content; max-width: 100%; }
 h1 span:nth-child(2) { margin-left: 8%; }
 h1 span:last-child { color: var(--accent); }
-.hero-deck { align-self: end; max-width: 20em; padding-bottom: .4em; font-size: var(--step-0); line-height: 1.7; }
+.hero-deck {　align-self: end;  max-width: 20em;  padding-bottom: .4em;  font-size: var(--step-0);  line-height: 1.7;}
 @media (min-width: 901px) {
   .hero-deck {
+    width: 24em;
+    max-width: none;
     transform: translateX(-80px);
-    max-width: 22em;
   }
 }
 .search-section, .filter-section { display: grid; grid-template-columns: 2fr 10fr; border-bottom: 1px solid var(--ink); }
