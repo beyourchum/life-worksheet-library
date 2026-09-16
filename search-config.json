@@ -1,0 +1,38 @@
+{
+  "ignoredQueryWords": ["我", "你", "他", "她", "它", "的", "了", "在", "是", "被", "把", "讓", "跟", "很", "和", "與", "或", "也", "都", "想", "要", "該", "怎麼", "如何", "為什麼", "可以", "最近", "一個", "是不是", "有", "太"],
+  "relatedMatch": {
+    "minimumGroups": 2,
+    "minimumCoverage": 0.6,
+    "minimumScore": 60,
+    "strongSingleMinimumLength": 2,
+    "strongSingleMinimumScore": 120
+  },
+  "synonymGroups": [
+    ["工作", "職場", "上班"],
+    ["辭職", "離職", "換工作"],
+    ["薪水", "薪資", "薪酬"],
+    ["焦慮", "壓力", "緊張"],
+    ["拖延", "沒動力", "無法開始", "難以開始"],
+    ["溝通", "表達", "說不出口"],
+    ["ADHD", "注意力", "執行功能"],
+    ["失敗", "挫折"],
+    ["規則", "規範", "校規"],
+    ["運動", "健身"],
+    ["算命", "占卜", "塔羅", "星座"]
+  ],
+  "weights": {
+    "exactTitle": 100,
+    "exactSearchTerm": 80,
+    "title": 50,
+    "summary": 20,
+    "category": 5,
+    "ep": 5,
+    "searchTerms": {
+      "situations": 45,
+      "feelings": 38,
+      "decisions": 55,
+      "phrases": 40,
+      "concepts": 30
+    }
+  }
+}
