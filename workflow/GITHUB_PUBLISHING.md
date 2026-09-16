@@ -8,6 +8,16 @@
 
 公開網站來源位於 `site/`。發布時將這個目錄獨立轉成 GitHub 遠端 `main` 分支的根目錄；開發專案的其他目錄不會出現在公開網站分支。
 
+影片連結的權威來源是 Google Sheets「[煩惱影片查找系統－資料庫](https://docs.google.com/spreadsheets/d/1H8BpNhd5LytJfUue3AnFXwe2fujVZWEPdFFlr8oXP34/edit?gid=0#gid=0)」的 `工作表1`。發布指定 EP 時，主動查詢此表，不要求使用者另外提供已存在於表內的影片網址，也不修改試算表。
+
+### 影片連結配對規則
+
+1. 讀取 `工作表1` 的 A 欄 `EP` 與 D 欄 `影片標題(影片連結)`；網址取自 D 欄儲存格的超連結目標，不以匯出 CSV 後只剩下的顯示文字代替。
+2. 將指定的 `EPxx` 與 A 欄值都正規化為去除 `EP` 前綴及前導零的整數後配對，例如 `EP01` 對應 `01`、`EP117` 對應 `117`。EP 編號是唯一配對鍵，不以標題或關鍵字猜測。
+3. 必須只得到一列，且 D 欄含有效的公開 `https://` 影片網址。找不到、找到多列、超連結缺漏或網址不是公開影片時，停止發布並回報資料表中的實際狀態；不得沿用未經本輪確認的舊 `videoUrl`，也不得改用標題近似配對。
+4. 以資料表取得的網址比對 `site/worksheets.json` 同一 EP 的 `videoUrl`。不同時只更新該欄；相同時不製造無效差異。D 欄顯示的影片標題可用來交叉檢查 EP，但不取代 EP 唯一配對。
+5. 更新後確認 `videoUrl` 可開啟，且目的頁是資料表該列所指的影片，再繼續發布前測試。
+
 ## 1. 發布前檢查
 
 每個指定 EP 必須符合以下條件：
@@ -16,7 +26,7 @@
 - lint、build 與機械驗證通過。
 - 已依 [`WORKFLOW.md`](WORKFLOW.md#5-validate) 完成適用的風險分級瀏覽器 QA；沒有待處理的 `visual_qa: pending` 或 `failed`。A4 列印沿用固定版型與 Script 檢查結果，預設通過。
 - 沒有待使用者確認的內容變更。
-- 已確認該 EP 對應的影片連結；新增或變更影片時，已取得正確的公開網址。
+- 已依「影片連結配對規則」從權威資料表取得並確認該 EP 的公開影片網址。
 - corrected Markdown 的 `category` 與 `site/worksheets.json` 該 EP 的 `category` 完全一致，且建置後每頁頁首均顯示此固定分類名稱。
 - 首頁 Index 符合 [`FORMAT_CONTRACT.md` 的分類顯示規則](../rules/FORMAT_CONTRACT.md#公開網站-index-的分類顯示)，且網站自動測試通過。
 
@@ -31,7 +41,7 @@ site/worksheets/EPxx/index.html
 site/assets/fonts/worksheet/
 ```
 
-新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。發布學習單時，必須同時檢查該 EP 的 `videoUrl`：若影片連結新增或變更，更新同一個 EP 項目的 `videoUrl`；若影片尚未提供，停止發布並回報，不以空白或未確認的網址代替。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
+新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。發布學習單時，依本文件的「影片連結配對規則」主動查詢並比對該 EP 的 `videoUrl`：若影片連結新增或變更，更新同一個 EP 項目的 `videoUrl`；若資料表尚未提供可確認的影片，停止發布並回報，不以空白或未確認的網址代替。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
 
 準備完成後，對 `site/worksheets/EPxx/index.html` 執行機械驗證，並比對每頁頁首分類與 `site/worksheets.json`。所有 EP 共用 `site/assets/fonts/worksheet/`，學習單頁面引用 `../../assets/fonts/worksheet/`，不得在各 EP 目錄重複複製字型。若只是把已驗證的 HTML 與未變更的資產複製到既有路徑，不重做完整瀏覽器 QA，也不重驗其他未受影響的 EP；只確認首頁資料指向正確 EP、檔案存在且相對資產可解析。只有網站介面、路徑、共用視覺資產、版型、renderer 或瀏覽器互動有變更時，才依工作流的觸發條件執行完整瀏覽器 QA。
 
