@@ -71,17 +71,24 @@
       "before": "series_title: 校園生活攻略",
       "after": "category: 學會和別人相處、不互相傷害",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "AI 幫幫忙前沒有最後提醒句，且沒有箭頭標記。",
+      "after": "加入 final-reminder 提醒句，並在既有 AI 提示前加入 with-arrow，名稱統一為 AI 幫幫忙。",
+      "reason": "依共通收尾規則補齊。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP117/EP117_source.md",
-      "sha256": "05c147c6bbd9b450c42a92ede3cfc7883fb3c341b2a81c22b5c71434fcd68abb"
+      "sha256": "0f3f702e83a628e541b8f9ff1ef7b77fca2ea39d0412194c9bf4e0ea8306aa87"
     },
     "corrected": {
       "path": "content/EP117/EP117_corrected.md",
-      "sha256": "34d5a69cfa32d32af740c6ead09d165aa9ae9e61f97c38f72a9d2fcee80bfaf9"
+      "sha256": "0d44d18c1d8f0b01bf13c1e124269d631f16c9c5fc70f0c5272b7be9ee2d3243"
     }
   }
 }

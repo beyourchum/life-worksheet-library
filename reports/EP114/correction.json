@@ -50,17 +50,31 @@
       "before": "series_title: 重新制定生活中的規則",
       "after": "category: 處理情緒低落、焦慮和壓力",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "format",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "提醒句沒有 final-reminder 標記，AI 提示沒有箭頭標記。",
+      "after": "提醒句使用 final-reminder，AI 提示前加入 with-arrow，名稱統一為 AI 幫幫忙。",
+      "reason": "依共通提示樣式規則整理。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP114/EP114_source.md",
-      "sha256": "c4370491fa3ba4e83d9dc4f60f8c61c5f4cd208cfdf74f47ddecacda8a213433"
+      "sha256": "4c00002809a9855a232cfb594a19fa8d495e68760c4ff305cf83e128ae5b5233"
     },
     "corrected": {
       "path": "content/EP114/EP114_corrected.md",
-      "sha256": "893e036d317ab69f6a46fa0519f1b481cca91757d59e374c5e77f4f18389d06d"
+      "sha256": "3a4264a553793c37391776a0c5e92d2fe5f5f47c489dbc7c4dda1379b6c9cac8"
     }
   }
 }

@@ -57,17 +57,31 @@
       "before": "series_title: 學習理性求助",
       "after": "category: 找到自己的特質與使用方式",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒",
+      "before": "AI 幫幫忙前沒有最後提醒句。",
+      "after": "加入 final-reminder 標記與提醒句；既有 AI 提示名稱統一為 AI 幫幫忙。",
+      "reason": "依共通收尾規則補齊。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP113/EP113_source.md",
-      "sha256": "5c2b4b39ae6e90cfbf19d9fc28c36f1adf5b740b06c5b88e2f2890e6f296e467"
+      "sha256": "98ed173eb3099b0045eb7c4f3d89ccda17a439c0e108e1d732c9f1f960a6c3b7"
     },
     "corrected": {
       "path": "content/EP113/EP113_corrected.md",
-      "sha256": "412532db514630f7bca342dd4865a0b259fb0f64841149358b18548d542b785f"
+      "sha256": "45c0ab5d76ff3e6875cfc8bdb4b05024f74bba4144607a9901c85a50023dc70b"
     }
   }
 }

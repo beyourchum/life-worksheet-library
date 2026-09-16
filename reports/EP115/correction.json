@@ -29,17 +29,31 @@
       "before": "series_title: 認識自己為什麼卡關",
       "after": "category: 看懂社會為什麼這樣運作",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "文件結尾沒有提醒句或 AI 協助。",
+      "after": "加入 final-reminder、AI 幫幫忙與可複製提示語。",
+      "reason": "依共通收尾規則補齊。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP115/EP115_source.md",
-      "sha256": "9c98b8318cb06896868a63116b59a3c93d9648b5d4acb496e213b748e4cefc81"
+      "sha256": "61d7e923440829d740a384b652ef6583dd6bde8bca931355e0d53dae79c351d2"
     },
     "corrected": {
       "path": "content/EP115/EP115_corrected.md",
-      "sha256": "a279a5ccc19de7084a882719551a128e9b77675d3f7407e7d1e8221cdda454c5"
+      "sha256": "d1571378860cb5aae4d390a957b9ff0c73a63a460815e0037c592a9bea46dc97"
     }
   }
 }

@@ -134,17 +134,24 @@
       "before": "series_title: 職場生存攻略",
       "after": "category: 避開職場常見問題與陷阱",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "僅有結語引用文字。",
+      "after": "加入 final-reminder 標記、AI 幫幫忙提示與可複製的提示語引用框。",
+      "reason": "依共通收尾規則補齊提醒句與 AI 協助。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP62/EP62_source.md",
-      "sha256": "586410333c57cc5f9e61aa94de63d7c299444ad412cacb54d5d2f838fb1ee5ac"
+      "sha256": "39e2556a057205b592f838d04816c654ee28b8638d84836a0676dbacb5043581"
     },
     "corrected": {
       "path": "content/EP62/EP62_corrected.md",
-      "sha256": "cf8f5d304b0f93b4dd7693c14ec27260e9de28a94acd7800ca86ad8f983cc84f"
+      "sha256": "0bc61027defa52bb2ebdfc598c5c21a8a6587d9bd010adef3dc074262f5bdd05"
     }
   }
 }

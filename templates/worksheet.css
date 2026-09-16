@@ -278,13 +278,14 @@ p { margin: .6rem 0; }
   align-items: start;
   margin: 2rem 0 0;
   padding: 1.15rem 1rem;
-  border-top: .35rem solid var(--foreground);
+  border-top: 1px solid var(--foreground);
   border-bottom: 1px solid var(--foreground);
 }
+.closing.final-reminder { border-top-width: .35rem; }
 .closing-mark { color: var(--green); font-family: var(--font-heading); font-size: 2.2rem; line-height: 1; }
 .closing.prompt-intro { border-bottom: 0; }
-/* 相鄰提示框共用一條分隔線；若粗細規則衝突，保留前一框的細底線。 */
-.closing + .closing { border-top: 0; }
+/* 相鄰提示框共用一條細分隔線；最後提醒仍保留粗上框線。 */
+.closing + .closing:not(.final-reminder) { border-top: 0; }
 .closing p {
   margin: 0;
   font-size: 1.05rem;

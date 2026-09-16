@@ -43,17 +43,31 @@
       "before": "series_title: 讓消費在日常行動中累積複利",
       "after": "category: 改善生活習慣、提升效率",
       "reason": "頁首固定顯示與網站清單一致的分類名稱，並改用可由 lint 驗證的 category 欄位。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒",
+      "before": "AI 幫幫忙前沒有最後提醒句。",
+      "after": "加入 final-reminder 標記與提醒句；既有 AI 提示名稱統一為 AI 幫幫忙。",
+      "reason": "依共通收尾規則補齊。"
     }
   ],
   "needs_confirmation": [],
   "fingerprints": {
     "source": {
       "path": "content/EP112/EP112_source.md",
-      "sha256": "452b3bb41c91ca984115accec9b081c92658de0b78feaa71d12337a152d4fd05"
+      "sha256": "79b8b7462d63be76874d9b8fc7fd5ab1075c3cf7b2d5d3d25aacc149da91fe4d"
     },
     "corrected": {
       "path": "content/EP112/EP112_corrected.md",
-      "sha256": "be7d3e061dcfdc746d42ac3073af0ac48d47c8bfb6c4511a7fe88a53b57e7cd2"
+      "sha256": "04bc16a174c840a372010fd09497de015eeb7a017474eec97f0cb30347de00f6"
     }
   }
 }

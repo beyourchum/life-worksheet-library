@@ -15,7 +15,7 @@ Google Docs 是人工來源，Markdown 是 Script 輸入。HTML 由固定題型 
 
 ## 後果
 
-- 工作流只有 `normalize`、`correct`、`build`、`validate`。
+- 完整工作流包含 `normalize`、`correct`、`build`、`validate` 與需明確指定的 `publish`；未指定 operation 時不自動發布。
 - 可能改變題意、題型或選項的修正仍需人工確認。
-- Script 通過不代表實際頁面沒有溢出；正式發布前仍需最小視覺與列印 QA。
+- Script 通過不代表實際頁面沒有溢出；交付或發布前須依工作流完成適用的風險分級視覺 QA。A4 列印由固定版型與 Script 檢查驗收，不另要求人工列印 QA。
 - Google Sheets 可繼續作搜尋索引，但不是校正依據。

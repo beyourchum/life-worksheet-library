@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文結構與 frontmatter",
+      "before": "來源使用來源欄位、未編號段落與手動底線填答。",
+      "after": "加入學生版必要 frontmatter，整理為三個連續 H2 區塊，並將填答處改為 short-answer／long-answer 標記。",
+      "reason": "符合 FORMAT_CONTRACT.md，讓建置工具能可靠呈現既有內容。"
+    },
+    {
+      "type": "content",
+      "location": "兩處範例情境",
+      "before": "但是你你記得老師好像有說過",
+      "after": "但是你記得老師好像有說過",
+      "reason": "修正重複字，不改變原意。"
+    },
+    {
+      "type": "content",
+      "location": "提出疑問／表達想法",
+      "before": "搜集資料",
+      "after": "蒐集資料",
+      "reason": "統一台灣繁體中文用字。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "format",
+      "location": "範例與結尾",
+      "before": "範例集中在填寫區外，且沒有統一收尾。",
+      "after": "範例改為各填寫區下方的灰字 example 標記；移除與填答欄提示重複的欄位標籤；並加入 final-reminder、AI 幫幫忙與提示語。",
+      "reason": "依範例位置與共通收尾規則整理。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP108/EP108_source.md",
+      "sha256": "07e047e87d9a0d8b9cdbfb67b3da792bae470b656bfbcb9724611e340b0395a9"
+    },
+    "corrected": {
+      "path": "content/EP108/EP108_corrected.md",
+      "sha256": "43c6b5a17edf1f0c75b253fdfaa43f061403ee94ac84585e0bdf282f465d4a2f"
+    }
+  }
+}

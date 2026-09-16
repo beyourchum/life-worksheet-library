@@ -1,6 +1,6 @@
 # GitHub 網站發布流程
 
-本文件只說明已完成校正、建置與驗證的學習單如何發布到 GitHub Pages。內容處理與驗收依 [`WORKFLOW.md`](WORKFLOW.md)；未收到明確發布要求時，不執行本流程。
+本文件說明完整工作流中 `publish` 階段的執行方式。內容處理與驗收依 [`WORKFLOW.md`](WORKFLOW.md)；只有使用者明確指定 `publish` 或要求發布時才執行本階段。
 
 ## 發布入口
 
@@ -18,6 +18,7 @@
 - 沒有待使用者確認的內容變更。
 - 已確認該 EP 對應的影片連結；新增或變更影片時，已取得正確的公開網址。
 - corrected Markdown 的 `category` 與 `site/worksheets.json` 該 EP 的 `category` 完全一致，且建置後每頁頁首均顯示此固定分類名稱。
+- 首頁 Index 符合 [`FORMAT_CONTRACT.md` 的分類顯示規則](../rules/FORMAT_CONTRACT.md#公開網站-index-的分類顯示)，且網站自動測試通過。
 
 若任一條件未完成，停止發布並回報缺少的項目；不要以發布操作取代校正或驗證。
 
@@ -27,12 +28,18 @@
 
 ```text
 site/worksheets/EPxx/index.html
-site/worksheets/EPxx/fonts/
+site/assets/fonts/worksheet/
 ```
 
 新增學習單或首頁資訊需要變更時，同步更新 `site/worksheets.json`。發布學習單時，必須同時檢查該 EP 的 `videoUrl`：若影片連結新增或變更，更新同一個 EP 項目的 `videoUrl`；若影片尚未提供，停止發布並回報，不以空白或未確認的網址代替。既有 EP 只更新對應項目，不重排或改寫其他項目。只有本次明確包含網站介面調整時，才修改 `site/index.html` 或 `site/assets/`。
 
-準備完成後，對 `site/worksheets/EPxx/index.html` 執行機械驗證，並比對每頁頁首分類與 `site/worksheets.json`。若只是把已驗證的 HTML 與未變更的資產複製到既有路徑，不重做完整瀏覽器 QA；只確認首頁資料指向正確 EP、檔案存在且相對資產可解析。網站介面、路徑、共用資產或版型有變更時，才依工作流的觸發條件執行瀏覽器 QA。
+準備完成後，對 `site/worksheets/EPxx/index.html` 執行機械驗證，並比對每頁頁首分類與 `site/worksheets.json`。所有 EP 共用 `site/assets/fonts/worksheet/`，學習單頁面引用 `../../assets/fonts/worksheet/`，不得在各 EP 目錄重複複製字型。若只是把已驗證的 HTML 與未變更的資產複製到既有路徑，不重做完整瀏覽器 QA，也不重驗其他未受影響的 EP；只確認首頁資料指向正確 EP、檔案存在且相對資產可解析。只有網站介面、路徑、共用視覺資產、版型、renderer 或瀏覽器互動有變更時，才依工作流的觸發條件執行完整瀏覽器 QA。
+
+發布前執行全套自動測試；Index 分類規則由 `tests/test_site.py` 檢查，不以人工逐筆確認取代。
+
+```powershell
+python -m unittest discover -s tests -p "test*.py"
+```
 
 ## 3. 限定 Git 變更
 

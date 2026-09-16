@@ -118,6 +118,14 @@ class WorksheetTests(unittest.TestCase):
         self.assertIn("目前的薪水", body)
         self.assertIn("目前的工作內容", body)
 
+    def test_matrix_rejects_checkbox_rows(self):
+        text = SOURCE.read_text(encoding="utf-8").replace(
+            "- 目前的薪水\n", "- [ ] 目前的薪水\n", 1
+        )
+        result = worksheet.lint_text(text, "matrix-checkbox.md")
+        self.assertEqual("fail", result["status"])
+        self.assertIn("invalid-matrix-row", {item["code"] for item in result["errors"]})
+
     def test_build_rejects_invalid_matrix_without_overwriting_output(self):
         text = SOURCE.read_text(encoding="utf-8").replace(
             "- 目前的薪水\n", "- 目前的薪水\n請保留這段說明。\n", 1
@@ -211,6 +219,16 @@ class WorksheetTests(unittest.TestCase):
         self.assertEqual("fail", result["status"])
         self.assertIn("missing-metadata", {item["code"] for item in result["errors"]})
 
+    def test_unknown_frontmatter_field_fails(self):
+        text = SOURCE.read_text(encoding="utf-8").replace(
+            "category: 避開職場常見問題與陷阱\n",
+            "category: 避開職場常見問題與陷阱\ncustom_label: 不應被忽略\n",
+            1,
+        )
+        result = worksheet.lint_text(text, "unknown-metadata.md")
+        self.assertEqual("fail", result["status"])
+        self.assertIn("unsupported-metadata", {item["code"] for item in result["errors"]})
+
     def test_legacy_style_metadata_fails(self):
         text = SOURCE.read_text(encoding="utf-8").replace(
             "category: 避開職場常見問題與陷阱\n",
@@ -292,15 +310,30 @@ hero_question: 我可以怎麼選？
         self.assertEqual(1, pages)
 
     def test_marked_quote_keeps_arrow_and_prompt_quote_uses_separate_container(self):
-        text = SOURCE.read_text(encoding="utf-8") + "\n<!-- with-arrow -->\n> 小提醒：提示內容。\n"
+        text = SOURCE.read_text(encoding="utf-8") + "\n<!-- final-reminder -->\n> 提示內容。\n"
         body = worksheet.render_document(text)[2]
-        self.assertIn('<aside class="closing"><span class="closing-mark">→</span><p>小提醒：提示內容。</p></aside>', body)
+        self.assertIn('<aside class="closing final-reminder no-arrow"><p>提示內容。</p></aside>', body)
         prompt_text = SOURCE.read_text(encoding="utf-8") + (
-            "\n<!-- with-arrow -->\n> AI 溝通教練幫幫忙：操作說明。\n\n<!-- prompt-quote -->\n\n第一段。\n\n- 條件一\n- 條件二\n\n<!-- end-prompt-quote -->\n"
+            "\n<!-- with-arrow -->\n> AI 幫幫忙：操作說明。\n\n<!-- prompt-quote -->\n\n第一段。\n\n- 條件一\n- 條件二\n\n<!-- end-prompt-quote -->\n"
         )
         prompt_body = worksheet.render_document(prompt_text)[2]
         self.assertIn('<aside class="closing prompt-intro"><span class="closing-mark">→</span>', prompt_body)
         self.assertIn('<aside class="prompt-quote"><div class="prompt-copy-text" data-prompt-text><p>第一段。</p><ul><li>條件一</li><li>條件二</li></ul></div><button class="prompt-copy-button" type="button" data-prompt-copy>複製提示詞</button></aside>', prompt_body)
+
+    def test_reminder_and_example_conventions_are_enforced(self):
+        original = SOURCE.read_text(encoding="utf-8")
+        cases = (
+            ("<!-- with-arrow -->\n> 一般提醒。", "arrow-outside-ai-help"),
+            ("> 小提醒：保留內容。", "legacy-small-reminder-label"),
+            ("> AI 溝通教練幫幫忙：操作說明。", "nonstandard-ai-help-label"),
+            ("### 範例", "standalone-example-heading"),
+            ("<!-- final-reminder -->\n一般段落。", "orphan-quote-style-marker"),
+        )
+        for block, expected_code in cases:
+            with self.subTest(expected_code=expected_code):
+                result = worksheet.lint_text(original + f"\n{block}\n", "conventions.md")
+                self.assertEqual("fail", result["status"])
+                self.assertIn(expected_code, {item["code"] for item in result["errors"]})
 
     def test_untyped_h3_renders_as_subheading(self):
         text = SOURCE.read_text(encoding="utf-8").replace(
@@ -323,6 +356,32 @@ hero_question: 我可以怎麼選？
         self.assertEqual("fail", result["status"])
         self.assertIn("choice-without-type", {item["code"] for item in result["errors"]})
 
+    def test_unknown_directive_and_h4_fail(self):
+        original = SOURCE.read_text(encoding="utf-8")
+        for extra, expected_code in (
+            ("<!-- custom-widget: value -->", "unknown-directive"),
+            ("#### 不支援的標題", "unsupported-heading"),
+        ):
+            with self.subTest(extra=extra):
+                result = worksheet.lint_text(original + f"\n{extra}\n", "unsupported.md")
+                self.assertEqual("fail", result["status"])
+                self.assertIn(expected_code, {item["code"] for item in result["errors"]})
+
+    def test_prompt_quote_markers_and_content_are_strict(self):
+        original = SOURCE.read_text(encoding="utf-8")
+        cases = (
+            ("<!-- prompt-quote -->\n正文。", "unclosed-prompt-quote"),
+            ("<!-- end-prompt-quote -->", "orphan-prompt-quote-end"),
+            ("<!-- prompt-quote -->\n<!-- end-prompt-quote -->", "empty-prompt-quote"),
+            ("<!-- prompt-quote -->\n<!-- prompt-quote -->\n正文。\n<!-- end-prompt-quote -->", "nested-prompt-quote"),
+            ("<!-- prompt-quote -->\n### 題目\n<!-- end-prompt-quote -->", "unsupported-prompt-quote-content"),
+        )
+        for block, expected_code in cases:
+            with self.subTest(expected_code=expected_code):
+                result = worksheet.lint_text(original + f"\n{block}\n", "prompt-quote.md")
+                self.assertEqual("fail", result["status"])
+                self.assertIn(expected_code, {item["code"] for item in result["errors"]})
+
     def test_more_than_two_pages_fails(self):
         text = SOURCE.read_text(encoding="utf-8") + "\n<!-- page-break -->\n"
         result = worksheet.lint_text(text, "three-pages.md")
@@ -340,6 +399,12 @@ hero_question: 我可以怎麼選？
         self.assertNotRegex(body, r'<textarea id="short-\d+"')
         self.assertRegex(body, r'<textarea id="long-\d+" rows="4"></textarea>')
 
+    def test_redundant_label_before_answer_field_fails(self):
+        text = SOURCE.read_text(encoding="utf-8") + "\n**情境：**\n\n<!-- long-answer: 請寫下情境 -->\n"
+        result = worksheet.lint_text(text, "redundant-answer-label.md")
+        self.assertEqual("fail", result["status"])
+        self.assertIn("redundant-answer-label", {item["code"] for item in result["errors"]})
+
     def test_local_asset_check_follows_linked_css(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
@@ -356,6 +421,11 @@ hero_question: 我可以怎麼選？
             font_path.parent.mkdir()
             font_path.write_bytes(b"font")
             self.assertEqual([], worksheet.find_missing_local_assets(html_path, ["styles/worksheet.css"]))
+
+            css_path.write_text('@import url("https://example.com/external.css");', encoding="utf-8")
+            external = set()
+            self.assertEqual([], worksheet.find_missing_local_assets(html_path, ["styles/worksheet.css"], external))
+            self.assertEqual({"https://example.com/external.css"}, external)
 
     def test_build_and_validate(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -389,6 +459,20 @@ hero_question: 我可以怎麼選？
             self.assertEqual("current", worksheet.check_report_versions(result)["status"])
             output.write_text(built_text + "\n", encoding="utf-8")
             self.assertEqual("stale", worksheet.check_report_versions(result)["status"])
+
+            invalid_candidates = (
+                (built_text.replace('class="page-count"', 'class="missing-page-count"', 1), "page-header-content"),
+                (built_text.replace('<footer class="page-footer"><strong>EP62</strong>', '<footer class="page-footer"><strong>EP99</strong>', 1), "page-footer-content"),
+                (built_text.replace('querySelectorAll("input, textarea")', 'querySelectorAll("textarea")', 1), "session-storage"),
+                (built_text.replace("<body>", '<body><form action="save">', 1), "answer-form"),
+                (built_text.replace("</script>", "new WebSocket('wss://example.com');</script>", 1), "network-upload"),
+                (built_text.replace("</style>", ".remote { background: url(https://example.com/image.png); }</style>", 1), "external-css-assets"),
+            )
+            for candidate, expected_code in invalid_candidates:
+                with self.subTest(expected_code=expected_code):
+                    result = worksheet.validate_html(candidate, "candidate.html", visual_qa="passed")
+                    self.assertEqual("fail", result["status"])
+                    self.assertIn(expected_code, {item["code"] for item in result["errors"]})
 
             for machine_ok in (True, False):
                 candidate = built_text if machine_ok else built_text.replace('lang="zh-Hant"', 'lang="en"')
@@ -437,11 +521,12 @@ hero_question: 我可以怎麼選？
         self.assertIn('data-score-total readonly', body)
 
     def test_with_arrow_marker_adds_the_prompt_arrow(self):
-        text = SOURCE.read_text(encoding="utf-8") + "\n> 分數解讀。\n\n<!-- with-arrow -->\n> 小提醒。\n"
+        text = SOURCE.read_text(encoding="utf-8") + "\n> 分數解讀。\n\n<!-- final-reminder -->\n> 最後提醒。\n\n<!-- with-arrow -->\n> AI 幫幫忙：請協助整理。\n"
         self.assertEqual("pass", worksheet.lint_text(text)["status"])
         body = worksheet.render_document(text)[2]
         self.assertIn('<aside class="closing no-arrow"><p>分數解讀。</p></aside>', body)
-        self.assertIn('<aside class="closing"><span class="closing-mark">→</span><p>小提醒。</p></aside>', body)
+        self.assertIn('<aside class="closing final-reminder no-arrow"><p>最後提醒。</p></aside>', body)
+        self.assertIn('<aside class="closing"><span class="closing-mark">→</span><p>AI 幫幫忙：請協助整理。</p></aside>', body)
 
 
     def test_time_labels_preserve_task_meaning(self):

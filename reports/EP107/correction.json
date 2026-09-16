@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文",
+      "before": "原稿使用底線、手寫方框與中文編號",
+      "after": "改為格式契約的 frontmatter、H2/H3、選項與 short-answer/long-answer 標記",
+      "reason": "符合格式契約並支援 HTML 建置"
+    },
+    {
+      "type": "content",
+      "location": "我和他的連結／興趣題",
+      "before": "目前還沒有，但我最近對 ______ 有一點點好奇",
+      "after": "目前還沒有，但我最近對某個領域有一點好奇，並新增領域填寫欄",
+      "reason": "移除手動底線，保留原有填答意圖"
+    },
+    {
+      "type": "content",
+      "location": "行動題與自由填答",
+      "before": "每週願意花 ______ 小時；小目標使用底線",
+      "after": "改為明確的每週投入時間欄與本週小目標長答欄",
+      "reason": "提高可執行性並符合格式契約"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "文件結尾沒有提醒句或 AI 協助。",
+      "after": "加入 final-reminder、AI 幫幫忙與可複製提示語。",
+      "reason": "依共通收尾規則補齊。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP107/EP107_source.md",
+      "sha256": "1bb8f28a8827661f124fee5dbceb59ed80d877aac90173dbad15528a840e56f7"
+    },
+    "corrected": {
+      "path": "content/EP107/EP107_corrected.md",
+      "sha256": "5218531f8db153227761cae112c3335982aa912f770f688882696d866851f102"
+    }
+  }
+}

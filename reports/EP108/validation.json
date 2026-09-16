@@ -1,6 +1,6 @@
 {
   "status": "warning",
-  "file": "output/EP112/EP112.html",
+  "file": "output/EP108/EP108.html",
   "machine_checks": "pass",
   "visual_qa": "pending",
   "errors": [],
@@ -12,13 +12,13 @@
     }
   ],
   "summary": {
-    "pages": 1,
-    "controls": 11
+    "pages": 2,
+    "controls": 14
   },
   "fingerprints": {
     "html": {
-      "path": "output/EP112/EP112.html",
-      "sha256": "3e7b268f8cb1d74fd433e3cbb252c5b666399fe1fc3e639b40e8114b861dd2cf"
+      "path": "output/EP108/EP108.html",
+      "sha256": "4f60d997faa6096b5783305ca96c48509789b701d66c1d6f852b7fb580ab472c"
     }
   }
 }

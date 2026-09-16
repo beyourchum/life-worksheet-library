@@ -25,6 +25,7 @@ REQUIRED_METADATA = (
     "hero_accent",
     "hero_question",
 )
+ALLOWED_METADATA = frozenset(REQUIRED_METADATA)
 REMOVED_METADATA = ("font_profile", "series_title")
 APPROVED_CATEGORIES = (
     "學會和別人相處、不互相傷害",
@@ -43,10 +44,13 @@ SHORT_RE = re.compile(r"^<!-- short-answer:\s*(.+?)\s*-->$")
 LONG_RE = re.compile(r"^<!-- long-answer:\s*(.+?)\s*-->$")
 SCORE_TOTAL_RE = re.compile(r"^<!-- score-total:\s*(.+?)\s*-->$")
 EXAMPLE_RE = re.compile(r"^<!-- example:\s*(.+?)\s*-->$")
+ANSWER_LABEL_RE = re.compile(r"^\*\*(.+?)[：:]\*\*$")
 PROMPT_QUOTE_START = "<!-- prompt-quote -->"
 PROMPT_QUOTE_END = "<!-- end-prompt-quote -->"
 WITH_ARROW_MARKER = "<!-- with-arrow -->"
+FINAL_REMINDER_MARKER = "<!-- final-reminder -->"
 CSS_URL_RE = re.compile(r"url\(\s*(['\"]?)(.*?)\1\s*\)", re.I)
+CSS_IMPORT_RE = re.compile(r"@import\s+(?:url\(\s*)?['\"]?([^'\"\s);]+)", re.I)
 
 
 def emit(payload, destination=sys.stdout):
@@ -182,6 +186,13 @@ def lint_text(text, source="<memory>"):
                 "message": f"缺少必要欄位：{field}。",
                 "fix": f"在 frontmatter 加入非空白的 {field}: value。",
             })
+    for field in sorted(set(metadata) - ALLOWED_METADATA - set(REMOVED_METADATA)):
+        errors.append({
+            "code": "unsupported-metadata",
+            "line": 1,
+            "message": f"frontmatter 含有格式契約未定義的欄位：{field}。",
+            "fix": f"刪除 {field}，或先在 FORMAT_CONTRACT.md、parser、lint、模板與測試中正式加入此欄位。",
+        })
     for field in REMOVED_METADATA:
         if field in metadata:
             errors.append({
@@ -227,8 +238,20 @@ def lint_text(text, source="<memory>"):
     h2_numbers = []
     page_breaks = 0
     matrix = None
+    prompt_quote = None
     current_question = None
     choice_groups = []
+
+    def redundant_answer_label(label, current_offset):
+        for candidate in reversed(lines[body_start:current_offset - 1]):
+            candidate = candidate.strip()
+            if candidate:
+                break
+        else:
+            return False
+        heading = ANSWER_LABEL_RE.match(candidate)
+        normalized_label = re.sub(r"^請(?:寫下|填寫)", "", label).strip(" ：:")
+        return bool(heading and heading.group(1).strip() == normalized_label)
 
     for offset, raw in enumerate(lines[body_start:], start=body_start + 1):
         line = raw.strip()
@@ -259,6 +282,87 @@ def lint_text(text, source="<memory>"):
                 "message": "發現以底線控制的填答空間。",
                 "fix": "改用 short-answer 或 long-answer 標記。",
             })
+
+        if line in (WITH_ARROW_MARKER, FINAL_REMINDER_MARKER):
+            next_line = next((item.strip() for item in lines[offset:] if item.strip()), "")
+            if not next_line.startswith("> "):
+                errors.append({
+                    "code": "orphan-quote-style-marker",
+                    "line": offset,
+                    "message": "提示樣式標記後沒有引用文字。",
+                    "fix": "將標記直接放在對應的 > 提示文字前，或移除標記。",
+                })
+            elif line == WITH_ARROW_MARKER and not is_ai_help_quote(next_line[2:].strip()):
+                errors.append({
+                    "code": "arrow-outside-ai-help",
+                    "line": offset,
+                    "message": "綠色箭頭只用於 AI 幫忙提示。",
+                    "fix": "移除 with-arrow；若這是最後提醒，改用 final-reminder 標記。",
+                })
+            continue
+
+        if line.startswith("> ") and re.match(r">\s*小提醒[：:]", line):
+            errors.append({
+                "code": "legacy-small-reminder-label",
+                "line": offset,
+                "message": "提醒句不顯示「小提醒：」字樣。",
+                "fix": "保留提醒內容並移除「小提醒：」；最後提醒前使用 final-reminder 標記。",
+            })
+        if line.startswith("> ") and is_ai_help_quote(line[2:].strip()) and not line.startswith("> AI 幫幫忙："):
+            errors.append({
+                "code": "nonstandard-ai-help-label",
+                "line": offset,
+                "message": "AI 協助提示必須使用「AI 幫幫忙：」名稱。",
+                "fix": "將 AI 溝通教練幫幫忙、AI 來幫忙等名稱統一改為 AI 幫幫忙：。",
+            })
+
+        if line == PROMPT_QUOTE_START:
+            if prompt_quote is not None:
+                errors.append({
+                    "code": "nested-prompt-quote",
+                    "line": offset,
+                    "message": "提示語引用框不可巢狀。",
+                    "fix": "先加入 <!-- end-prompt-quote -->，再開始下一個提示語引用框。",
+                })
+            else:
+                prompt_quote = {"line": offset, "items": 0}
+            continue
+        if line == PROMPT_QUOTE_END:
+            if prompt_quote is None:
+                errors.append({
+                    "code": "orphan-prompt-quote-end",
+                    "line": offset,
+                    "message": "找不到對應的 prompt-quote 起點。",
+                    "fix": "移除標記或補上 <!-- prompt-quote -->。",
+                })
+            else:
+                if prompt_quote["items"] == 0:
+                    errors.append({
+                        "code": "empty-prompt-quote",
+                        "line": prompt_quote["line"],
+                        "message": "提示語引用框沒有可複製的正文。",
+                        "fix": "在起訖標記之間加入提示語段落或無序清單。",
+                    })
+                prompt_quote = None
+            continue
+        if prompt_quote is not None:
+            if not line:
+                continue
+            if (
+                line.startswith("#")
+                or line == "<!-- page-break -->"
+                or CHOICE_RE.match(line)
+                or (line.startswith("<!--") and not EXAMPLE_RE.match(line))
+            ):
+                errors.append({
+                    "code": "unsupported-prompt-quote-content",
+                    "line": offset,
+                    "message": "提示語引用框內含有無法依契約建置的內容。",
+                    "fix": "引用框內只保留一般段落、無序清單與 example 標記；其他題型或標題移到引用框外。",
+                })
+            else:
+                prompt_quote["items"] += 1
+            continue
 
         if (
             matrix is not None
@@ -296,6 +400,13 @@ def lint_text(text, source="<memory>"):
         h3 = H3_RE.match(line)
         if h3:
             title = h3.group(1)
+            if re.fullmatch(r"(?:範例|例如)[：:]?", title.strip()):
+                errors.append({
+                    "code": "standalone-example-heading",
+                    "line": offset,
+                    "message": "範例不可另立標題或集中成獨立區塊。",
+                    "fix": "將既有範例拆到對應填寫區下方，改用 <!-- example: ... --> 灰字行。",
+                })
             if "（單選）" in title:
                 kind = "single"
             elif "（可複選）" in title:
@@ -347,7 +458,16 @@ def lint_text(text, source="<memory>"):
             matrix = None
             continue
         if matrix is not None and line.startswith("- "):
-            matrix["rows"] += 1
+            row_label = line[2:].strip()
+            if not row_label or CHOICE_RE.match(line):
+                errors.append({
+                    "code": "invalid-matrix-row",
+                    "line": offset,
+                    "message": "矩陣列必須是非空白的「- 列題目」，不可使用選項清單。",
+                    "fix": "將矩陣列改為 - 列題目；若原意是 checkbox 或 radio 選項，移到矩陣外並先確認題型。",
+                })
+            else:
+                matrix["rows"] += 1
             continue
 
         choice = CHOICE_RE.match(line)
@@ -377,6 +497,16 @@ def lint_text(text, source="<memory>"):
         if SCORE_TOTAL_RE.match(line):
             continue
 
+        answer = SHORT_RE.match(line) or LONG_RE.match(line)
+        if answer and redundant_answer_label(answer.group(1), offset):
+            errors.append({
+                "code": "redundant-answer-label",
+                "line": offset - 1,
+                "message": "填答欄前的粗體標籤與欄位提示重複。",
+                "fix": "保留填答欄的提示文字，移除前一個重複的粗體標籤。",
+            })
+            continue
+
         if line.startswith("<!-- section-note:"):
             errors.append({
                 "code": "removed-section-note",
@@ -390,16 +520,16 @@ def lint_text(text, source="<memory>"):
                 not SHORT_RE.match(line)
                 and not LONG_RE.match(line)
                 and not EXAMPLE_RE.match(line)
-                and line not in (PROMPT_QUOTE_START, PROMPT_QUOTE_END, WITH_ARROW_MARKER)
+                and line not in (PROMPT_QUOTE_START, PROMPT_QUOTE_END, WITH_ARROW_MARKER, FINAL_REMINDER_MARKER)
             ):
-                warnings.append({
+                errors.append({
                     "code": "unknown-directive",
                     "line": offset,
                     "message": "發現 Script 不處理的註解。",
                     "fix": "確認是否應加入 FORMAT_CONTRACT.md 或移除。",
                 })
         if line.startswith("####"):
-            warnings.append({
+            errors.append({
                 "code": "unsupported-heading",
                 "line": offset,
                 "message": "Script 只支援 H1 至 H3。",
@@ -412,6 +542,13 @@ def lint_text(text, source="<memory>"):
             "line": matrix["line"],
             "message": "矩陣題沒有結束標記。",
             "fix": "加入 <!-- end-matrix -->。",
+        })
+    if prompt_quote is not None:
+        errors.append({
+            "code": "unclosed-prompt-quote",
+            "line": prompt_quote["line"],
+            "message": "提示語引用框沒有結束標記。",
+            "fix": "加入 <!-- end-prompt-quote -->。",
         })
     if len(h1_lines) != 1:
         errors.append({
@@ -470,6 +607,10 @@ def lint_text(text, source="<memory>"):
 def render_inline(value):
     escaped = html.escape(value)
     return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", escaped)
+
+
+def is_ai_help_quote(value):
+    return bool(re.match(r"^AI\s*(?:溝通教練)?(?:幫幫忙|來幫忙)[：:]", value, re.I))
 
 
 def render_document(text):
@@ -710,11 +851,14 @@ def render_document(text):
                 continue
             if line.startswith("> "):
                 with_arrow = index > 0 and page_lines[index - 1].strip() == WITH_ARROW_MARKER
+                final_reminder = index > 0 and page_lines[index - 1].strip() == FINAL_REMINDER_MARKER
                 following_index = next_nonblank(index + 1)
                 closing_class = "closing prompt-intro" if (
                     following_index < len(page_lines)
                     and page_lines[following_index].strip() == PROMPT_QUOTE_START
                 ) else "closing"
+                if final_reminder:
+                    closing_class += " final-reminder"
                 if not with_arrow:
                     closing_class += " no-arrow"
                 parts.append(f'<aside class="{closing_class}">')
@@ -771,6 +915,7 @@ class ValidationParser(HTMLParser):
         self.has_clear_draft = False
         self.has_prompt_quote = False
         self.has_prompt_copy = False
+        self.has_form = False
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -800,7 +945,9 @@ class ValidationParser(HTMLParser):
             self.has_prompt_quote = True
         if tag == "button" and "data-prompt-copy" in attrs:
             self.has_prompt_copy = True
-        for attribute in ("src", "href"):
+        if tag == "form":
+            self.has_form = True
+        for attribute in ("src", "href", "action"):
             value = attrs.get(attribute, "")
             if value.startswith(("http://", "https://", "//")):
                 self.external_assets.append(value)
@@ -812,7 +959,7 @@ class ValidationParser(HTMLParser):
             self.label_depth -= 1
 
 
-def find_missing_local_assets(html_path, references):
+def find_missing_local_assets(html_path, references, external_assets=None):
     html_path = Path(html_path).resolve()
     queue = [(html_path.parent, reference) for reference in references]
     visited = set()
@@ -821,6 +968,8 @@ def find_missing_local_assets(html_path, references):
     while queue:
         base_directory, reference = queue.pop()
         if reference.startswith(("http://", "https://", "//", "data:")):
+            if external_assets is not None and reference.startswith(("http://", "https://", "//")):
+                external_assets.add(reference)
             continue
         reference_path = unquote(urlsplit(reference).path)
         if not reference_path:
@@ -841,6 +990,8 @@ def find_missing_local_assets(html_path, references):
             continue
         for match in CSS_URL_RE.finditer(stylesheet):
             queue.append((asset_path.parent, match.group(2).strip()))
+        for match in CSS_IMPORT_RE.finditer(stylesheet):
+            queue.append((asset_path.parent, match.group(1).strip()))
 
     return sorted(missing)
 
@@ -861,14 +1012,26 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
     require(parser.page_count >= 1, "page-container", "找不到 .page 容器。", "每頁使用一個 .page。")
     require(parser.page_count <= 2, "page-limit", f"HTML 有 {parser.page_count} 頁，超過兩頁上限。", "回到 Markdown 與模板檢查分頁配置後重新 build；若需刪減內容或調整頁數限制，先取得使用者確認。")
     require(len(parser.controls) >= 1, "controls", "找不到填答控制項。", "確認題型標記與 build 輸出。")
+    require(all(item["id"] for item in parser.controls), "control-ids", "有輸入控制項缺少 id，無法可靠暫存。", "使用共用 renderer 重新 build，確保每個控制項都有唯一 id。")
     unlabeled = [
         item for item in parser.controls
         if not item["aria"] and not item["nested_label"] and item["id"] not in parser.label_for
     ]
     require(not unlabeled, "control-labels", f"有 {len(unlabeled)} 個控制項沒有標籤。", "加入 label for 或 aria-label。")
+    inline_external_css = {
+        match.group(2).strip()
+        for match in CSS_URL_RE.finditer(text)
+        if match.group(2).strip().startswith(("http://", "https://", "//"))
+    }
+    inline_external_css.update(
+        match.group(1).strip()
+        for match in CSS_IMPORT_RE.finditer(text)
+        if match.group(1).strip().startswith(("http://", "https://", "//"))
+    )
+    external_css_assets = set(inline_external_css)
     require(not parser.external_assets, "external-assets", "HTML 含有外部網路資產。", "改用內嵌或專案內資產。")
     if source_path is not None:
-        missing_assets = find_missing_local_assets(source_path, parser.local_assets)
+        missing_assets = find_missing_local_assets(source_path, parser.local_assets, external_css_assets)
         if missing_assets:
             errors.append({
                 "code": "missing-local-assets",
@@ -876,32 +1039,82 @@ def validate_html(text, source, visual_qa="pending", source_path=None):
                 "files": missing_assets,
                 "fix": "還原列出的檔案，或修正 HTML／CSS 中的相對路徑。",
             })
-    require("sessionStorage" in text, "session-storage", "缺少 sessionStorage 暫存。", "使用共用 worksheet template。")
+    require(not external_css_assets, "external-css-assets", "HTML 或相依 CSS 含有外部網路資產。", "將 CSS、字型與圖片改為專案內資產。")
+    require(
+        'querySelectorAll("input, textarea")' in text
+        and "sessionStorage.setItem" in text
+        and "sessionStorage.getItem" in text,
+        "session-storage",
+        "缺少涵蓋所有輸入控制項的 sessionStorage 儲存或還原程式。",
+        "使用共用 worksheet template。",
+    )
     require(parser.has_clear_draft, "clear-draft", "缺少清除暫存按鈕。", "加入 id=\"clear-draft\" 或 data-clear 的按鈕。")
+    require(
+        "sessionStorage.removeItem" in text and "controls.forEach" in text,
+        "clear-draft-script",
+        "清除暫存功能未同時移除儲存資料與重設輸入控制項。",
+        "使用共用 worksheet template。",
+    )
     if parser.has_prompt_quote:
         require(parser.has_prompt_copy, "prompt-copy", "提示語引用框缺少複製按鈕。", "使用共用 renderer 重新 build。")
         require("navigator.clipboard.writeText" in text, "prompt-copy-script", "缺少提示詞複製功能。", "使用共用 worksheet template。")
     require(re.search(r"@page\s*\{[^}]*size:\s*A4\s+portrait", text, re.S | re.I), "a4-print", "缺少 A4 直式列印設定。", "在 CSS 設定 @page size: A4 portrait。")
     require("@media print" in text, "print-media", "缺少列印樣式。", "加入 @media print。")
     require(re.search(r"@media\s+print\s*\{.*?\.(?:worksheet-)?toolbar\s*\{\s*display:\s*none", text, re.S), "print-toolbar", "列印時未明確隱藏工具列。", "在 print media 中隱藏工具列。")
-    require('href="fonts/ep62-fonts.css"' in text and 'href="fonts/genki/swap/700.css"' in text, "approved-fonts", "缺少核准樣式的本機字型。", "使用共用 worksheet template 並保留兩個本機字型連結。")
+    require(
+        (
+            ('href="fonts/ep62-fonts.css"' in text and 'href="fonts/genki/swap/700.css"' in text)
+            or ('href="../../assets/fonts/worksheet/ep62-fonts.css"' in text and 'href="../../assets/fonts/worksheet/genki/swap/700.css"' in text)
+        ),
+        "approved-fonts",
+        "缺少核准樣式的本機字型。",
+        "使用共用 worksheet template 並保留兩個本機字型連結。",
+    )
     require('class="worksheet-hero"' in text and 'class="hero-kicker"' in text and 'class="hero-question"' in text, "approved-hero", "主視覺不是核准結構。", "補齊必要 frontmatter 後重新 build。")
     require('class="page-meta"' in text and 'class="section-number"' in text, "approved-hierarchy", "頁首或區塊編號不是核准結構。", "使用共用 renderer 重新 build。")
-    require('class="answer-mode"' in text, "answer-mode", "題目未顯示作答模式。", "為選項題加上（單選）或（可複選）後重新 build。")
+    if 'class="choices' in text or 'type="radio"' in text:
+        require('class="answer-mode"' in text, "answer-mode", "題目未顯示作答模式。", "為選項題加上（單選）或（可複選）後重新 build。")
     require('class="page-footer"' in text, "approved-footer", "缺少核准頁尾。", "使用共用 renderer 重新 build。")
+    page_headers = re.findall(
+        r'<header class="page-meta"><strong>([^<]+)</strong><span>([^<]+)</span>'
+        r'<span class="page-count">(\d{2}) / (\d{2})</span></header>',
+        text,
+    )
+    valid_headers = len(page_headers) == parser.page_count and all(
+        int(current) == index
+        and int(total) == parser.page_count
+        and html.unescape(category) in APPROVED_CATEGORIES
+        for index, (_, category, current, total) in enumerate(page_headers, start=1)
+    )
+    require(valid_headers, "page-header-content", "頁首未完整顯示 EP 編號、固定分類或正確頁數。", "使用共用 renderer 重新 build。")
+    page_footers = re.findall(
+        r'<footer class="page-footer"><strong>([^<]+)</strong><span>([^<]+)</span></footer>',
+        text,
+    )
+    header_ids = [html.unescape(item[0]) for item in page_headers]
+    footer_ids = [html.unescape(item[0]) for item in page_footers]
+    valid_footers = (
+        len(page_footers) == parser.page_count
+        and bool(header_ids)
+        and len(set(header_ids)) == 1
+        and footer_ids == header_ids
+        and all(html.unescape(title).strip() for _, title in page_footers)
+    )
+    require(valid_footers, "page-footer-content", "頁尾未在每頁完整顯示一致的 EP 編號與影片標題。", "使用共用 renderer 重新 build。")
     require(not re.search(r'<footer class="page-footer">(?:(?!</footer>).)*\d{2}\s*/\s*\d{2}', text, re.S), "footer-page-number", "頁尾不應顯示頁碼。", "頁碼只保留在頁首。")
     require('class="section-note"' not in text, "removed-section-note", "HTML 仍含已移除的標題旁描述。", "刪除 section-note 並重新 build。")
     require(re.search(r"@media\s+print\s*\{.*?height:\s*297mm", text, re.S), "fixed-a4-page", "列印頁面未固定為一張 A4。", "使用核准的 print CSS。")
     require(re.search(r"@media\s+print\s*\{.*?\.choice\s*\{[^}]*background:\s*var\(--soft-green\)", text, re.S), "print-choice-blocks", "列印選項未保留色塊。", "使用核准的 print CSS，選項不要改成底線樣式。")
     require("{{" not in text and "}}" not in text, "template-markers", "HTML 留有未解析模板標記。", "檢查 build 的模板替換。")
-    require(not re.search(r"\b(fetch|XMLHttpRequest|sendBeacon)\b", text), "network-upload", "HTML 含有可能傳送答案的網路 API。", "移除網路傳輸程式。")
+    require(not parser.has_form, "answer-form", "HTML 含有可能送出答案的 form。", "移除 form，輸入控制項只保留本機暫存。")
+    require(not re.search(r"\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource)\b", text), "network-upload", "HTML 含有可能傳送答案的網路 API。", "移除網路傳輸程式。")
 
     machine_checks = "fail" if errors else "pass"
     if visual_qa == "pending":
         warnings.append({
             "code": "visual-qa-pending",
-            "message": "瀏覽器與列印 QA 尚未全部完成。",
-            "fix": "完成工作流列出的響應式、互動與 A4 列印預覽檢查。",
+            "message": "適用的風險分級瀏覽器 QA 尚未完成。",
+            "fix": "完成 WORKFLOW.md 規定的風險分級瀏覽器 QA。",
         })
     elif visual_qa == "failed":
         errors.append({

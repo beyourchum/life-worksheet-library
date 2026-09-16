@@ -1,0 +1,66 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文結構與 frontmatter",
+      "before": "來源使用舊欄位、未編號段落、行內方框選項與手動底線。",
+      "after": "加入學生版必要 frontmatter，整理為連續 H2 區塊，並將既有選項與填答處改為固定題型標記。",
+      "reason": "符合 FORMAT_CONTRACT.md，讓建置工具能可靠呈現既有內容。"
+    },
+    {
+      "type": "format",
+      "location": "為下一次做準備",
+      "before": "我能控制的／我不能控制的欄位以舉例文字呈現，沒有可填答標記。",
+      "after": "保留兩欄與原有例子，分別加入 short-answer 填答欄。",
+      "reason": "讓學生知道答案填寫位置，不改變原題要求。"
+    },
+    {
+      "type": "content",
+      "location": "面對失敗時，我習慣怎麼做？",
+      "before": "算了不管他",
+      "after": "算了，不管它",
+      "reason": "修正指稱與標點，不改變原意。"
+    },
+    {
+      "type": "content",
+      "location": "調整自己的標準",
+      "before": "對於線接對的我來說",
+      "after": "對於現在的我來說",
+      "reason": "修正常見文字辨識錯誤，使句意恢復清楚。"
+    },
+    {
+      "type": "content",
+      "location": "全文用字與標點",
+      "before": "表達的不夠清楚、搜集、／、其他＿＿＿",
+      "after": "表達得不夠清楚、蒐集、／、其他（請填寫）",
+      "reason": "統一語法、台灣繁體用字與自由填答格式。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "文件結尾沒有提醒句或 AI 協助。",
+      "after": "加入 final-reminder、AI 幫幫忙與可複製提示語。",
+      "reason": "依共通收尾規則補齊。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP109/EP109_source.md",
+      "sha256": "1be2ba47a414493dc7460f5eb77e3922fa105cf0d7bdbd35949a3145076bf0ea"
+    },
+    "corrected": {
+      "path": "content/EP109/EP109_corrected.md",
+      "sha256": "84e905032ea7c6d2f5a92039ad8a2e1fa76ee77a160dad5ae6c4305f0d07d853"
+    }
+  }
+}

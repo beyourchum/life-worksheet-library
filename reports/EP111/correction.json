@@ -1,0 +1,45 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文",
+      "before": "原稿使用空白、底線與混合的核取方塊標記。",
+      "after": "改用標準 H2／H3、單選、短答、長答、舉例與提示語引用框標記。",
+      "reason": "符合格式契約，且不改變既有題目、選項與填答內容。"
+    },
+    {
+      "type": "content",
+      "location": "全文",
+      "before": "部分題幹為片語或問句，且有錯字「間單」。",
+      "after": "改為明確的填寫或勾選指令；更正為「簡單」。",
+      "reason": "提高作答明確性與可執行性，不改變原意。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒",
+      "before": "AI 幫幫忙前沒有最後提醒句。",
+      "after": "加入 final-reminder 標記與提醒句；既有 AI 提示名稱統一為 AI 幫幫忙。",
+      "reason": "依共通收尾規則補齊。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP111/EP111_source.md",
+      "sha256": "f021045dcbcede74f17a20c902a9e52164ff67beff122011c1852b157d1d29ed"
+    },
+    "corrected": {
+      "path": "content/EP111/EP111_corrected.md",
+      "sha256": "ca2137cfdab7714b093a7dddd0b23490a40e950fc88a1c44e5d72493eefd0ab3"
+    }
+  }
+}

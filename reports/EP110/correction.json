@@ -1,0 +1,59 @@
+{
+  "status": "pass",
+  "audience": "台灣大專生與初入職場者",
+  "changes": [
+    {
+      "type": "format",
+      "location": "全文結構與 frontmatter",
+      "before": "舊版來源欄位、未編號段落與無法解析的方框標記。",
+      "after": "改用學生版必要 frontmatter、連續 H2 區塊與固定題型標記。",
+      "reason": "符合 FORMAT_CONTRACT.md，讓建置工具可可靠呈現既有內容。"
+    },
+    {
+      "type": "format",
+      "location": "我的現狀、我的阻力與本週小目標",
+      "before": "題目、方框選項與底線填答空間寫在同一行或分散段落中。",
+      "after": "保留原有選項，改成標明單選／可複選的題組；自由填答改為 short-answer 或 long-answer。",
+      "reason": "明確標示作答方式，並移除無法穩定建置的手動底線。"
+    },
+    {
+      "type": "content",
+      "location": "解決辦法（以足球為例）",
+      "before": "阻力、解決辦法與各類範例以交錯文字和底線呈現。",
+      "after": "每類阻力保留原有範例，依序呈現阻力短答與解決辦法長答。",
+      "reason": "不改變原題要求，讓學生清楚知道要填寫的內容與位置。"
+    },
+    {
+      "type": "content",
+      "location": "小提醒",
+      "before": "單一長句且使用兩個驚嘆號。",
+      "after": "分成短句並統一標點。",
+      "reason": "降低閱讀負擔，且不改變鼓勵語的原意。"
+    },
+    {
+      "type": "content",
+      "location": "學習目標與使用說明",
+      "before": "精簡學習目標，未提供使用說明",
+      "after": "具體學習目標與完整使用說明",
+      "reason": "依使用者要求，補齊學生完成學習單前所需的前言"
+    },
+    {
+      "type": "content",
+      "location": "結尾提醒與 AI 幫幫忙",
+      "before": "小提醒以一般引用文字呈現，沒有 AI 協助。",
+      "after": "移除小提醒標籤，加入 final-reminder、AI 幫幫忙與可複製提示語。",
+      "reason": "依共通收尾規則整理。"
+    }
+  ],
+  "needs_confirmation": [],
+  "fingerprints": {
+    "source": {
+      "path": "content/EP110/EP110_source.md",
+      "sha256": "528adf6b619ec19718c0c09a68ec7e28c859c69d58f74230aae5062b827488b9"
+    },
+    "corrected": {
+      "path": "content/EP110/EP110_corrected.md",
+      "sha256": "b09dac6f0bc030df60510e808e1508736a1268ced2952263668c16ceb92b9147"
+    }
+  }
+}
