@@ -55,6 +55,8 @@ class SiteContractTests(unittest.TestCase):
         self.assertIn("minimumGroups", source)
         self.assertIn("minimumCoverage", source)
         self.assertIn("minimumScore", source)
+        self.assertIn("strongSingleMinimumLength", source)
+        self.assertIn("strongSingleMinimumScore", source)
 
     def test_search_copy_explains_multiple_terms_and_empty_recovery(self):
         source = SITE_INDEX.read_text(encoding="utf-8")
@@ -87,6 +89,8 @@ class SiteContractTests(unittest.TestCase):
         self.assertIn("被", config["ignoredQueryWords"])
         self.assertGreaterEqual(config["relatedMatch"]["minimumGroups"], 2)
         self.assertGreaterEqual(config["relatedMatch"]["minimumCoverage"], 0.6)
+        self.assertGreaterEqual(config["relatedMatch"]["strongSingleMinimumLength"], 2)
+        self.assertGreater(config["relatedMatch"]["strongSingleMinimumScore"], config["relatedMatch"]["minimumScore"])
 
     def test_search_ranking_cases_use_the_production_algorithm(self):
         node = shutil.which("node")

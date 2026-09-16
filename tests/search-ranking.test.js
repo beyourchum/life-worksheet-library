@@ -20,8 +20,13 @@ assert.deepEqual(
   '語法詞不應成為有效搜尋詞',
 );
 
-const noisyFallback = SearchCore.searchWorksheets(worksheets, '被老師罵', '', config);
-assert.equal(noisyFallback.matches.length, 0, '單一低覆蓋詞不得產生相關結果');
+const strongCoreFallback = SearchCore.searchWorksheets(worksheets, '被老師罵', '', config);
+assert.equal(strongCoreFallback.matchMode, 'related', '強核心詞應提供相關結果');
+assert.deepEqual(
+  strongCoreFallback.matches.map((match) => match.item.ep),
+  ['EP117'],
+  '強核心詞只能帶出高分且明確相關的內容',
+);
 
 const ignoredOnly = SearchCore.searchWorksheets(worksheets, '被', '', config);
 assert.equal(ignoredOnly.matches.length, 0, '只有停用詞的查詢不得顯示全部內容');

@@ -3,7 +3,9 @@
   "relatedMatch": {
     "minimumGroups": 2,
     "minimumCoverage": 0.6,
-    "minimumScore": 60
+    "minimumScore": 60,
+    "strongSingleMinimumLength": 2,
+    "strongSingleMinimumScore": 120
   },
   "synonymGroups": [
     ["工作", "職場", "上班"],

@@ -99,11 +99,18 @@
       const minimumGroups = relatedMatch.minimumGroups ?? 2;
       const minimumCoverage = relatedMatch.minimumCoverage ?? 0.6;
       const minimumScore = relatedMatch.minimumScore ?? 0;
+      const strongSingleMinimumLength = relatedMatch.strongSingleMinimumLength ?? 2;
+      const strongSingleMinimumScore = relatedMatch.strongSingleMinimumScore ?? Number.POSITIVE_INFINITY;
       const relatedMatches = candidates.filter((match) => {
         const coverage = match.matchedGroups.length / queryGroups.length;
-        return match.matchedGroups.length >= minimumGroups
+        const meetsCoverageThreshold = match.matchedGroups.length >= minimumGroups
           && coverage >= minimumCoverage
           && match.score >= minimumScore;
+        const matchedToken = match.matchedGroups[0] || '';
+        const isStrongSingleMatch = match.matchedGroups.length === 1
+          && normalizeText(matchedToken).replaceAll(' ', '').length >= strongSingleMinimumLength
+          && match.score >= strongSingleMinimumScore;
+        return meetsCoverageThreshold || isStrongSingleMatch;
       });
       if (relatedMatches.length) {
         matchMode = 'related';
