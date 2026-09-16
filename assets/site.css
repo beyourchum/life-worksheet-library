@@ -51,7 +51,7 @@ h1 { margin: 0; font-family: var(--display); font-size: var(--display-size); fon
 h1 span { display: block; width: max-content; max-width: 100%; }
 h1 span:nth-child(2) { margin-left: 8%; }
 h1 span:last-child { color: var(--accent); }
-.hero-deck {  grid-column: 2;  width: min(820px, 100%);  max-width: none;  margin: 0;  padding-bottom: .4em;  font-size: var(--step-0);  line-height: 1.7;  transform: none;}
+.hero-deck {  grid-column: 2;  width: min(960px, 100%);  max-width: none;  margin: 0;  padding-bottom: .4em;  font-size: var(--step-0);  line-height: 1.7;  transform: none;}
 .search-section, .filter-section { display: grid; grid-template-columns: 2fr 10fr; border-bottom: 1px solid var(--ink); }
 .section-label { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 24px 24px 24px 0; text-transform: uppercase; }
 .section-label span { color: var(--accent); font-variant-numeric: tabular-nums; }
