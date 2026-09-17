@@ -1,0 +1,23 @@
+.worksheet[data-worksheet-id="EP94"] .ep94-fields,
+.worksheet[data-worksheet-id="EP94"] .ep94-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.25rem; }
+.worksheet[data-worksheet-id="EP94"] .ep94-results { background: var(--soft-green); padding: .6rem .9rem; margin: .5rem 0; }
+.worksheet[data-worksheet-id="EP94"] .ep94-fields .answer-field,
+.worksheet[data-worksheet-id="EP94"] .ep94-results .answer-field { margin: 0; }
+.worksheet[data-worksheet-id="EP94"] .short-answer { width: 100%; min-height: 2rem; }
+.worksheet[data-worksheet-id="EP94"] .ep94-mode { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.worksheet[data-worksheet-id="EP94"] .ep94-legacy textarea { font-family: system-ui, sans-serif; }
+@media screen and (max-width: 600px) {
+  .worksheet[data-worksheet-id="EP94"] .ep94-fields,
+  .worksheet[data-worksheet-id="EP94"] .ep94-results,
+  .worksheet[data-worksheet-id="EP94"] .ep94-mode { grid-template-columns: 1fr; }
+}
+@media print {
+  .worksheet[data-worksheet-id="EP94"] .page { display: flex; flex-direction: column; overflow: visible; }
+  .worksheet[data-worksheet-id="EP94"] .page > * { flex-shrink: 0; }
+  .worksheet[data-worksheet-id="EP94"] .page-footer { position: static; margin-top: auto; }
+  .worksheet[data-worksheet-id="EP94"] .ep94-fields,
+  .worksheet[data-worksheet-id="EP94"] .ep94-results { gap: 1mm 5mm; }
+  .worksheet[data-worksheet-id="EP94"] .ep94-results { padding: 2mm 3mm; margin: 2mm 0; }
+  .worksheet[data-worksheet-id="EP94"] .short-answer { min-height: 6mm; padding: .5mm; font-size: 10pt; }
+  .worksheet[data-worksheet-id="EP94"] .ep94-fields .example-note { margin: .5mm 0 1mm; }
+}

@@ -236,6 +236,11 @@ async function withinFontBudget(page, home) {
       });
     }
 
+    await record('EP94 備案計算、跨日、選項、搜尋與舊作答保存', async () => {
+      const backup = await browser.newPage();
+      try { await require('./ep94-backup.test.cjs').testEp94Backup(backup, base); }
+      finally { await backup.close(); }
+    });
     await record('EP95 心率自動計算、輸入驗證與舊作答保存', async () => {
       const calculator = await browser.newPage();
       try {
