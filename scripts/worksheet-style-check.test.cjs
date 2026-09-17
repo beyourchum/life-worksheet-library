@@ -30,10 +30,15 @@ async function testWorksheetStyles(page) {
   assert.deepEqual(await check(heading + group + '<div class="answer-field"><input type="text"></div>' + group.replace('id="a"', 'id="b"')), []);
   assert((await check(heading + group + '<p>補充說明</p>' + group.replace('name="q"', 'name="other"'))).some(x => x.includes('同組 radio')));
   assert.deepEqual(await check('<p><span class="example-note">例如：整理房間</span></p>'), []);
+  assert((await check('<p class="example-note">範例：整理房間</p>')).some(x => x.includes('以「例如：」開頭')));
+  assert((await check('<p class="example-note">起手句：我先整理桌面。</p>')).some(x => x.includes('以「例如：」開頭')));
+  assert.deepEqual(await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>'), []);
+  assert((await check('<h3>情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('h3.subheading')));
+  assert((await check('<div class="subheading">情境：朋友臨時約吃飯</div>')).some(x => x.includes('灰綠底活動標題')));
   assert((await check(group)).some(x => x.includes('缺少題目')));
   assert((await check(heading.replace('<span class="answer-mode">單選</span>', '') + group)).some(x => x.includes('題型標示')));
   assert((await check(heading + '<p>先讀說明。</p>' + group.replace('type="radio"', 'type="checkbox"'))).some(x => x.includes('不一致')));
-  for (const text of ['填入任務，例如：整理房間', '選項（例：期末報告）', '起手句：我觀察到……']) {
+  for (const text of ['填入任務，例如：整理房間', '選項（例：期末報告）']) {
     assert((await check(`<p>${text}</p>`)).some(x => x.includes('灰字')));
     assert.deepEqual(await check(`<p><span class="example-note">${text}</span></p>`), []);
   }

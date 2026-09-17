@@ -24,6 +24,19 @@ async function worksheetStyleIssues(page) {
           (!choice.matches('.other-choice') || !choice.querySelector('.choice-toggle input[type=radio],.choice-toggle input[type=checkbox]')))
         issues.push('其他選項與填寫欄未正確配對：' + choice.textContent.trim());
     }
+    for (const example of document.querySelectorAll('.example-note,.choice-example')) {
+      const text = example.textContent.trim();
+      if (/(?:範例|起手句|示範答案|舉例)[：:]/.test(text))
+        issues.push('示範文字須以「例如：」開頭：' + text);
+    }
+    for (const heading of document.querySelectorAll('main h3')) {
+      const text = heading.textContent.trim();
+      if (/^(?:情境|例如[：:])/.test(text) && !heading.closest('.question-heading') && !heading.matches('h3.subheading'))
+        issues.push('情境或示範標題須使用 h3.subheading：' + text);
+    }
+    for (const heading of document.querySelectorAll('main .subheading')) {
+      if (!heading.matches('h3')) issues.push('灰綠底活動標題須使用 h3.subheading：' + heading.textContent.trim());
+    }
     const walker = document.createTreeWalker(document.querySelector('main') || document.body, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
       const node = walker.currentNode;
