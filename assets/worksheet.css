@@ -132,6 +132,7 @@ button:hover { background: #28755b66; }
   letter-spacing: -.055em;
 }
 .worksheet-hero h1 em { color: var(--green); font-style: normal; }
+.worksheet[data-worksheet-id="EP102"] .worksheet-hero h1 { font-size: clamp(2.1rem, 7vw, 3.8rem); }
 .worksheet-hero + p,
 .worksheet-hero + p + p {
   margin: 0;
