@@ -4,6 +4,12 @@
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const scoreTotal = worksheet.querySelector("[data-score-total]");
   const saveStatus = document.querySelector("[data-save-status]");
+  const clearButton = document.querySelector('[data-clear]');
+  const updateClearButton = () => {
+    clearButton.disabled = !controls.some((control) =>
+      control.type === "checkbox" || control.type === "radio" ? control.checked : control.value !== ""
+    );
+  };
   const copyPrompt = async (button) => {
     const prompt = button.closest(".prompt-quote")?.querySelector("[data-prompt-text]")?.innerText.trim();
     if (!prompt) return;
@@ -31,6 +37,7 @@
     scoreTotal.value = total ? String(total) : "";
   };
   const save = () => {
+    updateClearButton();
     const state = Object.fromEntries(controls.map((control) => [
       control.id,
       control.type === "checkbox" || control.type === "radio"
@@ -76,9 +83,10 @@
     button.addEventListener("click", () => { copyPrompt(button); });
   });
   document.getElementById("clear-draft").addEventListener("click", () => {
-    if (!window.confirm("確定要重設這個分頁中的所有作答嗎？")) return;
+    if (!window.confirm("確定要清除這個分頁中的所有作答嗎？清除後無法復原。")) return;
     clearDraft();
-    saveStatus.textContent = "本次暫存已重設";
+    updateClearButton();
+    saveStatus.textContent = "作答已清除";
   });
   const videoLink = document.querySelector('[data-video-link]');
   fetch('metadata.json')
@@ -93,5 +101,6 @@
     })
     .catch(() => { document.querySelector('[data-video-status]').hidden = false; });
   restore();
+  updateClearButton();
   updateScore();
 })();

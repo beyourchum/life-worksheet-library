@@ -15,14 +15,13 @@
 <body>
 <div class="toolbar" aria-label="學習單工具">
   <nav class="worksheet-nav" aria-label="學習單導覽"><a href="../../index.html">返回內容索引</a><a data-video-link hidden target="_blank" rel="noopener noreferrer">觀看影片</a><span data-video-status hidden>影片連結無法載入，請返回內容索引。</span></nav>
-  <div class="toolbar-group">
-    <span class="save-status" aria-live="polite" data-save-status>尚未填寫</span>
-    <button class="toolbar-button" id="clear-draft" data-clear type="button">重設本次暫存</button>
-  </div>
-  <p class="draft-hint">作答僅暫存在本次分頁；關閉前請列印或另存為 PDF。</p>
-  <div class="print-actions">
-    <p class="print-hint" id="print-hint">請在目的地選擇「另存為 PDF」再列印</p>
-    <button class="toolbar-button primary" data-print type="button" aria-describedby="print-hint">列印</button>
+  <button class="toolbar-button primary" data-print type="button">列印／另存 PDF</button>
+  <div class="toolbar-details">
+    <div class="draft-info">
+      <span class="save-status" aria-live="polite" data-save-status>尚未填寫</span>
+      <p class="draft-hint">作答僅保留於目前分頁，關閉前請先列印或另存 PDF。</p>
+    </div>
+    <button class="toolbar-button clear-button" id="clear-draft" data-clear type="button" disabled>清除作答</button>
   </div>
 </div>
 <main class="worksheet" data-worksheet-id="EP111">

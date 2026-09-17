@@ -183,11 +183,18 @@ async function withinFontBudget(page, home) {
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
         const field = page.locator('textarea,input[type=text]').first();
+        assert.equal(await page.locator('#clear-draft').isDisabled(), true);
         await field.fill('保留我的原文：龘');
+        assert.equal(await page.locator('#clear-draft').isEnabled(), true);
+        page.once('dialog', (dialog) => dialog.dismiss());
+        await page.locator('#clear-draft').click();
+        assert.equal(await field.inputValue(), '保留我的原文：龘');
         await page.reload();
         assert.equal(await field.inputValue(), '保留我的原文：龘');
         page.once('dialog', (dialog) => dialog.accept());
         await page.locator('#clear-draft').click();
+        assert.equal(await field.inputValue(), '');
+        assert.equal(await page.locator('#clear-draft').isDisabled(), true);
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
         await page.emulateMedia({ media: 'print' });
