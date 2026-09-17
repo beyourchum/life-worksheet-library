@@ -76,6 +76,11 @@ async function withinFontBudget(page, home) {
   };
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await record('題型與句中範例負向測試', async () => {
+      const fixture = await browser.newPage();
+      try { await require('./worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
+      finally { await fixture.close(); }
+    });
     page.on('pageerror', (e) => errors.push(e.message));
     await record('首頁延遲搜尋、字型預算與手機版', async () => {
       const requests = [];
@@ -182,6 +187,8 @@ async function withinFontBudget(page, home) {
         if (item.videoUrl) assert.equal(await page.locator('[data-video-link]').getAttribute('href'), item.videoUrl);
         await page.evaluate(() => document.fonts.ready);
         assert.deepEqual(await require('./worksheet-style-check.cjs').worksheetStyleIssues(page), []);
+        assert.deepEqual(await require('./worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
+        assert.deepEqual(await require('./worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
         const field = page.locator('textarea,input[type=text]').first();
@@ -197,8 +204,11 @@ async function withinFontBudget(page, home) {
         await page.locator('#clear-draft').click();
         assert.equal(await field.inputValue(), '');
         assert.equal(await page.locator('#clear-draft').isDisabled(), true);
+        await page.evaluate(() => scrollTo(0, 0));
+        await page.screenshot({ path: path.join(output, item.ep + '-desktop.png'), fullPage: true });
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        await page.screenshot({ path: path.join(output, item.ep + '-mobile.png'), fullPage: true });
         await page.emulateMedia({ media: 'print' });
         const metrics = await printMetrics(page);
         checkPrint(metrics, item.ep);

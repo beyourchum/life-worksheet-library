@@ -135,8 +135,16 @@ for (const item of items) {
   });
   check(positions.every((p, i) => p >= 0 && (!i || p > positions[i - 1])), `${item.ep}: 共通開頭與結尾順序錯誤`);
   const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
+  if (process.env.GITHUB_ACTIONS !== 'true') {
+    for (const role of ['source', 'corrected']) {
+      const sourceFile = `content/${item.ep}/${item.ep}_${role}.md`;
+      check(fs.existsSync(sourceFile), `${sourceFile}: 缺少本機稿件，請先查 Git 歷史及原始來源，完成核對後再驗收`);
+    }
+  }
   if (fs.existsSync(correctedFile)) {
     const md = read(correctedFile);
+    check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);
+    check(md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`), `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])
       check(md.includes(label), `${item.ep}: 修訂稿缺少${label}`);
     check(/(?:<!--\s*final-reminder\s*-->\s*>\s*\S|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
@@ -179,4 +187,4 @@ searchWorksheets(synthetic, '工作 焦慮', '', config);
 const searchMs = performance.now() - started;
 check(searchMs < policy.budgets.search150Ms, `${synthetic.length} 筆搜尋耗時 ${searchMs.toFixed(1)} ms，超出預算`);
 if (errors.length) { console.error(errors.join('\n')); process.exitCode = 1; }
-else console.log(`檢查通過：${items.length} 份學習單、索引、分類、資源、HTML 標籤與搜尋案例。`);
+else console.log(`靜態檢查通過：${items.length} 份學習單、索引、分類、資源、HTML 標籤與搜尋案例。仍須完成瀏覽器測試及逐篇人工驗收。${process.env.GITHUB_ACTIONS === 'true' ? ' CI 不含本機 MD，未驗證稿件同步。' : ''}`);
