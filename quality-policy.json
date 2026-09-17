@@ -17,5 +17,6 @@
     "pageWidthPx": 794,
     "pageHeightPx": 1123
   },
-  "fontFallbackExceptions": []
+  "fontFallbackExceptions": [],
+  "videoExceptions": []
 }

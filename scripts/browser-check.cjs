@@ -179,7 +179,9 @@ async function withinFontBudget(page, home) {
         await page.emulateMedia({ media: 'screen' });
         await page.goto(base + '/' + item.worksheetUrl);
         await page.locator('[data-video-link]').waitFor({ state: item.videoUrl ? 'visible' : 'hidden' });
+        if (item.videoUrl) assert.equal(await page.locator('[data-video-link]').getAttribute('href'), item.videoUrl);
         await page.evaluate(() => document.fonts.ready);
+        assert.deepEqual(await require('./worksheet-style-check.cjs').worksheetStyleIssues(page), []);
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
         const field = page.locator('textarea,input[type=text]').first();

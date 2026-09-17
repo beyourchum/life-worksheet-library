@@ -94,7 +94,15 @@ check(Array.isArray(items) && items.length > 0, 'worksheets.json 必須有內容
 check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'categories.json 必須是無重複的分類名稱');
 check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
 const videos = new Map();
+require('./video-policy.test.cjs');
+const { videoRequirement } = require('./video-policy.cjs');
+check(Array.isArray(policy.videoExceptions), 'videoExceptions 必須是陣列');
+const videoExceptions = Array.isArray(policy.videoExceptions) ? policy.videoExceptions : [];
+check(new Set(videoExceptions.map((entry) => entry.ep)).size === videoExceptions.length, '無影片例外集數重複');
+for (const entry of videoExceptions) check(items.some((item) => item.ep === entry.ep && item.worksheetUrl), '無影片例外必須對應既有學習單');
 for (const item of items) {
+  const videoError = videoRequirement(item, videoExceptions);
+  check(!videoError, `${item.ep}: ${videoError}`);
   for (const key of ['ep', 'title', 'summary', 'category']) check(typeof item[key] === 'string' && item[key].trim(), `${item.ep}: 缺少 ${key}`);
   check(/^EP\d+$/.test(item.ep), `${item.ep}: EP 格式錯誤`);
   check(categories.includes(item.category), `${item.ep}: 未定義分類 ${item.category}`);

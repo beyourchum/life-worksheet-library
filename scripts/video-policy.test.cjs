@@ -1,0 +1,12 @@
+const assert = require('node:assert/strict');
+const { videoRequirement } = require('./video-policy.cjs');
+const item = { ep: 'EP106', worksheetUrl: 'worksheets/EP106/' };
+assert(videoRequirement(item));
+assert(videoRequirement({ ...item, videoUrl: ' ' }));
+assert.equal(videoRequirement({ ...item, videoUrl: 'https://youtu.be/abcdefghijk' }), null);
+assert(videoRequirement(item, [{ ep: item.ep, reason: '未找到' }]));
+const approved = [{ ep: item.ep, reason: '本篇無影片', approvalReference: '測試用使用者核准紀錄' }];
+assert.equal(videoRequirement(item, approved), null);
+assert(videoRequirement({ ...item, videoUrl: 'https://youtu.be/abcdefghijk' }, approved));
+assert(videoRequirement(item, [{ ...approved[0], ep: 'EP999' }]));
+console.log('影片門檻測試通過：缺漏、空白、未核准及錯集例外均被攔截。');
