@@ -1,0 +1,251 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const { chromium } = require('playwright');
+const { start } = require('./test-server.cjs');
+const root = path.resolve(__dirname, '..');
+process.chdir(root);
+const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+const policy = read('quality-policy.json');
+const manifest = read('assets/fonts/worksheet/compact/manifest.json');
+const items = read('worksheets.json');
+const report = { checks: [], failures: [] };
+const output = path.join(root, '.qa/reports');
+fs.mkdirSync(output, { recursive: true });
+
+async function fontIssues(page, scope) {
+  const exceptions = policy.fontFallbackExceptions;
+  const issues = await page.evaluate(({ fonts, exceptions, scope }) => {
+    const names = { 'Glow Sans TC': 'glow-800', 'Genki Gothic TC': 'genki-700' };
+    const coverage = Object.fromEntries(Object.entries(fonts).map(([key, value]) => [key, new Set(value.characters)]));
+    const issues = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const el = node.parentElement;
+      if (!el.getClientRects().length || ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(el.tagName)) continue;
+      const style = getComputedStyle(el);
+      const family = style.fontFamily.split(',')[0].replaceAll('"', '').trim();
+      const font = family === 'GenYo Gothic TC' ? `genyo-${Number(style.fontWeight) >= 600 ? 700 : 400}` : names[family];
+      if (!font) continue;
+      for (const character of new Set(node.textContent)) {
+        if (!/\p{Script=Han}/u.test(character) || coverage[font]?.has(character.codePointAt(0))) continue;
+        const text = node.textContent.trim();
+        if (exceptions.some((e) => e.scope === scope && e.font === font && e.character === character && e.text === text && e.reason)) continue;
+        issues.push({ scope, font, character, text });
+      }
+    }
+    return issues;
+  }, { fonts: manifest.scopes[scope].fonts, exceptions, scope });
+  return issues;
+}
+
+async function printMetrics(page) {
+  return page.locator('.worksheet .page').evaluateAll((pages) => pages.map((page, index) => {
+    const rect = page.getBoundingClientRect();
+    const footer = page.querySelector('.page-footer').getBoundingClientRect();
+    const bottom = Math.max(...[...page.children].filter((el) => !el.matches('.page-footer')).map((el) => el.getBoundingClientRect().bottom));
+    return { page: index + 1, width: rect.width, height: rect.height, scrollHeight: page.scrollHeight, clientHeight: page.clientHeight, footerGap: footer.top - bottom };
+  }));
+}
+function checkPrint(metrics, name) {
+  assert(metrics.length, `${name}: 缺少頁面`);
+  for (const metric of metrics) {
+    assert(Math.abs(metric.width - policy.print.pageWidthPx) < 2 && Math.abs(metric.height - policy.print.pageHeightPx) < 2, `${name} 第 ${metric.page} 頁不是 A4`);
+    assert(metric.scrollHeight <= metric.clientHeight + 2, `${name} 第 ${metric.page} 頁內容溢出`);
+    assert(metric.footerGap >= policy.print.footerGapPx, `${name} 第 ${metric.page} 頁壓到頁尾（間距 ${metric.footerGap.toFixed(1)} px）`);
+  }
+}
+async function withinFontBudget(page, home) {
+  const resources = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => r.name.endsWith('.woff2')).map((r) => ({ name: r.name, bytes: r.encodedBodySize })));
+  assert(resources.length <= policy.budgets[home ? 'homeFontRequests' : 'worksheetFontRequests'], '字型請求數超標');
+  assert(resources.reduce((sum, r) => sum + r.bytes, 0) <= policy.budgets[home ? 'homeFontBytes' : 'worksheetFontBytes'], '字型流量超標');
+  assert(resources.every((r) => r.name.includes('/compact/')), '載入了原始大型字型');
+  return resources;
+}
+
+(async () => {
+  const { server, base } = await start(process.argv.includes('--built') ? path.join(root, '_site') : root);
+  let browser;
+  try { browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) }); }
+  catch (error) { server.close(); throw error; }
+  const errors = [];
+  const record = async (name, fn) => {
+    try { const detail = await fn(); report.checks.push({ name, detail }); console.log(`PASS ${name}`); }
+    catch (error) { report.failures.push({ name, message: error.message }); console.error(`FAIL ${name}: ${error.message}`); }
+  };
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    page.on('pageerror', (e) => errors.push(e.message));
+    await record('首頁延遲搜尋、字型預算與手機版', async () => {
+      const requests = [];
+      page.on('request', (request) => requests.push(request.url()));
+      await page.goto(base);
+      await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      assert.equal(await page.locator('.result-row').count(), Math.min(items.length, policy.pageSize));
+      assert(!requests.some((url) => url.endsWith('search-index.json')), '未搜尋就載入搜尋索引');
+      assert(!requests.some((url) => /\/worksheets\/.*\.html/.test(url)), '首頁預先下載文章全文');
+      const resources = await withinFontBudget(page, true);
+      assert.deepEqual(await fontIssues(page, 'home'), []);
+      await page.locator('#search').fill('巔峰');
+      await page.waitForFunction(() => document.querySelector('.result-ep')?.textContent === '109');
+      assert.equal(requests.filter((url) => url.endsWith('search-index.json')).length, 1);
+      await page.locator('#search').fill('挫折');
+      await page.waitForTimeout(policy.searchDebounceMs + 100);
+      assert(await page.locator('.result-row').count());
+      assert.equal(requests.filter((url) => url.endsWith('search-index.json')).length, 1);
+      await page.locator('#search').fill('');
+      await page.waitForTimeout(policy.searchDebounceMs + 100);
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.screenshot({ path: path.join(output, 'home-desktop.png'), fullPage: true });
+      await page.setViewportSize({ width: 390, height: 844 });
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      await page.screenshot({ path: path.join(output, 'home-mobile.png'), fullPage: true });
+      return resources;
+    });
+
+    await record('150 筆分頁、跨頁搜尋、分類、排序與輸入法', async () => {
+      const synthetic = Array.from({ length: policy.capacityTestEntries }, (_, i) => {
+        const item = items[i % items.length];
+        return { ...item, ep: `EP${i + 1}`, title: `${item.title}（${i + 1}）`, summary: item.summary + i,
+          searchTerms: Object.fromEntries(Object.entries(item.searchTerms).map(([key, terms]) => [key, terms.map((term) => term + i)])) };
+      });
+      synthetic[0] = { ...synthetic[0], articleUrl: 'articles/example/', worksheetUrl: undefined };
+      synthetic[149].searchTerms = { ...synthetic[149].searchTerms, phrases: ['容量測試唯一詞'] };
+      const catalog = { ...read('data/catalog.json'), items: synthetic.map(({ searchTerms, ...item }) => item) };
+      const index = { ...read('data/search-index.json'), terms: Object.fromEntries(synthetic.map((item) => [item.ep, item.searchTerms])) };
+      assert(Buffer.byteLength(JSON.stringify(catalog)) <= policy.budgets.catalogBytes);
+      assert(Buffer.byteLength(JSON.stringify(index)) <= policy.budgets.searchIndexBytes);
+      await page.route('**/data/catalog.json', (route) => route.fulfill({ json: catalog }));
+      await page.route('**/data/search-index.json', (route) => route.fulfill({ json: index }));
+      await page.goto(base);
+      await page.waitForFunction(() => document.querySelectorAll('.result-row').length === 12);
+      assert.equal(await page.locator('.result-ep').first().innerText(), '150');
+      assert.equal(await page.locator('#page-select option').count(), Math.ceil(synthetic.length / policy.pageSize));
+      await page.locator('#next-page').click();
+      assert.equal(await page.locator('.result-ep').first().innerText(), '138');
+      await page.locator('#page-select').selectOption('13');
+      assert.equal(await page.locator('.result-row').count(), 6);
+      assert.equal(await page.locator('#next-page').isDisabled(), true);
+      await page.locator('#sort').selectOption('oldest');
+      assert.equal(await page.locator('.result-ep').first().innerText(), '1');
+      assert.equal(await page.locator('.result-row').first().locator('.result-title a').getAttribute('href'), 'articles/example/');
+      assert.equal(await page.locator('.result-row').first().getByText('學習單', { exact: true }).count(), 0);
+      await page.locator('#search').dispatchEvent('compositionstart');
+      await page.locator('#search').fill('容量測試唯一詞');
+      await page.waitForTimeout(policy.searchDebounceMs + 80);
+      assert.equal(await page.locator('.result-row').count(), 12, '組字中不應搜尋');
+      await page.locator('#search').dispatchEvent('compositionend');
+      await page.waitForFunction(() => document.querySelectorAll('.result-row').length === 1);
+      assert.equal(await page.locator('.result-ep').innerText(), '150');
+      await page.locator('#search').fill('zzzznone');
+      await page.locator('#reset-button').waitFor({ state: 'visible' });
+      await page.locator('#reset-button').click();
+      await page.locator('.category-button').nth(1).click();
+      assert.equal(await page.locator('#page-select').inputValue(), '1');
+      const shown = await page.locator('.result-ep').allTextContents();
+      assert(shown.every((ep) => synthetic.find((x) => x.ep === `EP${ep}`).category === catalog.categories[0]));
+      await page.unroute('**/data/catalog.json');
+      await page.unroute('**/data/search-index.json');
+    });
+
+    await record('搜尋下載失敗可重試，清空搜尋不被舊結果覆寫', async () => {
+      let first = true;
+      await page.route('**/data/search-index.json', (route) => {
+        if (first) { first = false; return route.fulfill({ status: 503, body: 'unavailable' }); }
+        return route.continue();
+      });
+      await page.goto(base);
+      await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      await page.locator('#search').fill('規則');
+      await page.locator('#retry-load').waitFor({ state: 'visible' });
+      await page.locator('#retry-load').click();
+      await page.waitForFunction(() => document.querySelector('.result-ep')?.textContent === '117');
+      await page.unroute('**/data/search-index.json');
+      await page.route('**/data/search-index.json', async (route) => { await new Promise((r) => setTimeout(r, 800)); await route.continue(); });
+      await page.goto(base);
+      await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      await page.locator('#search').fill('規則');
+      await page.waitForTimeout(policy.searchDebounceMs + 40);
+      await page.locator('#search').fill('');
+      await page.waitForTimeout(1000);
+      assert.equal(await page.locator('.result-row').count(), Math.min(items.length, policy.pageSize));
+      await page.unroute('**/data/search-index.json');
+    });
+
+    for (const item of items.filter((item) => item.worksheetUrl)) {
+      await record(`${item.ep} 缺字、字型預算、暫存與列印`, async () => {
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.emulateMedia({ media: 'screen' });
+        await page.goto(base + '/' + item.worksheetUrl);
+        await page.locator('[data-video-link]').waitFor({ state: 'visible' });
+        await page.evaluate(() => document.fonts.ready);
+        assert.deepEqual(await fontIssues(page, item.ep), []);
+        const fonts = await withinFontBudget(page, false);
+        const field = page.locator('textarea,input[type=text]').first();
+        await field.fill('保留我的原文：龘');
+        await page.reload();
+        assert.equal(await field.inputValue(), '保留我的原文：龘');
+        page.once('dialog', (dialog) => dialog.accept());
+        await page.locator('#clear-draft').click();
+        await page.setViewportSize({ width: 390, height: 844 });
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        await page.emulateMedia({ media: 'print' });
+        const metrics = await printMetrics(page);
+        checkPrint(metrics, item.ep);
+        assert.equal(await page.locator('.toolbar').isVisible(), false);
+        const pdf = await page.pdf({ preferCSSPageSize: true, printBackground: true });
+        assert.equal((pdf.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length, metrics.length, `${item.ep}: PDF 實際頁數錯誤`);
+        fs.writeFileSync(path.join(output, item.ep + '.pdf'), pdf);
+        return { fonts, print: metrics };
+      });
+      await record(`${item.ep} 字型失敗仍可列印`, async () => {
+        const fallback = await browser.newPage();
+        try {
+          await fallback.route('**/*.woff2', (route) => route.abort());
+          await fallback.goto(base + '/' + item.worksheetUrl);
+          await fallback.emulateMedia({ media: 'print' });
+          const metrics = await printMetrics(fallback);
+          checkPrint(metrics, `${item.ep} 系統字型`);
+          return metrics;
+        } finally { await fallback.close(); }
+      });
+    }
+
+    await record('慢速字型不造成版面跳動', async () => {
+      const slow = await browser.newPage();
+      try {
+        await slow.addInitScript(() => {
+          window.shifts = [];
+          new PerformanceObserver((list) => { for (const entry of list.getEntries()) if (!entry.hadRecentInput) window.shifts.push(entry.value); }).observe({ type: 'layout-shift', buffered: true });
+        });
+        await slow.route('**/*.woff2', async (route) => { await new Promise((resolve) => setTimeout(resolve, 1800)); await route.continue(); });
+        await slow.goto(base + '/worksheets/EP109/', { waitUntil: 'domcontentloaded' });
+        await slow.waitForTimeout(400);
+        const before = await slow.locator('h1').boundingBox();
+        await slow.evaluate(() => document.fonts.ready);
+        assert.deepEqual(await slow.locator('h1').boundingBox(), before);
+        const cls = await slow.evaluate(() => window.shifts.reduce((a, b) => a + b, 0));
+        assert(cls <= policy.budgets.layoutShift, `字型 CLS ${cls} 超出預算`);
+        return { cls };
+      } finally { await slow.close(); }
+    });
+
+    await record('檢查器確實能抓到缺字與列印溢出', async () => {
+      await page.emulateMedia({ media: 'screen' });
+      await page.goto(base + '/worksheets/EP109/');
+      await page.locator('h1').evaluate((el) => { el.textContent = '龘'; });
+      assert((await fontIssues(page, 'EP109')).some((issue) => issue.character === '龘'));
+      await page.emulateMedia({ media: 'print' });
+      await page.locator('.page').first().evaluate((el) => { const block = document.createElement('div'); block.style.height = '2000px'; el.append(block); });
+      const metrics = await printMetrics(page);
+      assert.throws(() => checkPrint(metrics, 'self-test'), /溢出|頁尾/);
+    });
+    assert.deepEqual(errors, [], 'JavaScript 執行錯誤');
+  } finally {
+    await browser.close();
+    server.close();
+    fs.writeFileSync(path.join(output, 'quality-report.json'), JSON.stringify(report, null, 2) + '\n');
+  }
+  if (report.failures.length) process.exitCode = 1;
+})().catch((error) => { console.error(error); process.exitCode = 1; });

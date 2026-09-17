@@ -3,14 +3,22 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   root.SearchCore = api;
 }(typeof globalThis !== 'undefined' ? globalThis : this, () => {
+  const normalizedCache = new Map();
+  const segmenter = typeof Intl.Segmenter === 'function'
+    ? new Intl.Segmenter('zh-Hant', { granularity: 'word' }) : null;
   function normalizeText(value) {
-    return String(value || '')
+    const text = String(value || '');
+    if (normalizedCache.has(text)) return normalizedCache.get(text);
+    const result = text
       .normalize('NFKC')
       .toLocaleLowerCase('zh-Hant')
       .replace(/ep\s*0*(\d+)/giu, 'ep$1')
       .replace(/[^\p{L}\p{N}]+/gu, ' ')
       .trim()
       .replace(/\s+/g, ' ');
+    if (normalizedCache.size >= 10000) normalizedCache.clear();
+    normalizedCache.set(text, result);
+    return result;
   }
 
   function tokenizeQuery(query, ignoredQueryWords = []) {
@@ -18,8 +26,7 @@
     if (!normalized) return [];
     const ignored = new Set(ignoredQueryWords.map(normalizeText));
     const tokens = [];
-    if (typeof Intl.Segmenter === 'function') {
-      const segmenter = new Intl.Segmenter('zh-Hant', { granularity: 'word' });
+    if (segmenter) {
       for (const segment of segmenter.segment(normalized)) {
         const token = normalizeText(segment.segment);
         if (segment.isWordLike && token && !ignored.has(token)) tokens.push(token);

@@ -1,0 +1,16 @@
+{
+  "name": "life-worksheet-library",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "data": "node scripts/content-data.cjs",
+    "fonts": "python scripts/build-fonts.py",
+    "generate": "pnpm run data && pnpm run fonts",
+    "check": "node scripts/validate.cjs",
+    "test": "node scripts/build.cjs && node scripts/browser-check.cjs --built",
+    "build": "node scripts/build.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "pageSize": 12,
+  "searchDebounceMs": 180,
+  "capacityTestEntries": 150,
+  "budgets": {
+    "homeFontBytes": 100000,
+    "worksheetFontBytes": 360000,
+    "homeFontRequests": 1,
+    "worksheetFontRequests": 4,
+    "catalogBytes": 180000,
+    "searchIndexBytes": 450000,
+    "search150Ms": 250,
+    "layoutShift": 0.01
+  },
+  "print": {
+    "footerGapPx": 8,
+    "pageWidthPx": 794,
+    "pageHeightPx": 1123
+  },
+  "fontFallbackExceptions": []
+}
