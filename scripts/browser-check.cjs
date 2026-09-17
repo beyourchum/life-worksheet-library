@@ -178,7 +178,7 @@ async function withinFontBudget(page, home) {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.emulateMedia({ media: 'screen' });
         await page.goto(base + '/' + item.worksheetUrl);
-        await page.locator('[data-video-link]').waitFor({ state: 'visible' });
+        await page.locator('[data-video-link]').waitFor({ state: item.videoUrl ? 'visible' : 'hidden' });
         await page.evaluate(() => document.fonts.ready);
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);

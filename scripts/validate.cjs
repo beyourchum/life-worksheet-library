@@ -111,6 +111,28 @@ for (const item of items) {
   if (item.worksheetUrl && !fs.existsSync(file)) { errors.push(`${item.ep}: 缺少頁面`); continue; }
   if (item.worksheetUrl) {
   const html = read(file);
+  const requiredParts = [
+    /<strong>學習目標：<\/strong>\s*[^<\s]/,
+    /<strong>使用說明：<\/strong>\s*[^<\s]/,
+    /class="[^"]*\bfinal-reminder\b[^"]*"/,
+    /class="[^"]*\bprompt-intro\b[^"]*"[^>]*>[\s\S]*?AI 幫幫忙/,
+    /data-prompt-text[^>]*>\s*<p>\s*[^<\s]/,
+    /<button\b[^>]*data-prompt-copy/
+  ];
+  const partNames = ['學習目標', '使用說明', '結尾', 'AI 幫幫忙', 'AI 提示詞', '複製提示詞按鈕'];
+  const positions = requiredParts.map((pattern, i) => {
+    const match = pattern.exec(html);
+    check(Boolean(match), `${item.ep}: 缺少或未填寫${partNames[i]}，請依 docs/quality.md 補齊`);
+    return match?.index ?? -1;
+  });
+  check(positions.every((p, i) => p >= 0 && (!i || p > positions[i - 1])), `${item.ep}: 共通開頭與結尾順序錯誤`);
+  const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
+  if (fs.existsSync(correctedFile)) {
+    const md = read(correctedFile);
+    for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])
+      check(md.includes(label), `${item.ep}: 修訂稿缺少${label}`);
+    check(/(?:<!--\s*final-reminder\s*-->\s*>\s*\S|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
+  }
   check(html.includes(`<title>${item.ep}｜${item.title}</title>`), `${item.ep}: 頁面標題與索引不一致`);
   check(html.includes(`data-worksheet-id="${item.ep}"`), `${item.ep}: 暫存識別碼不一致`);
   const pageCategories = [...html.matchAll(/<header class="page-meta"><strong>[^<]+<\/strong><span>([^<]+)<\/span>/g)].map((m) => m[1]);
