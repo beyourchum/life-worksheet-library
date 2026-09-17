@@ -33,6 +33,8 @@ async function worksheetStyleIssues(page) {
       const text = heading.textContent.trim();
       if (/^(?:情境|例如[：:])/.test(text) && !heading.closest('.question-heading') && !heading.matches('h3.subheading'))
         issues.push('情境或示範標題須使用 h3.subheading：' + text);
+      if (heading.matches('h3.subheading') && /^情境[：:]/.test(text))
+        issues.push('情境小標題只保留辨識標籤，完整敘述須放在下方內文：' + text);
     }
     for (const heading of document.querySelectorAll('main .subheading')) {
       if (!heading.matches('h3')) issues.push('灰綠底活動標題須使用 h3.subheading：' + heading.textContent.trim());

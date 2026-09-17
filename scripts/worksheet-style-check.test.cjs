@@ -32,7 +32,8 @@ async function testWorksheetStyles(page) {
   assert.deepEqual(await check('<p><span class="example-note">例如：整理房間</span></p>'), []);
   assert((await check('<p class="example-note">範例：整理房間</p>')).some(x => x.includes('以「例如：」開頭')));
   assert((await check('<p class="example-note">起手句：我先整理桌面。</p>')).some(x => x.includes('以「例如：」開頭')));
-  assert.deepEqual(await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>'), []);
+  assert((await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('完整敘述須放在下方內文')));
+  assert.deepEqual(await check('<h3 class="subheading">情境</h3><p>朋友臨時約吃飯；選出較像你的描述。</p>'), []);
   assert((await check('<h3>情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('h3.subheading')));
   assert((await check('<div class="subheading">情境：朋友臨時約吃飯</div>')).some(x => x.includes('灰綠底活動標題')));
   assert((await check(group)).some(x => x.includes('缺少題目')));
