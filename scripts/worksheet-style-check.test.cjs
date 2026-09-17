@@ -26,6 +26,26 @@ async function testWorksheetStyles(page) {
   const heading = '<div class="question-heading"><h3>選一個</h3><span class="answer-mode">單選</span></div>';
   const group = '<div class="choices"><label class="choice"><input id="a" type="radio" name="q">甲</label></div>';
   const check = async (html) => { await page.setContent(`<main>${html}</main>`); return worksheetStyleIssues(page); };
+  // EP93: sentence blanks must have their own controls, not one shared answer box.
+  const unmatchedBlanks = () => page.locator('.answer-field > label').evaluateAll(labels =>
+    labels.filter(label => /[＿_]{2,}/.test(label.textContent)).map(label => label.htmlFor));
+  await page.setContent('<div class="answer-field"><label for="mixed">我想請教＿＿，能力是＿＿，問題是＿＿：</label><textarea id="mixed"></textarea></div>');
+  assert.deepEqual(await unmatchedBlanks(), ['mixed']);
+  await page.setContent(require('node:fs').readFileSync('worksheets/EP93/index.html', 'utf8'));
+  assert.deepEqual(await unmatchedBlanks(), []);
+  for (const id of ['ep93-ask-name', 'ep93-ask-skill', 'ep93-help-skill'])
+    assert.equal(await page.locator(`#${id}`).getAttribute('type'), 'text');
+  for (const id of ['ep93-ask-person', 'ep93-help-person'])
+    assert.equal(await page.locator(`textarea#${id}`).count(), 1);
+  assert.equal(await page.locator('.answer-field').evaluateAll(fields => fields.every(field =>
+    field.nextElementSibling?.matches('.example-note') && field.nextElementSibling.textContent.startsWith('例如：'))), true);
+  await page.setContent(require('node:fs').readFileSync('worksheets/EP91/index.html', 'utf8'));
+  assert.deepEqual(await unmatchedBlanks(), []);
+  for (const id of ["ep91-major","ep91-semester","ep91-hours","ep91-unique","ep91-point1","ep91-point2","ep91-point3"]) {
+    assert.equal(await page.locator('#' + id).getAttribute('type'), 'text');
+    assert.equal(await page.locator('#' + id).evaluate(node =>
+      node.parentElement.nextElementSibling?.matches('.example-note')), true);
+  }
   assert.deepEqual(await check(heading + group), []);
   assert.deepEqual(await check(heading + group + '<div class="answer-field"><input type="text"></div>' + group.replace('id="a"', 'id="b"')), []);
   assert((await check(heading + group + '<p>補充說明</p>' + group.replace('name="q"', 'name="other"'))).some(x => x.includes('同組 radio')));

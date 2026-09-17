@@ -1,0 +1,31 @@
+.selection-status { margin: .6rem 0; color: var(--green); font-family: system-ui, sans-serif; }
+.choice:has([data-need-choice]:disabled) { opacity: .55; }
+.ep99-comparison { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .9em; }
+.ep99-comparison th, .ep99-comparison td { border: 1px solid #aab9b1; padding: .7rem .25rem; text-align: center; }
+.ep99-comparison th { background: var(--soft-green); }
+.ep99-comparison input { width: 1.2rem; height: 1.2rem; accent-color: var(--green); }
+.ep99-comparison [data-top-need] { display: block; }
+.ep99-comparison .matrix-options { justify-content: center; }
+.ep99-rank-row { display: flex; align-items: center; gap: .7rem; padding: .65rem; margin: .45rem 0; background: var(--soft-green); }
+.ep99-rank-number { flex: 0 0 1.7rem; text-align: center; font-family: system-ui, sans-serif; font-weight: 700; }
+.ep99-rank-description { flex: 1; min-width: 0; }
+.ep99-rank-description span { display: block; font-size: .85em; }
+.ep99-rank-actions { display: flex; gap: .35rem; }
+.ep99-rank-actions button, .ep99-rank-confirm button { min-height: 44px; padding: .45rem .65rem; border: 1px solid #8ca597; border-radius: .3rem; color: var(--green); background: white; cursor: pointer; font: inherit; }
+.ep99-rank-actions button:disabled, .ep99-rank-confirm button:disabled { opacity: .45; cursor: default; }
+.ep99-rank-actions button:focus-visible, .ep99-rank-confirm button:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.ep99-rank-confirm { display: flex; align-items: center; gap: .7rem; font-family: system-ui, sans-serif; }
+.ep99-paper-hint { display: none; }
+@media screen and (max-width: 500px) {
+  .ep99-rank-row { flex-wrap: wrap; }
+  .ep99-rank-actions { margin-left: auto; }
+}
+@media print {
+  .ep99-rank-actions, .ep99-rank-confirm { display: none; }
+  .ep99-paper-hint { display: block; }
+  .ep99-rank-row { padding: 2mm; margin: 1.5mm 0; }
+  .ep99-ranking[data-confirmed="false"] .ep99-rank-number { color: transparent; border-bottom: 1px solid #777; }
+  .selection-status { font-size: 8pt; margin: 1mm 0; }
+  .choice:has([data-need-choice]:disabled) { opacity: 1; }
+  .ep99-comparison th, .ep99-comparison td { padding: 3mm 1mm; }
+}

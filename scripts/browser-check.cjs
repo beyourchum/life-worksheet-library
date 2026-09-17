@@ -82,6 +82,11 @@ async function withinFontBudget(page, home) {
       finally { await fixture.close(); }
     });
     page.on('pageerror', (e) => errors.push(e.message));
+    await record('EP99 跨頁十項上限、工作比較與暫存', async () => {
+      const fixture = await browser.newPage();
+      try { await require('./ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
+      finally { await fixture.close(); }
+    });
     await record('首頁延遲搜尋、字型預算與手機版', async () => {
       const requests = [];
       page.on('request', (request) => requests.push(request.url()));
@@ -191,7 +196,7 @@ async function withinFontBudget(page, home) {
         assert.deepEqual(await require('./worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
-        const field = page.locator('textarea,input[type=text]').first();
+        const field = page.locator('textarea:not([readonly]),input[type=text]:not([readonly])').first();
         assert.equal(await page.locator('#clear-draft').isDisabled(), true);
         await field.fill('保留我的原文：龘');
         assert.equal(await page.locator('#clear-draft').isEnabled(), true);
@@ -230,6 +235,14 @@ async function withinFontBudget(page, home) {
         } finally { await fallback.close(); }
       });
     }
+
+    await record('EP95 心率自動計算、輸入驗證與舊作答保存', async () => {
+      const calculator = await browser.newPage();
+      try {
+        await calculator.goto(base + '/worksheets/EP95/');
+        await require('./ep95-calculator.test.cjs').testEp95Calculator(calculator);
+      } finally { await calculator.close(); }
+    });
 
     await record('首次慢速載入自動套用字型並維持版面穩定', async () => {
       const slow = await browser.newPage();

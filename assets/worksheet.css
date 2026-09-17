@@ -247,6 +247,21 @@ p { margin: .6rem 0; }
 .term-pair { padding: .65rem .75rem; background: var(--soft-gray); }
 .term-pair strong { display: block; margin-bottom: .2rem; color: var(--green); }
 
+.worksheet[data-worksheet-id="EP96"] .ep96-types { gap: 1rem; }
+.worksheet[data-worksheet-id="EP96"] .ep96-types .term-pair { padding: 0 0 .75rem; }
+.worksheet[data-worksheet-id="EP96"] .ep96-types .subheading { margin: 0; padding: .65rem .85rem; background: var(--soft-green); }
+.worksheet[data-worksheet-id="EP96"] .ep96-types p { margin: .65rem .85rem 0; }
+@media screen {
+  .worksheet[data-worksheet-id="EP96"] .worksheet-hero h1 { font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.08; }
+  .worksheet[data-worksheet-id="EP96"] .worksheet-hero h1 em { display: block; }
+}
+@media print {
+  .worksheet[data-worksheet-id="EP96"] .ep96-types { gap: 2mm; }
+  .worksheet[data-worksheet-id="EP96"] .ep96-types .term-pair { padding-bottom: 2mm; }
+  .worksheet[data-worksheet-id="EP96"] .ep96-types .subheading { padding: 1.5mm 2mm; }
+  .worksheet[data-worksheet-id="EP96"] .ep96-types p { margin: 2mm 2mm 0; }
+}
+
 .answer-field { margin-top: 1.2rem; }
 .answer-field label { display: block; margin-bottom: .55rem; font-weight: 600; }
 .answer-field .short-answer {
