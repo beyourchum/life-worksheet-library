@@ -1,5 +1,33 @@
 [
   {
+    "ep": "EP91", "title": "整理我的獨特知識", "summary": "我讀的系所，已經讓我累積了哪些能幫上忙的知識與經驗？", "category": "找到自己的特質與使用方式", "worksheetUrl": "worksheets/EP91/", "videoUrl": "https://youtu.be/THkxKcgHMe0?si=TTbp44mJfzBxaP6W",
+    "searchTerms": {"situations":["不知道系所學到什麼","想找自己的專長"],"feelings":["覺得自己沒專長","對未來迷惘"],"decisions":["如何找能力","系所能做什麼"],"phrases":["我有什麼特別","讀這個系有用嗎"],"concepts":["獨特知識","納瓦爾","專業能力"]}
+  },
+  {
+    "ep": "EP92", "title": "面對壓力，先做好準備", "summary": "我緊張時，怎麼把注意力拉回現在能做的事？", "category": "處理情緒低落、焦慮和壓力", "worksheetUrl": "worksheets/EP92/", "videoUrl": "https://youtu.be/lvoe6cZK_Ic?si=WRkAZ15llhU-TOwL",
+    "searchTerms": {"situations":["上台報告","考試前緊張"],"feelings":["壓力很大","很焦慮","腦袋空白"],"decisions":["如何面對壓力","怎麼放鬆"],"phrases":["我快崩潰了","緊張到睡不著"],"concepts":["壓力管理","復原力","目標調整"]}
+  },
+  {
+    "ep": "EP93", "title": "把社交能量用在有用的連結", "summary": "我怎麼從圍觀、陪伴到協作，建立能互相幫忙的關係？", "category": "學會和別人相處、不互相傷害", "worksheetUrl": "worksheets/EP93/", "videoUrl": "https://youtu.be/hMVlQiXDl_M?si=NWgqCok3Tst5wcIn",
+    "searchTerms": {"situations":["社群好友很多","想認識同行"],"feelings":["社交很累","覺得沒人幫忙"],"decisions":["怎麼建立人脈","如何請教別人"],"phrases":["好友很多卻沒人幫","弱連結"],"concepts":["弱連結","社交","協作"]}
+  },
+  {
+    "ep": "EP94", "title": "為生活留一個備案", "summary": "遇到作業、金錢或時間出狀況時，我能怎麼預留彈性？", "category": "改善生活習慣、提升效率", "worksheetUrl": "worksheets/EP94/", "videoUrl": "https://youtu.be/lCYgSNtsHlU?si=RsoheX1SjRSnr5bk",
+    "searchTerms": {"situations":["作業快截止","怕來不及","錢不夠用"],"feelings":["怕出錯","很慌"],"decisions":["怎麼留備案","如何規劃時間"],"phrases":["總是來不及","事情突然出包"],"concepts":["備案","緩衝時間","規劃"]}
+  },
+  {
+    "ep": "EP95", "title": "找到適合我的運動節奏", "summary": "我怎麼選擇能持續、又不把自己操到沒電的運動？", "category": "改善生活習慣、提升效率", "worksheetUrl": "worksheets/EP95/", "videoUrl": "https://youtu.be/3KaJrIHNj-Q?si=MVTET_V9RIJ55fZw",
+    "searchTerms": {"situations":["想開始運動","運動後很累"],"feelings":["沒動力運動","怕運動太累"],"decisions":["怎麼開始運動","運動強度怎麼選"],"phrases":["運動完想睡","懶得運動"],"concepts":["運動習慣","心率","BDNF"]}
+  },
+  {
+    "ep": "EP96", "title": "不被自我貶低的對話掏空", "summary": "朋友一直說自己很爛時，我可以怎麼回應，也照顧自己的感受？", "category": "學會和別人相處、不互相傷害", "worksheetUrl": "worksheets/EP96/", "videoUrl": "https://youtu.be/RhC4CwbD7B8?si=6mWiBOjWEkIK4alP",
+    "searchTerms": {"situations":["朋友一直說自己很爛","被負能量影響"],"feelings":["被掏空","很心疼","很煩"],"decisions":["怎麼安慰朋友","如何設界線"],"phrases":["我就爛","朋友一直否定自己"],"concepts":["自我貶低","人際界線","情緒支持"]}
+  },
+  {
+    "ep": "EP99", "title": "找出我最在意的工作條件", "summary": "我以為在找工作時，其實想過的是什麼樣的生活？", "category": "找到自己的特質與使用方式", "worksheetUrl": "worksheets/EP99/", "videoUrl": "https://youtu.be/V9H2iouv_Z4?si=TrQ2qH67_eeoSTF4",
+    "searchTerms": {"situations":["找不到工作方向","比較職缺"],"feelings":["職涯迷惘","不知道要什麼"],"decisions":["怎麼選工作","職涯怎麼規劃"],"phrases":["找不到想走的路","我想過什麼生活"],"concepts":["職涯需求","工作條件","價值觀"]}
+  },
+  {
     "ep": "EP101",
     "title": "把工作任務講明白",
     "summary": "主管交代得很抽象、工作分配不清楚或事情卡住時，我怎麼確認責任、交付方式與求助問題？",
