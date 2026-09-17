@@ -19,27 +19,6 @@
   },
   "fontFallbackExceptions": [
     {
-      "scope": "EP93",
-      "font": "genyo-400",
-      "character": "弱",
-      "text": "善用弱連結",
-      "reason": "弱連結是本集核心社會學概念，改寫會改變分類意義；原始字型未提供此字。"
-    },
-    {
-      "scope": "EP93",
-      "font": "genyo-400",
-      "character": "弱",
-      "text": "別把社交能量都用在點讚｜3招教你善用弱連結，讓別人看見你",
-      "reason": "影片原始標題保留來源用語；原始字型未提供此字。"
-    },
-    {
-      "scope": "EP96",
-      "font": "genyo-400",
-      "character": "掏",
-      "text": "不再被負能量掏空｜總是說「我就爛」，如何與習慣自我貶低的人相處？",
-      "reason": "影片原始標題保留來源用語；原始字型未提供此字。"
-    },
-    {
       "scope": "EP103",
       "font": "genyo-400",
       "character": "粹",
