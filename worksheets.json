@@ -5,11 +5,38 @@
     "summary": "主管交代得很抽象、工作分配不清楚或事情卡住時，我怎麼確認責任、交付方式與求助問題？",
     "category": "避開職場常見問題與風險",
     "searchTerms": {
-      "situations": ["主管交代不清楚", "工作分配不清", "不知道工作要做到什麼程度", "工作卡住", "剛進職場"],
-      "feelings": ["怕做錯", "怕問主管", "覺得主管不滿意", "工作很焦慮"],
-      "decisions": ["怎麼問主管", "怎麼確認工作內容", "工作卡住怎麼辦", "如何回報進度"],
-      "phrases": ["明明有做事老闆還是不滿意", "主管講得太抽象", "不知道自己負責什麼", "工作怎麼問"],
-      "concepts": ["工作社會技能", "責任釐清", "任務管理", "求助", "工作溝通"]
+      "situations": [
+        "主管交代不清楚",
+        "工作分配不清",
+        "不知道工作要做到什麼程度",
+        "工作卡住",
+        "剛進職場"
+      ],
+      "feelings": [
+        "怕做錯",
+        "怕問主管",
+        "覺得主管不滿意",
+        "工作很焦慮"
+      ],
+      "decisions": [
+        "怎麼問主管",
+        "怎麼確認工作內容",
+        "工作卡住怎麼辦",
+        "如何回報進度"
+      ],
+      "phrases": [
+        "明明有做事老闆還是不滿意",
+        "主管講得太抽象",
+        "不知道自己負責什麼",
+        "工作怎麼問"
+      ],
+      "concepts": [
+        "工作社會技能",
+        "責任釐清",
+        "任務管理",
+        "求助",
+        "工作溝通"
+      ]
     },
     "worksheetUrl": "worksheets/EP101/",
     "videoUrl": "https://youtu.be/FRWoH-q3dH0?si=RzKmk6gapaq1w0B_"
@@ -20,11 +47,38 @@
     "summary": "做完職能測驗後，我可以怎麼把模糊的能力敘述拆成情境、行動與例子，看懂自己真正做得到什麼？",
     "category": "找到自己的特質與使用方式",
     "searchTerms": {
-      "situations": ["做完職能測驗", "不知道自己有什麼能力", "履歷能力怎麼寫", "職涯測驗結果看不懂", "自我介紹"],
-      "feelings": ["覺得自己沒專長", "看不懂測驗結果", "不知道怎麼形容自己", "對未來迷惘"],
-      "decisions": ["怎麼看職能測驗", "如何找自己的能力", "能力怎麼舉例", "測驗結果可信嗎"],
-      "phrases": ["做完測驗還是不知道能力", "我有外語能力是什麼意思", "溝通能力良好", "不知道自己擅長什麼"],
-      "concepts": ["職能測驗", "能力盤點", "情境證據", "自我認識", "職涯"]
+      "situations": [
+        "做完職能測驗",
+        "不知道自己有什麼能力",
+        "履歷能力怎麼寫",
+        "職涯測驗結果看不懂",
+        "自我介紹"
+      ],
+      "feelings": [
+        "覺得自己沒專長",
+        "看不懂測驗結果",
+        "不知道怎麼形容自己",
+        "對未來迷惘"
+      ],
+      "decisions": [
+        "怎麼看職能測驗",
+        "如何找自己的能力",
+        "能力怎麼舉例",
+        "測驗結果可信嗎"
+      ],
+      "phrases": [
+        "做完測驗還是不知道能力",
+        "我有外語能力是什麼意思",
+        "溝通能力良好",
+        "不知道自己擅長什麼"
+      ],
+      "concepts": [
+        "職能測驗",
+        "能力盤點",
+        "情境證據",
+        "自我認識",
+        "職涯"
+      ]
     },
     "worksheetUrl": "worksheets/EP102/",
     "videoUrl": "https://youtu.be/aECgZ9epROY?si=fGx4Dw87YtnJF-YZ"
@@ -35,11 +89,39 @@
     "summary": "Google、朋友、Foodie 或 Threads 的說法互相衝突時，我怎麼找出真正對自己有用的線索？",
     "category": "看懂社會為什麼這樣運作",
     "searchTerms": {
-      "situations": ["選餐廳看評價", "商品評價互相矛盾", "不知道該相信誰", "看到網紅推薦", "網路資訊太多"],
-      "feelings": ["怕踩雷", "看評論越看越焦慮", "不相信業配", "不知道資訊是真是假"],
-      "decisions": ["餐廳怎麼選", "評價可信嗎", "要不要相信網紅", "如何判斷資訊"],
-      "phrases": ["Google 評價能信嗎", "朋友和網友說的不一樣", "Foodie 是業配嗎", "Threads 的心得是真的嗎"],
-      "concepts": ["資訊判斷", "網路評價", "業配", "統計", "個人經驗", "需求"]
+      "situations": [
+        "選餐廳看評價",
+        "商品評價互相矛盾",
+        "不知道該相信誰",
+        "看到網紅推薦",
+        "網路資訊太多"
+      ],
+      "feelings": [
+        "怕踩雷",
+        "看評論越看越焦慮",
+        "不相信業配",
+        "不知道資訊是真是假"
+      ],
+      "decisions": [
+        "餐廳怎麼選",
+        "評價可信嗎",
+        "要不要相信網紅",
+        "如何判斷資訊"
+      ],
+      "phrases": [
+        "Google 評價能信嗎",
+        "朋友和網友說的不一樣",
+        "Foodie 是業配嗎",
+        "Threads 的心得是真的嗎"
+      ],
+      "concepts": [
+        "資訊判斷",
+        "網路評價",
+        "業配",
+        "統計",
+        "個人經驗",
+        "需求"
+      ]
     },
     "worksheetUrl": "worksheets/EP103/",
     "videoUrl": "https://youtu.be/UawRf5Uucgw?si=aAXDo3zyXPGbl6r8"
@@ -50,11 +132,40 @@
     "summary": "月底發現錢不夠用時，我可以怎麼看懂自己花錢時在重視什麼？",
     "category": "改善生活習慣、提升效率",
     "searchTerms": {
-      "situations": ["月底沒錢", "錢不知道花到哪裡", "衝動消費", "朋友約吃飯花太多", "帳單讓我嚇到"],
-      "feelings": ["花錢後罪惡感", "月底很焦慮", "覺得自己亂花錢", "想對自己好又怕花太多"],
-      "decisions": ["要不要買", "怎麼控制花錢", "想要跟需要怎麼分", "怎麼分配生活費"],
-      "phrases": ["月底錢又不見了", "吃土", "我是不是太會花錢", "花錢買快樂", "總是請客"],
-      "concepts": ["消費風格", "金錢人格", "消費習慣", "價值交換", "預算", "資源管理"]
+      "situations": [
+        "月底沒錢",
+        "錢不知道花到哪裡",
+        "衝動消費",
+        "朋友約吃飯花太多",
+        "帳單讓我嚇到"
+      ],
+      "feelings": [
+        "花錢後罪惡感",
+        "月底很焦慮",
+        "覺得自己亂花錢",
+        "想對自己好又怕花太多"
+      ],
+      "decisions": [
+        "要不要買",
+        "怎麼控制花錢",
+        "想要跟需要怎麼分",
+        "怎麼分配生活費"
+      ],
+      "phrases": [
+        "月底錢又不見了",
+        "吃土",
+        "我是不是太會花錢",
+        "花錢買快樂",
+        "總是請客"
+      ],
+      "concepts": [
+        "消費風格",
+        "金錢人格",
+        "消費習慣",
+        "價值交換",
+        "預算",
+        "資源管理"
+      ]
     },
     "worksheetUrl": "worksheets/EP104/",
     "videoUrl": "https://youtu.be/xGGD6BNW2hA?si=IObm6HDIiubgccVm"
@@ -65,11 +176,40 @@
     "summary": "沒有得獎或實習經驗時，我可以如何把日常經歷和他人的評價，整理成履歷上的能力證據？",
     "category": "避開職場常見問題與風險",
     "searchTerms": {
-      "situations": ["沒有實習經驗", "履歷不知道寫什麼", "打工經驗怎麼寫", "沒有亮眼經歷", "找工作寫履歷"],
-      "feelings": ["覺得自己沒能力", "履歷很空白", "怕經歷不夠", "不知道自己的優點"],
-      "decisions": ["履歷怎麼寫", "日常經驗能寫履歷嗎", "如何整理工作能力", "MBTI能寫在履歷嗎"],
-      "phrases": ["我好像沒什麼能寫", "沒有得過獎", "沒有實習", "履歷空白", "把生活寫成能力"],
-      "concepts": ["履歷", "經歷重構", "能力盤點", "人格特質", "MBTI", "求職"]
+      "situations": [
+        "沒有實習經驗",
+        "履歷不知道寫什麼",
+        "打工經驗怎麼寫",
+        "沒有亮眼經歷",
+        "找工作寫履歷"
+      ],
+      "feelings": [
+        "覺得自己沒能力",
+        "履歷很空白",
+        "怕經歷不夠",
+        "不知道自己的優點"
+      ],
+      "decisions": [
+        "履歷怎麼寫",
+        "日常經驗能寫履歷嗎",
+        "如何整理工作能力",
+        "MBTI能寫在履歷嗎"
+      ],
+      "phrases": [
+        "我好像沒什麼能寫",
+        "沒有得過獎",
+        "沒有實習",
+        "履歷空白",
+        "把生活寫成能力"
+      ],
+      "concepts": [
+        "履歷",
+        "經歷重構",
+        "能力盤點",
+        "人格特質",
+        "MBTI",
+        "求職"
+      ]
     },
     "worksheetUrl": "worksheets/EP105/",
     "videoUrl": "https://www.youtube.com/watch?v=Yidgm4LnoEY"
@@ -519,5 +659,138 @@
     },
     "videoUrl": "https://youtu.be/wyMzJG9dPNA?si=gytXB_2o8VPmL0Zq",
     "worksheetUrl": "worksheets/EP117/"
+  },
+  {
+    "ep": "EP91",
+    "title": "整理我的獨特知識",
+    "summary": "了解系所帶給自己的知識",
+    "category": "找到自己的特質與使用方式",
+    "worksheetUrl": "worksheets/EP91/",
+    "videoUrl": "https://youtu.be/THkxKcgHMe0?si=TTbp44mJfzBxaP6W",
+    "searchTerms": {
+      "situations": [
+        "Ep.91只有月薪三萬，成功學還能成功嗎？｜普通人的納瓦爾生存攻略"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "了解系所帶給自己的知識"
+      ]
+    }
+  },
+  {
+    "ep": "EP92",
+    "title": "提高我的壓力臨界點",
+    "summary": "提高壓力臨界點",
+    "category": "處理情緒低落、焦慮和壓力",
+    "worksheetUrl": "worksheets/EP92/",
+    "videoUrl": "https://youtu.be/lvoe6cZK_Ic?si=WRkAZ15llhU-TOwL",
+    "searchTerms": {
+      "situations": [
+        "Ep.92內在卓越的武士道修煉│一樣是壓力，為什麼有人崩潰，有人升級？"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "提高壓力臨界點"
+      ]
+    }
+  },
+  {
+    "ep": "EP93",
+    "title": "把社交能量用在有用的連結",
+    "summary": "有效社交",
+    "category": "學會和別人相處、不互相傷害",
+    "worksheetUrl": "worksheets/EP93/",
+    "videoUrl": "https://youtu.be/hMVlQiXDl_M?si=NWgqCok3Tst5wcIn",
+    "searchTerms": {
+      "situations": [
+        "Ep. 93別把社交能量都用在點讚│3招教你善用弱連結，讓別人看見你"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "有效社交"
+      ]
+    }
+  },
+  {
+    "ep": "EP94",
+    "title": "為生活留一個備案",
+    "summary": "處理生活中的不確定性",
+    "category": "改善生活習慣、提升效率",
+    "worksheetUrl": "worksheets/EP94/",
+    "videoUrl": "https://youtu.be/lCYgSNtsHlU?si=RsoheX1SjRSnr5bk",
+    "searchTerms": {
+      "situations": [
+        "Ep. 94在名為人生的地下城，我獨自升級｜從初級到頂級大人的系統進化論"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "處理生活中的不確定性"
+      ]
+    }
+  },
+  {
+    "ep": "EP95",
+    "title": "找到適合我的運動節奏",
+    "summary": "運動習慣",
+    "category": "改善生活習慣、提升效率",
+    "worksheetUrl": "worksheets/EP95/",
+    "videoUrl": "https://youtu.be/3KaJrIHNj-Q?si=MVTET_V9RIJ55fZw",
+    "searchTerms": {
+      "situations": [
+        "Ep.95運動完是清醒還是想睡？｜揭秘美國明星高中的大腦改造術：讓運動從安眠藥變能量飲料"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "運動習慣"
+      ]
+    }
+  },
+  {
+    "ep": "EP96",
+    "title": "不被自我貶低的對話掏空",
+    "summary": "釐清、表達自己的感受",
+    "category": "學會和別人相處、不互相傷害",
+    "worksheetUrl": "worksheets/EP96/",
+    "videoUrl": "https://youtu.be/RhC4CwbD7B8?si=6mWiBOjWEkIK4alP",
+    "searchTerms": {
+      "situations": [
+        "Ep.96 不再被負能量掏空｜總是說「我就爛」，如何與習慣自我貶低的人相處？"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "釐清、表達自己的感受"
+      ]
+    }
+  },
+  {
+    "ep": "EP99",
+    "title": "找出我最在意的工作條件",
+    "summary": "釐清現階段自己在工作方面最強烈的需求",
+    "category": "找到自己的特質與使用方式",
+    "worksheetUrl": "worksheets/EP99/",
+    "videoUrl": "https://youtu.be/V9H2iouv_Z4?si=TrQ2qH67_eeoSTF4",
+    "searchTerms": {
+      "situations": [
+        "Ep.99 找不到想走的路？｜你以為自己在找工作，其實你在找想過的生活"
+      ],
+      "feelings": [],
+      "decisions": [],
+      "phrases": [],
+      "concepts": [
+        "釐清現階段自己在工作方面最強烈的需求"
+      ]
+    }
   }
 ]
