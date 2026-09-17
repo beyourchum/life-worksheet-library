@@ -14,7 +14,7 @@
     "worksheets/EP113/index.html": "713e594cd4bf1205be8b1215be370e71af6a1e72fd28e6724b572cc22f72e62e",
     "worksheets/EP114/index.html": "7df3cbed03c565621e870a07a5d90b89c1be1eda80a0bbe2002da686efdab03b",
     "worksheets/EP115/index.html": "c3f7faa5992466498894a2aa15c033056a378a6ee776e67dd8a17cf550d9d834",
-    "worksheets/EP117/index.html": "123cc4ed76c43fa87e6db44be648a0bf982bd59624a6932ad5f9c159a385bf54",
+    "worksheets/EP117/index.html": "fae4a641a87f42b5228264d552dcc7c443f5b400216fa35f69399ce2f2130f38",
     "worksheets/EP62/index.html": "6d042690a65e72cabf7c385b4c3fcf2d070b670d53bbb8164a2f2554be4c7046"
   },
   "scopes": {
@@ -16980,8 +16980,8 @@
           ]
         },
         "genki-700": {
-          "bytes": 61968,
-          "sha256": "baa9b7824fb6e772de4f683f3af14ff49803915676750e848ead2a9081b97b09",
+          "bytes": 61900,
+          "sha256": "9f0100f5bc9f8b330ebf15cae6310d466768895dba23cd9e0bf748c82fbfd1dd",
           "characters": [
             32,
             33,
@@ -17078,7 +17078,6 @@
             124,
             125,
             126,
-            8230,
             8594,
             12289,
             12290,
@@ -17465,8 +17464,8 @@
           ]
         },
         "genyo-400": {
-          "bytes": 58436,
-          "sha256": "625c967b9c69c4a9232d19af1c366cd4226cec491ccf1ae8d68f2c824836d76c",
+          "bytes": 58500,
+          "sha256": "3586002f525864bdc00d66950d2aeccb595eeb58af879cf8b963abb2ead7bb91",
           "characters": [
             32,
             33,
@@ -17561,7 +17560,6 @@
             124,
             125,
             126,
-            8230,
             8594,
             12289,
             12290,
@@ -17948,8 +17946,8 @@
           ]
         },
         "genyo-700": {
-          "bytes": 56768,
-          "sha256": "cfd0dd6f8a5f0b2e1626dbe334cee879f17dee65caf6204b58700604d1b84e11",
+          "bytes": 56704,
+          "sha256": "55295023ed59215821f18dcec50d4c7723b9934c0a1d353258d7c03e718dcc84",
           "characters": [
             32,
             33,
@@ -18044,7 +18042,6 @@
             124,
             125,
             126,
-            8230,
             8594,
             12289,
             12290,
@@ -18416,7 +18413,7 @@
           ]
         }
       },
-      "cssHash": "44696fe994c38db92ab7ce41383faea98e857c4450b6c61822ed487966f2df10"
+      "cssHash": "017d846128495668ca98aef6892e033e869393f31b17673da37e973817d3f9ea"
     },
     "EP62": {
       "fonts": {
