@@ -1,5 +1,20 @@
 [
   {
+    "ep": "EP103",
+    "title": "從網路資訊找出可用線索",
+    "summary": "Google、朋友、Foodie 或 Threads 的說法互相衝突時，我怎麼找出真正對自己有用的線索？",
+    "category": "看懂社會為什麼這樣運作",
+    "searchTerms": {
+      "situations": ["選餐廳看評價", "商品評價互相矛盾", "不知道該相信誰", "看到網紅推薦", "網路資訊太多"],
+      "feelings": ["怕踩雷", "看評論越看越焦慮", "不相信業配", "不知道資訊是真是假"],
+      "decisions": ["餐廳怎麼選", "評價可信嗎", "要不要相信網紅", "如何判斷資訊"],
+      "phrases": ["Google 評價能信嗎", "朋友和網友說的不一樣", "Foodie 是業配嗎", "Threads 的心得是真的嗎"],
+      "concepts": ["資訊判斷", "網路評價", "業配", "統計", "個人經驗", "需求"]
+    },
+    "worksheetUrl": "worksheets/EP103/",
+    "videoUrl": "https://youtu.be/UawRf5Uucgw?si=aAXDo3zyXPGbl6r8"
+  },
+  {
     "ep": "EP104",
     "title": "看懂我的消費風格",
     "summary": "月底發現錢不夠用時，我可以怎麼看懂自己花錢時在重視什麼？",
