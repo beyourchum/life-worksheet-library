@@ -212,7 +212,7 @@ async function withinFontBudget(page, home) {
       });
     }
 
-    await record('慢速字型不造成版面跳動', async () => {
+    await record('首次慢速載入自動套用字型並維持版面穩定', async () => {
       const slow = await browser.newPage();
       try {
         await slow.addInitScript(() => {
@@ -222,13 +222,33 @@ async function withinFontBudget(page, home) {
         await slow.route('**/*.woff2', async (route) => { await new Promise((resolve) => setTimeout(resolve, 1800)); await route.continue(); });
         await slow.goto(base + '/worksheets/EP109/', { waitUntil: 'domcontentloaded' });
         await slow.waitForTimeout(400);
-        const before = await slow.locator('h1').boundingBox();
         await slow.evaluate(() => document.fonts.ready);
-        assert.deepEqual(await slow.locator('h1').boundingBox(), before);
+        assert(await slow.evaluate(() => document.fonts.check('800 32px "Glow Sans TC"', '面對失敗')));
         const cls = await slow.evaluate(() => window.shifts.reduce((a, b) => a + b, 0));
         assert(cls <= policy.budgets.layoutShift, `字型 CLS ${cls} 超出預算`);
         return { cls };
       } finally { await slow.close(); }
+    });
+
+    await record('首次載入超過等待期限仍自動顯示指定字型', async () => {
+      for (const url of ['/', '/worksheets/EP109/']) {
+        const cold = await browser.newPage();
+        try {
+          await cold.route('**/*.woff2', async (route) => {
+            await new Promise((resolve) => setTimeout(resolve, 3600));
+            await route.continue();
+          });
+          await cold.goto(base + url, { waitUntil: 'domcontentloaded' });
+          await cold.evaluate(() => document.fonts.ready);
+          const session = await cold.context().newCDPSession(cold);
+          await session.send('DOM.enable');
+          await session.send('CSS.enable');
+          const { root } = await session.send('DOM.getDocument');
+          const { nodeId } = await session.send('DOM.querySelector', { nodeId: root.nodeId, selector: url === '/' ? 'h1 span' : 'h1' });
+          const { fonts } = await session.send('CSS.getPlatformFontsForNode', { nodeId });
+          assert(fonts.some((font) => font.isCustomFont && font.glyphCount > 0), `${url}: 首次載入未實際使用自訂字型`);
+        } finally { await cold.close(); }
+      }
     });
 
     await record('檢查器確實能抓到缺字與列印溢出', async () => {

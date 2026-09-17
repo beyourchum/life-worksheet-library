@@ -151,7 +151,7 @@ for scope, file in scopes:
                      f'  font-family: "{family}";\n  font-style: normal;\n'
                      f'  font-weight: {weight};\n'
                      + ('  font-stretch: condensed;\n' if family == 'Glow Sans TC' else '')
-                     + '  font-display: optional;\n'
+                     + '  font-display: block;\n'
                      f'  src: url({filename}.woff2) format("woff2");\n'
                      f'  unicode-range: {", ".join(ranges)};\n}}\n')
         scope_manifest['fonts'][filename] = {'bytes': output.stat().st_size, 'sha256': hashlib.sha256(output.read_bytes()).hexdigest(), 'characters': points}

@@ -51,7 +51,7 @@ for (const [scope, data] of Object.entries(fontManifest.scopes)) {
   }
   check(totalBytes <= policy.budgets[home ? 'homeFontBytes' : 'worksheetFontBytes'], `${scope}: 字型總量 ${totalBytes} bytes 超出預算`);
   check(Object.keys(data.fonts).length <= policy.budgets[home ? 'homeFontRequests' : 'worksheetFontRequests'], `${scope}: 字型檔案數超出預算`);
-  check((fontCss.match(/font-display: optional;/g) || []).length === Object.keys(data.fonts).length, `${scope}: 必須避免慢速字型載入後跳動`);
+  check((fontCss.match(/font-display: block;/g) || []).length === Object.keys(data.fonts).length, `${scope}: 必須在字型載入完成後自動套用`);
   const html = read(home ? 'index.html' : `worksheets/${scope}/index.html`);
   check(html.includes(`compact/${scope}/fonts.css`), `${scope}: 必須引用自己頁面的精簡字型`);
   check(!html.includes('ep62-fonts.css') && !html.includes('site-fonts.css') && !html.includes('genki/swap'), `${scope}: 不可重新載入舊的大型字型`);
