@@ -82,6 +82,11 @@ async function withinFontBudget(page, home) {
       finally { await fixture.close(); }
     });
     page.on('pageerror', (e) => errors.push(e.message));
+    await record('EP90 兩項上限、其他、暫存與清除', async () => {
+      const fixture = await browser.newPage();
+      try { await require('./ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
+      finally { await fixture.close(); }
+    });
     await record('EP99 跨頁十項上限、工作比較與暫存', async () => {
       const fixture = await browser.newPage();
       try { await require('./ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
