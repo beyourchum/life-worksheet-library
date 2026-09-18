@@ -212,6 +212,8 @@ p { margin: .6rem 0; }
 .choice input { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; margin: 0; accent-color: var(--green); }
 .choice.other-choice { flex-wrap: wrap; }
 .choice-toggle { display: flex; align-items: center; gap: .65rem; cursor: pointer; }
+.worksheet[data-worksheet-id="EP86"] .choices-inline .choice input { margin-right: .2rem; }
+.worksheet[data-worksheet-id="EP86"] .choices-inline .choice > span { margin-left: .2rem; }
 .other-input, .short-answer, textarea {
   min-width: 0;
   border: 0;
