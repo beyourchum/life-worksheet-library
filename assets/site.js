@@ -144,7 +144,7 @@ function renderPage() {
 }
 
 function fetchJSON(url) {
-  return fetch(url).then((response) => {
+  return fetch(url, { cache: 'no-store' }).then((response) => {
     if (!response.ok) throw new Error(url + ': HTTP ' + response.status);
     return response.json();
   });

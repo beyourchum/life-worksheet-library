@@ -53,6 +53,6 @@ async function testEp94Backup(page, base) {
   await page.evaluate(()=>sessionStorage.setItem('worksheet:EP94:draft-v1',JSON.stringify({'ep94-work-backup':{value:'原本工作備案'},'ep94-money-backup':{value:'原本金錢備案'},'ep94-time-backup':{value:'原本時間備案'}})));
   await page.reload();for(const kind of ['work','money','time']){assert(await input(kind+'-legacy').isVisible());assert((await value(kind+'-backup')).startsWith('原本'));}
   page.once('dialog',d=>d.accept());await page.locator('[data-clear]').click();for(const kind of ['work','money','time'])assert(await input(kind+'-legacy').isHidden());
-  await page.goto(base);for(const query of ['預留緩衝','來不及']){await page.locator('#search').fill(query);await page.waitForTimeout(500);assert(await page.locator('.result-row').filter({hasText:'為生活留一個備案'}).count());}
+  await page.goto(base);await page.locator('#search-folder > summary').click();for(const query of ['預留緩衝','來不及']){await page.locator('#search').fill(query);await page.waitForTimeout(500);assert(await page.locator('.result-row').filter({hasText:'為生活留一個備案'}).count());}
 }
 module.exports={testEp94Backup};

@@ -10,6 +10,7 @@ const categories = JSON.parse(read('catalog/categories.json'));
 const config = JSON.parse(read('config/search.json'));
 const policy = JSON.parse(read('config/quality-policy.json'));
 const qualityExceptions = JSON.parse(read('config/quality-exceptions.json'));
+const categoryAliases = JSON.parse(read('config/category-aliases.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
 for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
@@ -96,6 +97,9 @@ for (const file of files) {
 }
 check(Array.isArray(items) && items.length > 0, 'catalog/worksheets.json 必須有內容');
 check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'catalog/categories.json 必須是無重複的分類名稱');
+require('./tests/category-alias-policy.test.cjs');
+const { categoryAliasIssues } = require('./rules/category-alias-policy.cjs');
+for (const issue of categoryAliasIssues(categories, items, categoryAliases)) errors.push(issue);
 check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
 const videos = new Map();
 require('./tests/video-policy.test.cjs');

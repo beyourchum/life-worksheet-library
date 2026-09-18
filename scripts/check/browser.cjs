@@ -120,11 +120,24 @@ async function withinFontBudget(page, home) {
       page.on('request', (request) => requests.push(request.url()));
       await page.goto(base);
       await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      assert.equal(await page.locator('#book-answer').getAttribute('aria-hidden'), 'true');
+      await page.locator('#open-inspiration').click();
+      await page.waitForFunction(() => document.querySelector('#inspiration-book').classList.contains('is-open'));
+      assert.notEqual(await page.locator('#book-cover').evaluate((cover) => getComputedStyle(cover).transform), 'none', '封面應以書脊為軸翻開');
+      assert.equal(await page.locator('#book-answer').getAttribute('aria-hidden'), 'false');
+      assert.match(await page.locator('#inspiration-meta').innerText(), /^EP\d+ · /);
+      assert(await page.locator('#inspiration-link').innerText());
+      const firstInspiration = await page.locator('#inspiration-meta').innerText();
+      await page.locator('#another-inspiration').click();
+      await page.waitForFunction((previous) => document.querySelector('#inspiration-meta').textContent !== previous, firstInspiration);
+      assert.notEqual(await page.locator('#inspiration-meta').innerText(), firstInspiration, '再次翻閱應提供不同靈感');
+      assert.match(await page.locator('#inspiration-status').innerText(), /^今天的靈感：/);
       assert.equal(await page.locator('.result-row').count(), Math.min(items.length, policy.pageSize));
       assert(!requests.some((url) => url.endsWith('search-index.json')), '未搜尋就載入搜尋索引');
       assert(!requests.some((url) => /\/worksheets\/.*\.html/.test(url)), '首頁預先下載文章全文');
       const resources = await withinFontBudget(page, true);
       assert.deepEqual(await fontIssues(page, 'home'), []);
+      await page.locator('#search-folder > summary').click();
       await page.locator('#search').fill('巔峰');
       await page.waitForFunction(() => document.querySelector('.result-ep')?.textContent === '109');
       assert.equal(requests.filter((url) => url.endsWith('search-index.json')).length, 1);
@@ -169,6 +182,7 @@ async function withinFontBudget(page, home) {
       assert.equal(await page.locator('.result-ep').first().innerText(), '1');
       assert.equal(await page.locator('.result-row').first().locator('.result-title a').getAttribute('href'), 'articles/example/');
       assert.equal(await page.locator('.result-row').first().getByText('學習單', { exact: true }).count(), 0);
+      await page.locator('#search-folder > summary').click();
       await page.locator('#search').dispatchEvent('compositionstart');
       await page.locator('#search').fill('容量測試唯一詞');
       await page.waitForTimeout(policy.searchDebounceMs + 80);
@@ -179,7 +193,7 @@ async function withinFontBudget(page, home) {
       await page.locator('#search').fill('zzzznone');
       await page.locator('#reset-button').waitFor({ state: 'visible' });
       await page.locator('#reset-button').click();
-      await page.locator('.category-button').nth(1).click();
+      await page.locator('#categories .category-button').first().click();
       assert.equal(await page.locator('#page-select').inputValue(), '1');
       const shown = await page.locator('.result-ep').allTextContents();
       assert(shown.every((ep) => synthetic.find((x) => x.ep === `EP${ep}`).category === catalog.categories[0]));
@@ -195,6 +209,7 @@ async function withinFontBudget(page, home) {
       });
       await page.goto(base);
       await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      await page.locator('#search-folder > summary').click();
       await page.locator('#search').fill('規則');
       await page.locator('#retry-load').waitFor({ state: 'visible' });
       await page.locator('#retry-load').click();
@@ -203,6 +218,7 @@ async function withinFontBudget(page, home) {
       await page.route('**/data/search-index.json', async (route) => { await new Promise((r) => setTimeout(r, 800)); await route.continue(); });
       await page.goto(base);
       await page.waitForFunction(() => document.querySelectorAll('.result-row').length > 0);
+      await page.locator('#search-folder > summary').click();
       await page.locator('#search').fill('規則');
       await page.waitForTimeout(policy.searchDebounceMs + 40);
       await page.locator('#search').fill('');
