@@ -1,5 +1,20 @@
 [
   {
+    "ep": "EP88",
+    "title": "跟 AI 當朋友！變動世界裡的安穩生存指南",
+    "summary": "使用 AI 或刷到 AI 資訊時感到跟不上、怕被取代或越看越焦慮，我可以怎麼找回自己的步調？",
+    "category": "處理情緒低落、焦慮和壓力",
+    "searchTerms": {
+      "situations": ["AI 寫錯一直改", "用 AI 寫信怕被拆穿", "怕被 AI 取代", "刷 Threads 很焦慮"],
+      "feelings": ["跟不上 AI", "覺得自己很廢", "怕被淘汰", "使用 AI 很焦慮"],
+      "decisions": ["AI 可以怎麼幫我", "怎麼減少 AI 焦慮", "要不要關掉 AI 討論", "如何保留自己的步調"],
+      "phrases": ["AI 太強了", "我會不會被取代", "怕社交穿幫", "AI 是來被我改的", "數位小弟"],
+      "concepts": ["人工智慧", "AI 焦慮", "黃仁勳", "NVIDIA", "試錯", "修正", "心理餘裕"]
+    },
+    "worksheetUrl": "worksheets/EP88/",
+    "videoUrl": "https://www.youtube.com/watch?v=agpi-9fGe-w"
+  },
+  {
     "ep": "EP89",
     "title": "轉動我的「九宮格」計畫",
     "summary": "對畢業後的方向感到模糊時，從八個面向找出一個最容易做到或最不排斥的微小行動。",
