@@ -223,6 +223,42 @@ p { margin: .6rem 0; }
 }
 .other-input { min-width: 7rem; flex: 1; padding: .3rem .2rem; }
 .choice:has(.other-input) { flex-wrap: wrap; }
+.worksheet[data-worksheet-id="EP85"] .ep85-situation-card {
+  align-items: flex-start;
+  padding: .55rem .75rem .65rem;
+  line-height: 1.25;
+}
+.worksheet[data-worksheet-id="EP85"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP103"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP103"] h3 { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP85"] .ep85-card-content {
+  display: grid;
+  gap: .12rem;
+  min-width: 0;
+  flex: 1;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+.worksheet[data-worksheet-id="EP85"] .ep85-card-title {
+  margin-bottom: .18rem;
+  font-size: 1rem;
+}
+.worksheet[data-worksheet-id="EP85"] .ep85-card-label {
+  margin-top: .12rem;
+  color: var(--muted);
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.worksheet[data-worksheet-id="EP85"] .ep85-card-negative,
+.worksheet[data-worksheet-id="EP85"] .ep85-card-positive,
+.worksheet[data-worksheet-id="EP85"] .ep85-card-need {
+  display: block;
+  padding: .2rem .4rem;
+  background: var(--card);
+}
+.worksheet[data-worksheet-id="EP85"] .ep85-card-negative { border-left: .22rem solid #b87979; }
+.worksheet[data-worksheet-id="EP85"] .ep85-card-need { border-left: .22rem solid var(--green); }
+.worksheet[data-worksheet-id="EP85"] .ep85-card-positive { border-left: .22rem solid #6e9a7c; background: #f7fbf7; }
 .example-note,
 .choice-example {
   margin: .35rem 0 .75rem;
@@ -397,6 +433,17 @@ p { margin: .6rem 0; }
     break-after: auto;
     page-break-after: auto;
   }
+  .worksheet[data-worksheet-id="EP85"] .ep85-situation-card {
+    padding: .25mm .9mm .3mm;
+    font-size: 7pt;
+    line-height: 1.12;
+  }
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-content { gap: .05mm; }
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-title { font-size: 8.5pt; }
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-label { margin-top: .05mm; font-size: 5.5pt; }
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-negative,
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-positive,
+  .worksheet[data-worksheet-id="EP85"] .ep85-card-need { padding: .1mm .5mm; }
   .page-meta {
     gap: 2mm;
     padding-bottom: 2mm;
