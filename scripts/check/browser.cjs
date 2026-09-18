@@ -145,6 +145,32 @@ async function withinFontBudget(page, home) {
         );
       } finally { await fixture.close(); }
     });
+    await record('EP86 其他選項的勾選與填寫欄保留', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      try {
+        await fixture.goto(`${base}/worksheets/EP86/`);
+        const otherChoices = fixture.locator('.choice:has(input[value="其他"]), .choice:has(input[value="未完成"])');
+        assert.equal(await otherChoices.count(), 4, '應保留四個其他或自訂回答選項');
+        assert.equal(await otherChoices.locator('input[type="checkbox"], input[type="radio"]').count(), 4, '每個其他或自訂回答選項都應保留勾選控制');
+        assert.equal(await otherChoices.locator('input[type="text"]').count(), 3, '三個自訂回答選項應保留行內填寫欄');
+        const firstOther = fixture.locator('.choice:has(input[name="ep86-situation"][value="其他"])');
+        await firstOther.locator('.choice-toggle input').check();
+        await firstOther.locator('input[type="text"]').fill('書桌旁的紙袋');
+        assert.equal(await firstOther.locator('.choice-toggle input').isChecked(), true, '其他選項應能勾選');
+        assert.equal(await firstOther.locator('input[type="text"]').inputValue(), '書桌旁的紙袋', '其他填寫欄應能輸入');
+      } finally { await fixture.close(); }
+    });
+    await record('EP86 五分鐘整理法維持一般選項樣式', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      try {
+        await fixture.goto(`${base}/worksheets/EP86/`);
+        const method = fixture.locator('.choice:has(input[name="ep86-method"][value="五分鐘"])');
+        await method.locator('input').check();
+        assert.equal(await method.evaluate((element) => element.classList.contains('choice-example')), false, '含「例如」的正常選項不應整張套用範例灰字');
+        assert.equal(await method.evaluate((element) => getComputedStyle(element).color), 'rgb(18, 20, 18)', '五分鐘整理法文字顏色應與其他方法一致');
+        assert.equal(await method.locator('.choice-inline-example').innerText(), '例如：一個收納格、一格書架或桌面的一角。', '句中範例應單獨換行並使用灰字');
+      } finally { await fixture.close(); }
+    });
     await record('EP103 與 EP106 共用複選上限、暫存與清除', async () => {
       const fixture = await browser.newPage();
       try { await require('./tests/shared-choice-limits.test.cjs').testSharedChoiceLimits(fixture, base); }

@@ -13,11 +13,21 @@
       && !/^[「『]/.test(detail);
     if (!title || !detail || !looksLikeHeading) return;
     copy.classList.add("choice-copy");
-    copy.replaceChildren(
+    const exampleMatch = detail.match(/^(.*?)（((?:例如|如)：[^()（）]+)）(.*)$/);
+    const detailMain = exampleMatch ? `${exampleMatch[1]}${exampleMatch[3]}`.trim() : detail;
+    const children = [
       Object.assign(document.createElement("strong"), { className: "choice-title", textContent: title }),
       document.createElement("br"),
-      document.createTextNode(detail)
-    );
+      document.createTextNode(detailMain)
+    ];
+    if (exampleMatch) {
+      copy.classList.add("choice-copy-with-example");
+      children.push(Object.assign(document.createElement("small"), {
+        className: "choice-inline-example",
+        textContent: exampleMatch[2].trim()
+      }));
+    }
+    copy.replaceChildren(...children);
     const input = copy.closest("label")?.querySelector("input");
     input?.setAttribute("data-choice-label", original);
   });
