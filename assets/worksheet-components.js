@@ -211,6 +211,19 @@
       label.querySelector('.choice-toggle').append(input);
       if (field) label.querySelector('span:last-child').append(field);
     });
+    const uncertain = worksheet.querySelector('input[name="ep85-judgment"][value="不確定"]');
+    if (uncertain) {
+      const label = uncertain.closest('label');
+      const field = label.querySelector('input[type="text"]');
+      if (field) {
+        field.remove();
+        const group = label.closest('.choices');
+        const answer = document.createElement('div');
+        answer.className = 'answer-field ep85-uncertain-answer';
+        answer.innerHTML = '<label for="ep85-judgment-note">我還不能判斷，因為我還需要知道：</label><textarea id="ep85-judgment-note" rows="3" placeholder="例如：我需要知道這筆花費是否在預算內，以及有沒有替代方案。"></textarea>';
+        group.after(answer);
+      }
+    }
     const replacements = new Map([['瑣事', '小事'], ['懶惰', '不勤快'], ['挫折', '受打擊'], ['廢物', '沒用的東西'], ['薄弱', '不夠堅定']]);
     const walker = document.createTreeWalker(worksheet, NodeFilter.SHOW_TEXT);
     const nodes = [];

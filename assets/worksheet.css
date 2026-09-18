@@ -259,6 +259,9 @@ p { margin: .6rem 0; }
 .worksheet[data-worksheet-id="EP85"] .ep85-card-negative { border-left: .22rem solid #b87979; }
 .worksheet[data-worksheet-id="EP85"] .ep85-card-need { border-left: .22rem solid var(--green); }
 .worksheet[data-worksheet-id="EP85"] .ep85-card-positive { border-left: .22rem solid #6e9a7c; background: #f7fbf7; }
+.worksheet[data-worksheet-id="EP85"] .ep85-uncertain-answer textarea {
+  min-height: 5.2rem;
+}
 .example-note,
 .choice-example {
   margin: .35rem 0 .75rem;
