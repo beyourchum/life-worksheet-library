@@ -371,9 +371,19 @@ body { background-image: radial-gradient(circle at 12% 4%, rgba(40, 117, 91, .07
 .chapter-heading .section-label { grid-template-columns: 64px 1fr; padding: 0; }
 .chapter-heading h2 { margin: 0; font-family: var(--display); font-size: clamp(1.8rem, 3.2vw, 3.25rem); line-height: 1; letter-spacing: -.045em; }
 .chapter-heading > div:last-child > p { margin: 8px 0 0; color: var(--muted); font-size: var(--step--1); }
-.categories { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; border: 0; }
-.categories.three-column-topics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.category-button { min-height: 96px; grid-template-columns: minmax(0, 1fr); align-content: space-between; gap: 10px; padding: 15px 17px 13px 22px; border: 1px solid #c4cbc5; border-radius: 2px; background: #f4f1e7; box-shadow: 0 8px 22px rgba(33, 47, 39, .035); clip-path: none; overflow: hidden; }
+.category-directory { position: relative; margin-inline: calc(50% - 50vw); padding-inline: max(32px, calc((100vw - min(1440px, calc(100vw - 64px))) / 2)); overflow: hidden; }
+.category-directory-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 12px; }
+.category-directory-heading p { margin: 0; color: var(--muted); font-size: var(--step--1); }
+.category-scroll-controls { display: flex; gap: 6px; }
+.category-scroll-controls button { display: grid; width: 42px; height: 42px; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: var(--canvas); cursor: pointer; transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease; }
+.category-scroll-controls button:hover:not(:disabled) { border-color: var(--accent); color: var(--canvas); background: var(--accent); }
+.category-scroll-controls button:disabled { opacity: .32; cursor: default; }
+.categories { display: flex; flex-wrap: nowrap; gap: 10px; margin: 0; padding: 8px 2px 22px; border: 0; overflow-x: auto; overscroll-behavior-inline: contain; scroll-behavior: smooth; scroll-snap-type: inline mandatory; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; cursor: grab; }
+.categories.is-dragging { scroll-behavior: auto; scroll-snap-type: none; cursor: grabbing; user-select: none; }
+.categories::-webkit-scrollbar { height: 5px; }
+.categories::-webkit-scrollbar-thumb { border-radius: 99px; background: var(--accent); }
+.categories::-webkit-scrollbar-track { background: transparent; }
+.category-button { flex: 0 0 clamp(280px, 34vw, 460px); min-height: 112px; grid-template-columns: minmax(0, 1fr); align-content: space-between; gap: 10px; padding: 17px 19px 15px 24px; border: 1px solid #c4cbc5; border-radius: 2px; background: #f4f1e7; box-shadow: 0 8px 22px rgba(33, 47, 39, .035); clip-path: none; overflow: hidden; scroll-snap-align: start; }
 .category-button::before { inset: 0 auto 0 0; width: 5px; height: auto; background: #9fb8ab; }
 .category-button:hover { color: var(--accent); box-shadow: 0 16px 34px rgba(33, 47, 39, .09); transform: translateY(-5px); }
 .category-button.active { color: var(--canvas); background: var(--accent); box-shadow: 0 18px 38px rgba(24, 79, 60, .2); transform: translateY(-5px); }
@@ -408,9 +418,11 @@ body { background-image: radial-gradient(circle at 12% 4%, rgba(40, 117, 91, .07
   .chapter-heading { display: block; margin-bottom: 24px; }
   .chapter-heading .section-label { margin-bottom: 18px; }
   .chapter-heading > div:last-child > p { line-height: 1.7; }
-  .categories { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .categories.three-column-topics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .category-button { min-height: 90px; padding: 13px 12px 11px 17px; }
+  .category-directory { margin-inline: calc(50% - 50vw); padding-inline: 18px; }
+  .category-directory-heading { align-items: end; margin-bottom: 8px; }
+  .category-scroll-controls button { width: 38px; height: 38px; }
+  .categories { gap: 10px; padding-bottom: 18px; scroll-padding-inline: 18px; }
+  .category-button { flex-basis: min(78vw, 290px); min-height: 104px; padding: 15px 15px 13px 20px; }
   .category-name { font-size: .82rem; line-height: 1.4; }
   .explore-utilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .explore-utilities .search-section:has(.search-folder[open]) { grid-column: 1 / -1; }

@@ -5,6 +5,8 @@ const status = document.querySelector('#status');
 const empty = document.querySelector('#empty');
 const categories = document.querySelector('#categories');
 const allCategory = document.querySelector('#all-category');
+const categoryPrevious = document.querySelector('#category-scroll-previous');
+const categoryNext = document.querySelector('#category-scroll-next');
 const resetButton = document.querySelector('#reset-button');
 const emptyMessage = document.querySelector('#empty-message');
 const sort = document.querySelector('#sort');
@@ -150,6 +152,59 @@ function updateCategoryState() {
   }
 }
 
+function updateCategoryScrollControls() {
+  const maximum = categories.scrollWidth - categories.clientWidth;
+  categoryPrevious.disabled = categories.scrollLeft <= 2;
+  categoryNext.disabled = categories.scrollLeft >= maximum - 2;
+}
+
+function scrollCategories(direction) {
+  const card = categories.querySelector('.category-button');
+  const distance = card ? card.getBoundingClientRect().width + 10 : categories.clientWidth * .75;
+  categories.scrollBy({ left: direction * distance, behavior: 'smooth' });
+}
+
+let categoryDrag, suppressCategoryClick = false;
+categories.addEventListener('pointerdown', (event) => {
+  if (event.pointerType === 'touch' || event.target.closest('.category-button')) return;
+  categoryDrag = { id: event.pointerId, startX: event.clientX, startScroll: categories.scrollLeft, moved: false };
+  categories.setPointerCapture(event.pointerId);
+});
+categories.addEventListener('pointermove', (event) => {
+  if (!categoryDrag || categoryDrag.id !== event.pointerId) return;
+  const distance = event.clientX - categoryDrag.startX;
+  if (Math.abs(distance) > 6) {
+    categoryDrag.moved = true;
+    categories.classList.add('is-dragging');
+    categories.scrollLeft = categoryDrag.startScroll - distance;
+  }
+});
+function finishCategoryDrag(event) {
+  if (!categoryDrag || categoryDrag.id !== event.pointerId) return;
+  suppressCategoryClick = categoryDrag.moved;
+  categoryDrag = undefined;
+  categories.classList.remove('is-dragging');
+  updateCategoryScrollControls();
+  window.setTimeout(() => { suppressCategoryClick = false; }, 0);
+}
+categories.addEventListener('pointerup', finishCategoryDrag);
+categories.addEventListener('pointercancel', finishCategoryDrag);
+categories.addEventListener('click', (event) => {
+  if (suppressCategoryClick) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+}, true);
+categories.addEventListener('scroll', updateCategoryScrollControls, { passive: true });
+categories.addEventListener('keydown', (event) => {
+  if (event.target !== categories || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  scrollCategories(event.key === 'ArrowLeft' ? -1 : 1);
+});
+categoryPrevious.addEventListener('click', () => scrollCategories(-1));
+categoryNext.addEventListener('click', () => scrollCategories(1));
+window.addEventListener('resize', updateCategoryScrollControls);
+
 function renderCategories() {
   const counts = new Map(categoryLabels.map((label) => [label, 0]));
   worksheets.forEach((item) => counts.set(item.category, (counts.get(item.category) || 0) + 1));
@@ -171,9 +226,9 @@ function renderCategories() {
     return button;
   };
   categories.replaceChildren(...categoryLabels.map(createCategoryButton));
-  categories.classList.toggle('three-column-topics', categoryLabels.length > 0 && categoryLabels.length % 3 === 0);
   allCategory.replaceChildren(createCategoryButton(''));
   updateCategoryState();
+  requestAnimationFrame(updateCategoryScrollControls);
 }
 
 function renderPage() {

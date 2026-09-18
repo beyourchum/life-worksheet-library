@@ -65,7 +65,16 @@
         <div class="section-label"><span>02</span><p>CHAPTERS / 生活章節</p></div>
         <div><h2 id="filter-title">從一個主題開始</h2><p>像翻目錄一樣，選一個此刻最想處理的生活章節。</p></div>
       </div>
-      <div id="categories" class="categories" aria-label="依主題篩選"></div>
+      <div class="category-directory">
+        <div class="category-directory-heading">
+          <p>左右滑動，翻閱所有生活章節</p>
+          <div class="category-scroll-controls" aria-label="捲動生活章節">
+            <button id="category-scroll-previous" type="button" aria-label="向左查看生活章節" disabled><span aria-hidden="true">←</span></button>
+            <button id="category-scroll-next" type="button" aria-label="向右查看生活章節" disabled><span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+        <div id="categories" class="categories" aria-label="依主題篩選，可左右滑動" tabindex="0"></div>
+      </div>
       <div class="explore-utilities">
         <div id="all-category" class="all-category"></div>
         <section class="search-section" aria-label="搜尋更多生活線索">
@@ -97,6 +106,6 @@
     <div class="footer-note"><p>EDUCATIONAL USE</p><p>本站提供教育內容，不是心理診斷或緊急服務。如有傷害自己或他人的想法，請立即聯絡可信任的人、學校諮商中心、資源教室或當地緊急求助單位。</p></div>
   </footer>
   <script src="assets/search-core.js" defer></script>
-  <script src="assets/site.js?v=20260918-2" defer></script>
+  <script src="assets/site.js?v=20260918-3" defer></script>
 </body>
 </html>

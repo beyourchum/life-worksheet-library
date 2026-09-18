@@ -135,6 +135,15 @@ async function withinFontBudget(page, home) {
       assert.equal(await page.locator('.result-row').count(), Math.min(items.length, policy.pageSize));
       assert(!requests.some((url) => url.endsWith('search-index.json')), '未搜尋就載入搜尋索引');
       assert(!requests.some((url) => /\/worksheets\/.*\.html/.test(url)), '首頁預先下載文章全文');
+      assert(await page.locator('#categories').evaluate((element) => element.scrollWidth > element.clientWidth), '生活章節應形成可橫向滑動的連續目錄');
+      assert.equal(await page.locator('#category-scroll-previous').isDisabled(), true);
+      await page.locator('#category-scroll-next').click();
+      await page.waitForFunction(() => document.querySelector('#categories').scrollLeft > 0);
+      await page.waitForFunction(() => !document.querySelector('#category-scroll-previous').disabled);
+      await page.locator('#categories').focus();
+      const categoryScrollBeforeKeyboard = await page.locator('#categories').evaluate((element) => element.scrollLeft);
+      await page.keyboard.press('ArrowRight');
+      await page.waitForFunction((before) => document.querySelector('#categories').scrollLeft > before, categoryScrollBeforeKeyboard);
       const resources = await withinFontBudget(page, true);
       assert.deepEqual(await fontIssues(page, 'home'), []);
       await page.locator('#search-folder > summary').click();
@@ -151,6 +160,7 @@ async function withinFontBudget(page, home) {
       await page.screenshot({ path: path.join(output, 'home-desktop.png'), fullPage: true });
       await page.setViewportSize({ width: 390, height: 844 });
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      assert(await page.locator('#categories').evaluate((element) => element.scrollWidth > element.clientWidth), '手機版生活章節應可觸控橫向滑動');
       await page.screenshot({ path: path.join(output, 'home-mobile.png'), fullPage: true });
       return resources;
     });
@@ -196,7 +206,7 @@ async function withinFontBudget(page, home) {
       await page.locator('#categories .category-button').first().click();
       assert.equal(await page.locator('#page-select').inputValue(), '1');
       const shown = await page.locator('.result-ep').allTextContents();
-      assert(shown.every((ep) => synthetic.find((x) => x.ep === `EP${ep}`).category === catalog.categories[0]));
+      assert(shown.every((ep) => synthetic.find((x) => x.ep === `EP${ep}`).category === catalog.categories[0]), `分類結果不一致：${shown.join(', ')}`);
       await page.unroute('**/data/catalog.json');
       await page.unroute('**/data/search-index.json');
     });
