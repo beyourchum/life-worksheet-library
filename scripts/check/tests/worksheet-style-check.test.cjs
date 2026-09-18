@@ -1,8 +1,8 @@
 const assert = require('node:assert/strict');
-const { worksheetStyleIssues } = require('./worksheet-style-check.cjs');
+const { worksheetStyleIssues } = require('../rules/worksheet-style-check.cjs');
 
 async function testWorksheetStyles(page) {
-  const { worksheetStructureIssues } = require('./worksheet-content-check.cjs');
+  const { worksheetStructureIssues } = require('../rules/worksheet-content-check.cjs');
   const answer = '<textarea id="answer"></textarea>';
   const ending = '<aside class="final-reminder">結尾</aside>';
   const ai = '<aside class="prompt-intro">AI 幫幫忙</aside><div data-prompt-text>提示詞</div>';
@@ -19,7 +19,7 @@ async function testWorksheetStyles(page) {
   assert((await structure(answer + ending + ending + ai)).some(x => x.includes('結尾語須唯一')));
   assert((await structure(answer + ai + ending)).some(x => x.includes('AI 引導之前')));
   assert((await structure(answer + ai)).some(x => x.includes('結尾語須唯一')));
-  const { missingText } = require('./worksheet-content-check.cjs');
+  const { missingText } = require('../rules/worksheet-content-check.cjs');
   assert.deepEqual(missingText('請寫一項。<!-- example -->整理房間<!-- end-example -->', ['請寫一項。', '例如：整理房間']), []);
   assert.deepEqual(missingText('請寫一項。', ['請寫三項。']), ['請寫三項。']);
   assert.deepEqual(missingText('我承認自己……', ['我希望之後能……']), ['我希望之後能……']);

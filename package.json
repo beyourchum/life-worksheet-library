@@ -3,12 +3,15 @@
   "private": true,
   "packageManager": "pnpm@11.19.0",
   "scripts": {
-    "data": "node scripts/content-data.cjs",
-    "fonts": "python scripts/build-fonts.py",
+    "data": "node scripts/generate/catalog.cjs",
+    "fonts": "python scripts/generate/fonts.py",
     "generate": "pnpm run data && pnpm run fonts",
-    "check": "node scripts/validate.cjs",
-    "test": "node scripts/build.cjs && node scripts/browser-check.cjs --built",
-    "build": "node scripts/build.cjs"
+    "check:static": "node scripts/check/static.cjs",
+    "build": "node scripts/build/site.cjs",
+    "check:browser": "node scripts/check/browser.cjs --built",
+    "verify": "pnpm run generate && pnpm run check:static && pnpm run build && pnpm run check:browser",
+    "check": "pnpm run check:static",
+    "test": "pnpm run verify"
   },
   "devDependencies": {
     "playwright": "1.62.1"

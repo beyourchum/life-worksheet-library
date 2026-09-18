@@ -13,7 +13,7 @@ from fontTools.pens.cu2quPen import Cu2QuPen
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.ttLib import TTFont
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 FONTS = ROOT / 'assets/fonts/worksheet'
 OUTPUT = FONTS / 'compact'
 

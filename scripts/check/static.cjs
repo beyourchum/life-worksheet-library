@@ -3,15 +3,16 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const { createHash } = require('node:crypto');
-process.chdir(path.join(__dirname, '..'));
+process.chdir(path.join(__dirname, '../..'));
 const read = (file) => fs.readFileSync(file, 'utf8');
-const items = JSON.parse(read('worksheets.json'));
-const categories = JSON.parse(read('categories.json'));
-const config = JSON.parse(read('search-config.json'));
-const policy = JSON.parse(read('quality-policy.json'));
+const items = JSON.parse(read('catalog/worksheets.json'));
+const categories = JSON.parse(read('catalog/categories.json'));
+const config = JSON.parse(read('config/search.json'));
+const policy = JSON.parse(read('config/quality-policy.json'));
+const qualityExceptions = JSON.parse(read('config/quality-exceptions.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
-for (const [file, expected] of Object.entries(require('./content-data.cjs').outputs())) {
+for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
   check(fs.existsSync(file) && read(file).replace(/\r\n/g, '\n') === expected, `${file}: 衍生資料過期，請執行 pnpm run data`);
 }
 for (const [file, budget] of [['data/catalog.json', policy.budgets.catalogBytes], ['data/search-index.json', policy.budgets.searchIndexBytes]]) {
@@ -27,14 +28,14 @@ const fontSources = [
 const sourceHash = createHash('sha256');
 for (const [dir, filter] of fontSources) for (const file of fs.readdirSync(dir).filter((name) => name.endsWith('.woff2') && filter(name)).sort()) sourceHash.update(fs.readFileSync(path.join(dir, file)));
 check(sourceHash.digest('hex') === fontManifest.sourceHash, '原始字型已改變，請重新執行 pnpm run fonts');
-check(createHash('sha256').update(read('scripts/build-fonts.py').replace(/\r\n/g, '\n')).digest('hex') === fontManifest.generatorHash,
+check(createHash('sha256').update(read('scripts/generate/fonts.py').replace(/\r\n/g, '\n')).digest('hex') === fontManifest.generatorHash,
   '字型產生程式已改變，請重新執行 pnpm run fonts');
 for (const [file, hash] of Object.entries(fontManifest.inputs)) {
   check(fs.existsSync(file) && createHash('sha256').update(read(file).replace(/\r\n/g, '\n')).digest('hex') === hash,
-    `${file}: 內容已改變，請執行 python scripts/build-fonts.py 更新精簡字型`);
+    `${file}: 內容已改變，請執行 pnpm run fonts 更新精簡字型`);
 }
 for (const ep of fs.readdirSync('worksheets')) {
-  check(`worksheets/${ep}/index.html` in fontManifest.inputs, `${ep}: 新頁面尚未收錄精簡字型，請執行 python scripts/build-fonts.py`);
+  check(`worksheets/${ep}/index.html` in fontManifest.inputs, `${ep}: 新頁面尚未收錄精簡字型，請執行 pnpm run fonts`);
 }
 for (const [scope, data] of Object.entries(fontManifest.scopes)) {
   const home = scope === 'home';
@@ -61,6 +62,9 @@ const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entr
   return entry.isDirectory() ? walk(file) : [file];
 });
 const files = ['index.html', ...walk('assets'), ...walk('worksheets'), ...(fs.existsSync('articles') ? walk('articles') : [])];
+for (const file of walk('worksheets')) {
+  check(!/\.(?:css|js)$/.test(file), `${file}: 單元互動與樣式須改用 assets/worksheet-components 共用元件`);
+}
 const voidTags = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
 for (const file of files) {
   if (file.endsWith('.js')) { try { new vm.Script(read(file), { filename: file }); } catch (e) { errors.push(e.message); } }
@@ -90,14 +94,14 @@ for (const file of files) {
     if (m[0].startsWith('for=') || m[0].startsWith('href="#')) check(ids.includes(m[1]), `${file}: 找不到目標 ${m[1]}`);
   }
 }
-check(Array.isArray(items) && items.length > 0, 'worksheets.json 必須有內容');
-check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'categories.json 必須是無重複的分類名稱');
+check(Array.isArray(items) && items.length > 0, 'catalog/worksheets.json 必須有內容');
+check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'catalog/categories.json 必須是無重複的分類名稱');
 check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
 const videos = new Map();
-require('./video-policy.test.cjs');
-const { videoRequirement } = require('./video-policy.cjs');
-check(Array.isArray(policy.videoExceptions), 'videoExceptions 必須是陣列');
-const videoExceptions = Array.isArray(policy.videoExceptions) ? policy.videoExceptions : [];
+require('./tests/video-policy.test.cjs');
+const { videoRequirement } = require('./rules/video-policy.cjs');
+check(Array.isArray(qualityExceptions.videoExceptions), 'videoExceptions 必須是陣列');
+const videoExceptions = Array.isArray(qualityExceptions.videoExceptions) ? qualityExceptions.videoExceptions : [];
 check(new Set(videoExceptions.map((entry) => entry.ep)).size === videoExceptions.length, '無影片例外集數重複');
 for (const entry of videoExceptions) check(items.some((item) => item.ep === entry.ep && item.worksheetUrl), '無影片例外必須對應既有學習單');
 for (const item of items) {
@@ -134,6 +138,17 @@ for (const item of items) {
     return match?.index ?? -1;
   });
   check(positions.every((p, i) => p >= 0 && (!i || p > positions[i - 1])), `${item.ep}: 共通開頭與結尾順序錯誤`);
+  const firstActivityPosition = html.indexOf('<div class="section-heading"', positions[1]);
+  check(firstActivityPosition > positions[1], `${item.ep}: 使用說明後缺少第一個活動`);
+  if (firstActivityPosition > positions[1]) {
+    const worksheetIntro = html.slice(positions[0], firstActivityPosition);
+    const introLabels = [...worksheetIntro.matchAll(/<strong>([^<]+)：<\/strong>/g)].map((match) => match[1].trim());
+    check(
+      introLabels.length === 2 && introLabels[0] === '學習目標' && introLabels[1] === '使用說明',
+      `${item.ep}: 第一個活動前只能依序出現學習目標、使用說明，不得另列適用對象等前置欄位`
+    );
+    check(!/(?:適用對象|目標對象|建議年級|預備知識|建議時間)[：:]/.test(worksheetIntro), `${item.ep}: 第一個活動前不得另列適用對象等前置資訊`);
+  }
   const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
   if (process.env.GITHUB_ACTIONS !== 'true') {
     for (const role of ['source', 'corrected']) {
@@ -147,6 +162,10 @@ for (const item of items) {
     check(md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`), `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])
       check(md.includes(label), `${item.ep}: 修訂稿缺少${label}`);
+    const mdIntroStart = md.search(/學習目標[：:]/);
+    const mdFirstActivity = md.indexOf('\n## ', md.search(/使用說明[：:]/));
+    const mdIntro = mdIntroStart >= 0 && mdFirstActivity > mdIntroStart ? md.slice(mdIntroStart, mdFirstActivity) : '';
+    check(!/(?:適用對象|目標對象|建議年級|預備知識|建議時間)[：:]/.test(mdIntro), `${item.ep}: 修訂稿開頭只能保留學習目標與使用說明，不得另列適用對象等前置欄位`);
     check(/(?:<!--\s*final-reminder\s*-->\s*>\s*\S|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
   }
   check(html.includes(`<title>${item.ep}｜${item.title}</title>`), `${item.ep}: 頁面標題與索引不一致`);
@@ -170,7 +189,7 @@ for (const item of items) {
   }
 }
 for (const dir of fs.readdirSync('worksheets')) check(items.some((x) => x.ep === dir), `${dir}: 未登錄索引`);
-const { searchWorksheets } = require('../assets/search-core.js');
+const { searchWorksheets } = require('../../assets/search-core.js');
 try {
   assert.equal(searchWorksheets(items, '', '', config).matches.length, items.length);
   for (const [query, ep] of [['規則', 'EP117'], ['換工作', 'EP62'], ['拖延', 'EP111'], ['EP117', 'EP117']]) assert(searchWorksheets(items, query, '', config).matches.some((m) => m.item.ep === ep), `${query}: 找不到 ${ep}`);

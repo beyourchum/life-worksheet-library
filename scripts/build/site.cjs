@@ -1,8 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
-const root = path.resolve(__dirname, '..');
-execFileSync(process.execPath, [path.join(__dirname, 'validate.cjs')], { stdio: 'inherit' });
+const root = path.resolve(__dirname, '../..');
 const output = path.join(root, '_site');
 // Only this generated directory may be replaced; reject redirected targets.
 if (fs.existsSync(output)) {
@@ -20,4 +18,4 @@ for (const [scope, { fonts }] of Object.entries(manifest.scopes)) {
   copy(dir + 'fonts.css');
   for (const name of Object.keys(fonts)) copy(dir + name + '.woff2');
 }
-console.log('網站已建置至 _site；原始字型、維護文件與未精簡的索引不會發布。');
+console.log('網站已建置至 _site；此命令不執行靜態或瀏覽器檢查。');

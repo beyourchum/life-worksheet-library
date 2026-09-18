@@ -2,19 +2,37 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
-const { start } = require('./test-server.cjs');
-const root = path.resolve(__dirname, '..');
+const { start } = require('./server.cjs');
+const root = path.resolve(__dirname, '../..');
 process.chdir(root);
+
+const args = process.argv.slice(2);
+if (args.includes('--help')) {
+  console.log('用法：node scripts/check/browser.cjs (--built | --source)');
+  console.log('  --built   檢查既有 _site 發布產物');
+  console.log('  --source  直接檢查專案來源；不代表發布產物已通過');
+  process.exit(0);
+}
+const unknownArgs = args.filter((arg) => !['--built', '--source'].includes(arg));
+if (unknownArgs.length || Number(args.includes('--built')) + Number(args.includes('--source')) !== 1) {
+  const detail = unknownArgs.length ? `未知參數：${unknownArgs.join(', ')}。` : '必須且只能指定一個檢查目標。';
+  throw new Error(`${detail} 使用 --built 檢查 _site，或使用 --source 檢查專案來源。`);
+}
+const browserTarget = args.includes('--built') ? path.join(root, '_site') : root;
+if (args.includes('--built') && !fs.existsSync(browserTarget)) {
+  throw new Error('_site 不存在；請先執行 pnpm run build，再執行 pnpm run check:browser。');
+}
 const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
-const policy = read('quality-policy.json');
+const policy = read('config/quality-policy.json');
+const qualityExceptions = read('config/quality-exceptions.json');
 const manifest = read('assets/fonts/worksheet/compact/manifest.json');
-const items = read('worksheets.json');
+const items = read('catalog/worksheets.json');
 const report = { checks: [], failures: [] };
 const output = path.join(root, '.qa/reports');
 fs.mkdirSync(output, { recursive: true });
 
 async function fontIssues(page, scope) {
-  const exceptions = policy.fontFallbackExceptions;
+  const exceptions = qualityExceptions.fontFallbackExceptions;
   const issues = await page.evaluate(({ fonts, exceptions, scope }) => {
     const names = { 'Glow Sans TC': 'glow-800', 'Genki Gothic TC': 'genki-700' };
     const coverage = Object.fromEntries(Object.entries(fonts).map(([key, value]) => [key, new Set(value.characters)]));
@@ -65,7 +83,7 @@ async function withinFontBudget(page, home) {
 }
 
 (async () => {
-  const { server, base } = await start(process.argv.includes('--built') ? path.join(root, '_site') : root);
+  const { server, base } = await start(browserTarget);
   let browser;
   try { browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) }); }
   catch (error) { server.close(); throw error; }
@@ -78,18 +96,23 @@ async function withinFontBudget(page, home) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await record('題型與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
-      try { await require('./worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
+      try { await require('./tests/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
       finally { await fixture.close(); }
     });
     page.on('pageerror', (e) => errors.push(e.message));
     await record('EP90 兩項上限、其他、暫存與清除', async () => {
       const fixture = await browser.newPage();
-      try { await require('./ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
+      try { await require('./tests/ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
+      finally { await fixture.close(); }
+    });
+    await record('EP103 與 EP106 共用複選上限、暫存與清除', async () => {
+      const fixture = await browser.newPage();
+      try { await require('./tests/shared-choice-limits.test.cjs').testSharedChoiceLimits(fixture, base); }
       finally { await fixture.close(); }
     });
     await record('EP99 跨頁十項上限、工作比較與暫存', async () => {
       const fixture = await browser.newPage();
-      try { await require('./ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
+      try { await require('./tests/ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
       finally { await fixture.close(); }
     });
     await record('首頁延遲搜尋、字型預算與手機版', async () => {
@@ -196,9 +219,9 @@ async function withinFontBudget(page, home) {
         await page.locator('[data-video-link]').waitFor({ state: item.videoUrl ? 'visible' : 'hidden' });
         if (item.videoUrl) assert.equal(await page.locator('[data-video-link]').getAttribute('href'), item.videoUrl);
         await page.evaluate(() => document.fonts.ready);
-        assert.deepEqual(await require('./worksheet-style-check.cjs').worksheetStyleIssues(page), []);
-        assert.deepEqual(await require('./worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
-        assert.deepEqual(await require('./worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
+        assert.deepEqual(await require('./rules/worksheet-style-check.cjs').worksheetStyleIssues(page), []);
+        assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
+        assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
         const field = page.locator('textarea:not([readonly]),input[type=text]:not([readonly])').first();
@@ -243,14 +266,14 @@ async function withinFontBudget(page, home) {
 
     await record('EP94 備案計算、跨日、選項、搜尋與舊作答保存', async () => {
       const backup = await browser.newPage();
-      try { await require('./ep94-backup.test.cjs').testEp94Backup(backup, base); }
+      try { await require('./tests/ep94-backup.test.cjs').testEp94Backup(backup, base); }
       finally { await backup.close(); }
     });
     await record('EP95 心率自動計算、輸入驗證與舊作答保存', async () => {
       const calculator = await browser.newPage();
       try {
         await calculator.goto(base + '/worksheets/EP95/');
-        await require('./ep95-calculator.test.cjs').testEp95Calculator(calculator);
+        await require('./tests/ep95-calculator.test.cjs').testEp95Calculator(calculator);
       } finally { await calculator.close(); }
     });
 

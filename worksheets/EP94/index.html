@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="../../assets/fonts/worksheet/compact/EP94/fonts.css">
 <title>EP94｜為生活留一個備案</title>
 <link rel="stylesheet" href="../../assets/worksheet.css">
-<link rel="stylesheet" href="../../assets/ep94-backup.css">
+<link rel="stylesheet" href="../../assets/worksheet-components.css">
 </head>
 <body>
 <div class="toolbar">
@@ -24,7 +24,7 @@
 <button class="toolbar-button clear-button" id="clear-draft" data-clear type="button" disabled>清除作答</button>
 </div>
 </div>
-<main class="worksheet" data-worksheet-id="EP94">
+<main class="worksheet" data-worksheet-id="EP94" data-calculator="planning-buffer" data-calculator-layout>
 <article class="page worksheet-page">
 <header class="page-meta"><strong>EP94</strong><span>改善生活習慣、提升效率</span><span class="page-count">01 / 03</span></header>
 <div class="worksheet-hero">
@@ -277,7 +277,7 @@
 <p>把影片的「事前預留空間」用在以下三組練習。先填條件，再決定要多留多少時間或金額；網頁會計算，紙本可依公式填入結果。</p>
 <h3 class="subheading">工作／學業｜倒推開始與完成時間</h3>
 <p>用一份報告練習。以連續完成估算；若中間有上課、睡眠或其他安排，請再提早開始。</p>
-<div class="ep94-fields">
+<div class="calculator-fields">
 <div class="answer-field">
 <label for="ep94-work-hours">① 完成報告需要幾小時</label>
 <input class="short-answer" id="ep94-work-hours" type="number" min="0.01" step="any">
@@ -293,7 +293,7 @@
 <h3>③ 用哪種方式預留時間？</h3>
 <span class="answer-mode">單選</span>
 </div>
-<div class="choices ep94-mode">
+<div class="choices calculator-mode ep94-mode">
 <label class="choice">
 <input id="ep94-work-mode-percent" name="ep94-work-mode" type="radio" value="percent">
 <span>按所需時間的百分比</span>
@@ -303,7 +303,7 @@
 <span>直接填預留時數</span>
 </label>
 </div>
-<div class="ep94-fields">
+<div class="calculator-fields">
 <div class="answer-field">
 <label for="ep94-work-percent">預留比例（％；選百分比時填）</label>
 <input class="short-answer" id="ep94-work-percent" type="number" min="0" step="any">
@@ -316,7 +316,7 @@
 </div>
 </div>
 <p>只填所選方式的欄位。預留分鐘＝所需小時×60×比例÷100，或預留時數×60；不足一分鐘進位。</p>
-<div class="ep94-results">
+<div class="calculator-results">
 <div class="answer-field">
 <label for="ep94-work-finish">④ 最晚完成＝交件時間－預留時間</label>
 <input class="short-answer" id="ep94-work-finish" type="text" readonly aria-live="polite">
@@ -328,7 +328,7 @@
 </div>
 <p>所需時間換算成分鐘，不足一分鐘進位；結果包含日期，可跨日。</p>
 <p class="example-note">例如：需 1.5 小時，10/10 11:00 交件，預留 24 小時；最晚 10/9 09:30 開始、10/9 11:00 完成。</p>
-<div class="answer-field ep94-legacy" id="ep94-work-legacy" hidden>
+<div class="answer-field legacy-answer" id="ep94-work-legacy" data-reveal-when="#ep94-work-backup" hidden>
 <label for="ep94-work-backup">先前暫存的工作／學業備案</label>
 <textarea id="ep94-work-backup" readonly rows="2">
 </textarea>
@@ -342,7 +342,7 @@
 <header class="page-meta"><strong>EP94</strong><span>改善生活習慣、提升效率</span><span class="page-count">03 / 03</span></header>
 <h3 class="subheading">財務｜留出這個月的備用金</h3>
 <p>填入每月收入或可用生活費，再決定保留的比例。沒有固定收入時，可填假設金額練習。</p>
-<div class="ep94-fields">
+<div class="calculator-fields">
 <div class="answer-field">
 <label for="ep94-money-income">① 每月可用金額（整元）</label>
 <input class="short-answer" id="ep94-money-income" type="number" min="0" step="1">
@@ -354,7 +354,7 @@
 <p class="example-note">例如：20</p>
 </div>
 </div>
-<div class="ep94-results">
+<div class="calculator-results">
 <div class="answer-field">
 <label for="ep94-money-reserve">③ 預留金額（元）</label>
 <input class="short-answer" id="ep94-money-reserve" type="text" readonly aria-live="polite">
@@ -366,14 +366,14 @@
 </div>
 <p>預留金額＝可用金額×比例÷100，四捨五入至小數點後兩位；最多可花＝可用金額－預留金額，無條件捨去到整元。</p>
 <p class="example-note">例如：35000 元預留 20％，保留 7000 元，最多花 28000 元。</p>
-<div class="answer-field ep94-legacy" id="ep94-money-legacy" hidden>
+<div class="answer-field legacy-answer" id="ep94-money-legacy" data-reveal-when="#ep94-money-backup" hidden>
 <label for="ep94-money-backup">先前暫存的財務備案</label>
 <textarea id="ep94-money-backup" readonly rows="2">
 </textarea>
 </div>
 <h3 class="subheading">時間｜倒推最晚出發時刻</h3>
 <p>填入要抵達的日期、時間與地點。若是搭飛機，請填「到機場的時間」，把起飛前需提早到場的時間先算進去。</p>
-<div class="ep94-fields">
+<div class="calculator-fields">
 <div class="answer-field">
 <label for="ep94-time-arrival">① 要抵達的日期與時間</label>
 <input class="short-answer" id="ep94-time-arrival" type="datetime-local" >
@@ -395,7 +395,7 @@
 <p class="example-note">例如：10</p>
 </div>
 </div>
-<div class="ep94-results">
+<div class="calculator-results">
 <div class="answer-field">
 <label for="ep94-time-total">⑤ 含預留時間的交通分鐘數</label>
 <input class="short-answer" id="ep94-time-total" type="text" readonly aria-live="polite">
@@ -407,7 +407,7 @@
 </div>
 <p>交通時間＝最快所需分鐘×（1＋比例÷100），不足一分鐘進位；最晚出發＝抵達時間－交通時間。</p>
 <p class="example-note">例如：15:00 抵達，85 分鐘多留 10％＝93.5 分鐘，進位為 94 分鐘；最晚 13:26 出發。</p>
-<div class="answer-field ep94-legacy" id="ep94-time-legacy" hidden>
+<div class="answer-field legacy-answer" id="ep94-time-legacy" data-reveal-when="#ep94-time-backup" hidden>
 <label for="ep94-time-backup">先前暫存的時間備案</label>
 <textarea id="ep94-time-backup" readonly rows="2">
 </textarea>
@@ -434,7 +434,7 @@
 </main>
 <script src="../../assets/worksheet.js" defer>
 </script>
-<script src="../../assets/ep94-backup.js" defer>
+<script src="../../assets/worksheet-components.js" defer>
 </script>
 </body>
 </html>

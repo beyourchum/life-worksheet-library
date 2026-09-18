@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="../../assets/fonts/worksheet/compact/EP95/fonts.css">
 <title>EP95｜找到適合我的運動節奏</title>
 <link rel="stylesheet" href="../../assets/worksheet.css">
+<link rel="stylesheet" href="../../assets/worksheet-components.css">
 </head>
 <body>
 <div class="toolbar">
@@ -22,7 +23,7 @@
 <button class="toolbar-button clear-button" id="clear-draft" data-clear type="button" disabled>清除作答</button>
 </div>
 </div>
-<main class="worksheet" data-worksheet-id="EP95">
+<main class="worksheet" data-worksheet-id="EP95" data-calculator="heart-rate">
 <article class="page worksheet-page">
 <header class="page-meta"><strong>EP95</strong><span>改善生活習慣、提升效率</span><span class="page-count">01 / 03</span></header>
 <div class="worksheet-hero">
@@ -76,15 +77,15 @@
 </div>
 <div class="choices choices-stacked">
 <label class="choice">
-<input id="ep95-intensity-70" data-heart-rate-low="70" data-heart-rate-high="80" type="radio" name="ep95-intensity">
+<input id="ep95-intensity-70" data-range-low="70" data-range-high="80" type="radio" name="ep95-intensity">
 <span>有運動習慣，最適合最大心率的70~80%</span>
 </label>
 <label class="choice">
-<input id="ep95-intensity-60" data-heart-rate-low="60" data-heart-rate-high="70" type="radio" name="ep95-intensity">
+<input id="ep95-intensity-60" data-range-low="60" data-range-high="70" type="radio" name="ep95-intensity">
 <span>沒有固定運動習慣，最適合最大心率的60~70%</span>
 </label>
 <label class="choice">
-<input id="ep95-intensity-50" data-heart-rate-low="50" data-heart-rate-high="60" type="radio" name="ep95-intensity">
+<input id="ep95-intensity-50" data-range-low="50" data-range-high="60" type="radio" name="ep95-intensity">
 <span>幾乎沒在動、體能較低，最適合最大心率的50~60%</span>
 </label>
 </div>
@@ -325,7 +326,7 @@
 <input id="ep95-target-rate" class="short-answer" type="text" readonly aria-live="polite">
 </div>
 <p>先填第 1 頁的年齡與這裡的目標比例，結果四捨五入到整數。</p>
-<div class="answer-field" id="ep95-legacy" hidden><label for="ep95-next">先前暫存的小目標</label><textarea id="ep95-next" rows="3" readonly></textarea></div>
+<div class="answer-field legacy-answer" id="ep95-legacy" data-reveal-when="#ep95-next" hidden><label for="ep95-next">先前暫存的小目標</label><textarea id="ep95-next" rows="3" readonly></textarea></div>
 <aside class="closing final-reminder no-arrow">
 <p>從自己目前能承受的強度開始，才有機會讓運動變成可持續的習慣。</p>
 </aside>
@@ -347,7 +348,7 @@
 </main>
 <script src="../../assets/worksheet.js" defer>
 </script>
-<script src="../../assets/ep95-calculator.js" defer>
+<script src="../../assets/worksheet-components.js" defer>
 </script>
 </body>
 </html>

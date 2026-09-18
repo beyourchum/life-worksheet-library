@@ -1,20 +1,20 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(__dirname, '../..');
 const read = (name) => JSON.parse(fs.readFileSync(path.join(root, name), 'utf8'));
 function outputs() {
-  const items = read('worksheets.json');
-  const policy = read('quality-policy.json');
+  const items = read('catalog/worksheets.json');
+  const policy = read('config/quality-policy.json');
   const catalog = {
     pageSize: policy.pageSize,
     searchDebounceMs: policy.searchDebounceMs,
-    categories: read('categories.json'),
+    categories: read('catalog/categories.json'),
     items: items.map(({ ep, title, summary, category, videoUrl, worksheetUrl, articleUrl }) => ({ ep, title, summary, category, videoUrl, worksheetUrl, articleUrl })),
   };
   const files = {
     'data/catalog.json': catalog,
     'data/search-index.json': {
-      config: read('search-config.json'),
+      config: read('config/search.json'),
       terms: Object.fromEntries(items.map((item) => [item.ep, item.searchTerms])),
     },
   };
