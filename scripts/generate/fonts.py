@@ -5,6 +5,7 @@ for the same source files and tool versions. Original font files stay intact.
 """
 import hashlib
 import json
+import time
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -16,6 +17,17 @@ from fontTools.ttLib import TTFont
 ROOT = Path(__file__).resolve().parents[2]
 FONTS = ROOT / 'assets/fonts/worksheet'
 OUTPUT = FONTS / 'compact'
+
+
+def save_font(builder, output):
+    for attempt in range(5):
+        try:
+            builder.save(output)
+            return
+        except OSError as error:
+            if error.errno != 22 or attempt == 4:
+                raise
+            time.sleep(0.2 * (attempt + 1))
 
 
 class TextCollector(HTMLParser):
@@ -130,7 +142,7 @@ for scope, file in scopes:
         builder.font.recalcTimestamp = False
         builder.font.flavor = 'woff2'
         output = destination / (filename + '.woff2')
-        builder.save(output)
+        save_font(builder, output)
         check = TTFont(output)
         assert set(check.getBestCmap()) == set(cmap)
         check.close()

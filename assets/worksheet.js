@@ -2,6 +2,39 @@
   const worksheet = document.querySelector(".worksheet");
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   const controls = [...worksheet.querySelectorAll("input, textarea")];
+  const promptBindings = {
+    EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
+    EP83: [["[id^=ep83-feel-]"], ["#ep83-expectation"], ["[id^=ep83-understand-]"], ["[id^=ep83-prepare-]", "#ep83-question"]],
+    EP84: [["#ep84-point"], ["#ep84-action"]],
+    EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
+    EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
+    EP87: [["[name=ep87-a]", "[name=ep87-b]", "[name=ep87-c]"], ["[name=ep87-focus]", "#ep87-focus-other"], ["[name=ep87-action]", "#ep87-action-custom", "#ep87-reminder"]],
+    EP88: [["[name=ep88-situation]"], ["#ep88-one-action"], ["#ep88-when"]],
+    EP89: [["#ep89-start-point"]],
+    EP90: [[], ["[name=ep90-fear]", "#ep90-fear-other-text"], ["[name=ep90-fact]", "#ep90-fact-other-text"], ["#ep90-breaths", "#ep90-object", "[name=ep90-phrase]", "#ep90-phrase-other-text", "[name=ep90-after]", "#ep90-after-other-text"]],
+    EP91: [["#ep91-major", "[name=ep91-field]", "#ep91-field-other-text"], ["#ep91-hours", "[id^=ep91-skill-]"], ["#ep91-unique"], ["[id^=ep91-goal-]"], ["[id^=ep91-difficulty-]"]],
+    EP92: [["#ep92-situation"], ["[id^=ep92-emotion-]", "[id^=ep92-result-]"], ["[id^=ep92-maintain]", "[id^=ep92-adjust]", "[id^=ep92-response-]", "#ep92-old-goal", "#ep92-new-goal", "[name=ep92-goal-relation]", "#ep92-goal-relation-other-text"], ["[id^=ep92-knowledge-]", "[id^=ep92-skill-]", "[name=ep92-frequency]", "[id^=ep92-resource-]", "#ep92-now-other"], ["[id^=ep92-short-]", "[id^=ep92-long-]"]],
+    EP93: [["#ep93-reading-topic"], ["#ep93-discovery"], ["#ep93-ask-name"], ["#ep93-ask-person"], ["#ep93-ask-skill"], ["#ep93-help-skill", "#ep93-help-person"]],
+    EP94: [["[id^=ep94-work-]", "[id^=ep94-money-]", "[id^=ep94-time-]"], ["[id^=ep94-work-]", "[id^=ep94-money-]", "[id^=ep94-time-]"], ["[id$=-backup]"], ["[id$=-finish]", "[id$=-start]", "[id$=-reserve]", "[id$=-limit]", "[id$=-total]", "[id$=-depart]"]],
+    EP95: [["#ep95-age"], ["[name=ep95-habit]", "[name=ep95-willing]"], ["#ep95-next-sport"], ["[id^=ep95-hard-]"]],
+    EP96: [["#ep96-example", "[id^=ep96-place-]"], ["#ep96-friend-words"], ["[id^=ep96-response-feel-]"], ["[id^=ep96-care-]"], ["#ep96-frequency-time", "#ep96-frequency-count", "#ep96-topic-limit"], ["#ep96-worry"], ["#ep96-next-action"]],
+    EP99: [["#ep99-ranking"], ["#ep99-job-current", "#ep99-job-a", "#ep99-job-b", "#ep99-job-c"]],
+    EP101: [["#task-name"], ["#task-result"], ["#task-deadline", "#task-unknown"], ["#task-role"], ["#stuck"], ["#tried"]],
+    EP102: [["#statement"], ["#context"], ["#problem"], ["#action"], ["#result"]],
+    EP103: [["#choice-item"], ["#choice-needs", "#scenario-needs"], ["[name=signals]", "#signal-other-text", "#signal-reason", "#fact-check", "#personal-feeling"]],
+    EP104: [["#spending-item", "#spending-amount"], ["[name=spending-needs]", "#need-other-text"], ["#life-style-summary"], ["#spend-style-summary"], ["#people-style-summary"], ["[name=strengths]"], ["[name=pressures]"]],
+    EP105: [["#experience-context"], ["#experience-problem"], ["#experience-action"], ["#experience-result"], ["#trait-word"]],
+    EP106: [["#short-21", "#long-17"], ["#short-22", "#short-25", "#short-28", "#long-18"], ["#short-23", "#short-26", "#short-29", "#long-19"], ["#short-24", "#short-27", "#long-20"]],
+    EP107: [["#short-16"], ["#short-13", "#short-15", "#long-37"]],
+    EP109: [["[name=group-1]", "#other-6"], ["#short-38"], ["#short-39"]],
+    EP110: [["#short-13"], ["[name=group-4]", "#other-26", "#short-27", "#short-29", "#short-31", "#short-33", "#short-35", "#short-37"]],
+    EP111: [["#short-1"]],
+    EP112: [["#short-8"]],
+    EP113: [[], [], []],
+    EP114: [["#short-23"]],
+    EP115: [["#short-16"], ["[name=group-3]", "#other-12", "#short-17"]],
+    EP117: [["#long-1"]]
+  };
   const scoreTotal = worksheet.querySelector("[data-score-total]");
   const saveStatus = document.querySelector("[data-save-status]");
   const clearButton = document.querySelector('[data-clear]');
@@ -10,8 +43,80 @@
       control.type === "checkbox" || control.type === "radio" ? control.checked : control.value !== ""
     );
   };
+  const normalize = (value) => value.replace(/\s+/g, " ").trim();
+  const answerFor = (control) => {
+    if (!control || control.disabled) return "";
+    if (control.type === "checkbox" || control.type === "radio") {
+      if (!control.checked) return "";
+      if (control.value && control.value !== "on") return normalize(control.value);
+      return normalize(control.closest("label")?.innerText || "");
+    }
+    return normalize(control.value || "");
+  };
+  const bindingValue = (binding) => {
+    const selectors = Array.isArray(binding) ? binding : [];
+    const matched = selectors.flatMap((selector) => [...worksheet.querySelectorAll(selector)]);
+    return [...new Set(matched.map(answerFor).filter(Boolean))].join("、");
+  };
+  const promptTemplates = new WeakMap();
+  const templateFor = (root) => {
+    if (!promptTemplates.has(root)) promptTemplates.set(root, { html: root.innerHTML, text: root.innerText.trim() });
+    return promptTemplates.get(root);
+  };
+  const promptState = (root) => {
+    const template = templateFor(root).text;
+    const bindings = promptBindings[worksheet.dataset.worksheetId] || [];
+    let index = 0;
+    let filled = 0;
+    const text = template.replace(/【[^】]+】/g, (placeholder) => {
+      const value = bindingValue(bindings[index++]);
+      if (!value) return placeholder;
+      filled += 1;
+      return value;
+    });
+    return { text, filled, total: index };
+  };
+  const replaceTextRange = (root, start, length, value) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    let offset = 0;
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      nodes.push({ node, start: offset, end: offset + node.data.length });
+      offset += node.data.length;
+    }
+    const end = start + length;
+    const touched = nodes.filter((item) => item.end > start && item.start < end);
+    if (!touched.length) return;
+    const first = touched[0];
+    const last = touched[touched.length - 1];
+    const prefix = first.node.data.slice(0, start - first.start);
+    const suffix = last.node.data.slice(end - last.start);
+    first.node.data = prefix + value + (first === last ? suffix : "");
+    for (const item of touched.slice(1, -1)) item.node.data = "";
+    if (last !== first) last.node.data = suffix;
+  };
+  const updatePrompt = () => {
+    document.querySelectorAll("[data-prompt-text]").forEach((root) => {
+      const template = templateFor(root);
+      root.innerHTML = template.html;
+      const state = promptState(root);
+      const bindings = promptBindings[worksheet.dataset.worksheetId] || [];
+      const matches = [...root.textContent.matchAll(/【[^】]+】/g)];
+      matches.reverse().forEach((match, reverseIndex) => {
+        const value = bindingValue(bindings[matches.length - reverseIndex - 1]);
+        if (value) replaceTextRange(root, match.index, match[0].length, value);
+      });
+      root.parentElement.dataset.promptStatus = state.total === 0
+        ? "這段提示詞不需要代入作答。"
+        : state.filled === state.total
+          ? `已自動代入 ${state.total} 項作答。`
+          : `已自動代入 ${state.filled}／${state.total} 項；未作答處保留括號提示。`;
+    });
+  };
   const copyPrompt = async (button) => {
-    const prompt = button.closest(".prompt-quote")?.querySelector("[data-prompt-text]")?.innerText.trim();
+    const root = button.closest(".prompt-quote")?.querySelector("[data-prompt-text]");
+    const prompt = root ? promptState(root).text : "";
     if (!prompt) return;
     try {
       await navigator.clipboard.writeText(prompt);
@@ -75,8 +180,8 @@
     updateScore();
   };
   controls.forEach((control) => {
-    control.addEventListener("change", () => { updateScore(); save(); });
-    control.addEventListener("input", save);
+    control.addEventListener("change", () => { updateScore(); save(); updatePrompt(); });
+    control.addEventListener("input", () => { save(); updatePrompt(); });
   });
   document.querySelector("[data-print]").addEventListener("click", () => window.print());
   document.querySelectorAll("[data-prompt-copy]").forEach((button) => {
@@ -86,6 +191,7 @@
     if (!window.confirm("確定要清除這個分頁中的所有作答嗎？清除後無法復原。")) return;
     clearDraft();
     updateClearButton();
+    updatePrompt();
     saveStatus.textContent = "作答已清除";
   });
   const videoLink = document.querySelector('[data-video-link]');
@@ -103,4 +209,5 @@
   restore();
   updateClearButton();
   updateScore();
+  updatePrompt();
 })();

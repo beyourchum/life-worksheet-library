@@ -302,6 +302,11 @@ async function withinFontBudget(page, home) {
         await require('./tests/ep95-calculator.test.cjs').testEp95Calculator(calculator);
       } finally { await calculator.close(); }
     });
+    await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
+      const prompt = await browser.newPage();
+      try { await require('./tests/prompt-autofill.test.cjs').testPromptAutofill(prompt, base); }
+      finally { await prompt.close(); }
+    });
 
     await record('首次慢速載入自動套用字型並維持版面穩定', async () => {
       const slow = await browser.newPage();
