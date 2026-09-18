@@ -4,6 +4,7 @@ const results = document.querySelector('#results');
 const status = document.querySelector('#status');
 const empty = document.querySelector('#empty');
 const categories = document.querySelector('#categories');
+const allCategory = document.querySelector('#all-category');
 const resetButton = document.querySelector('#reset-button');
 const emptyMessage = document.querySelector('#empty-message');
 const sort = document.querySelector('#sort');
@@ -12,10 +13,56 @@ const pageSelect = document.querySelector('#page-select');
 const previous = document.querySelector('#previous-page');
 const next = document.querySelector('#next-page');
 const retry = document.querySelector('#retry-load');
+const inspirationBook = document.querySelector('#inspiration-book');
+const bookCover = document.querySelector('#book-cover');
+const bookAnswer = document.querySelector('#book-answer');
+const openInspiration = document.querySelector('#open-inspiration');
+const anotherInspiration = document.querySelector('#another-inspiration');
+const inspirationStatus = document.querySelector('#inspiration-status');
+const inspirationMeta = document.querySelector('#inspiration-meta');
+const inspirationLink = document.querySelector('#inspiration-link');
+const inspirationSummary = document.querySelector('#inspiration-summary');
+const inspirationAction = document.querySelector('#inspiration-action');
 let worksheets = [], categoryLabels = [], matches = [];
 let searchConfig, searchPromise, catalogPromise;
 let selectedCategory = '', matchMode = 'all', pageNumber = 1, pageSize = 12, debounceMs = 180;
-let ready = false, composing = false, revision = 0, timer;
+let ready = false, composing = false, revision = 0, timer, currentInspiration;
+
+function pickInspiration() {
+  const choices = worksheets.filter((item) => item.ep !== currentInspiration?.ep);
+  return choices[Math.floor(Math.random() * choices.length)] || worksheets[0];
+}
+
+function renderInspiration(item) {
+  const href = item.articleUrl || item.worksheetUrl;
+  inspirationMeta.textContent = `${item.ep} · ${item.category}`;
+  inspirationLink.href = href;
+  inspirationLink.textContent = item.title;
+  inspirationLink.setAttribute('aria-label', `${item.title}：${item.articleUrl ? '閱讀文章' : '開啟互動式學習單'}`);
+  inspirationSummary.textContent = item.summary || '';
+  inspirationAction.href = href;
+}
+
+function revealInspiration(announce = true) {
+  currentInspiration = pickInspiration();
+  renderInspiration(currentInspiration);
+  inspirationBook.classList.add('is-open');
+  bookCover.inert = true;
+  bookCover.setAttribute('aria-hidden', 'true');
+  bookAnswer.inert = false;
+  bookAnswer.setAttribute('aria-hidden', 'false');
+  if (announce) inspirationStatus.textContent = `今天的靈感：${currentInspiration.title}`;
+}
+
+function revealAnotherInspiration() {
+  anotherInspiration.disabled = true;
+  inspirationBook.classList.remove('is-open');
+  const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 360;
+  window.setTimeout(() => {
+    revealInspiration();
+    anotherInspiration.disabled = false;
+  }, delay);
+}
 
 function appendHighlightedText(element, text, terms) {
   if (!terms.length) { element.textContent = text; return; }
@@ -96,7 +143,7 @@ function createResult(match) {
 }
 
 function updateCategoryState() {
-  for (const button of categories.children) {
+  for (const button of document.querySelectorAll('.category-button')) {
     const active = button.dataset.category === selectedCategory;
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
@@ -106,15 +153,26 @@ function updateCategoryState() {
 function renderCategories() {
   const counts = new Map(categoryLabels.map((label) => [label, 0]));
   worksheets.forEach((item) => counts.set(item.category, (counts.get(item.category) || 0) + 1));
-  categories.replaceChildren(...['', ...categoryLabels].map((label) => {
+  const createCategoryButton = (label) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'category-button';
+    button.className = `category-button${label ? '' : ' category-all'}`;
     button.dataset.category = label;
-    button.textContent = (label || '全部') + ' · ' + (label ? counts.get(label) : worksheets.length);
+    const name = document.createElement('span');
+    name.className = 'category-name';
+    name.textContent = label || '全部靈感';
+    button.title = name.textContent;
+    const count = document.createElement('span');
+    count.className = 'category-count';
+    count.textContent = `${label ? counts.get(label) : worksheets.length} 篇`;
+    button.append(name, count);
+    button.setAttribute('aria-label', `${name.textContent}，${count.textContent}`);
     button.addEventListener('click', () => { selectedCategory = label; updateCategoryState(); refresh(); });
     return button;
-  }));
+  };
+  categories.replaceChildren(...categoryLabels.map(createCategoryButton));
+  categories.classList.toggle('three-column-topics', categoryLabels.length > 0 && categoryLabels.length % 3 === 0);
+  allCategory.replaceChildren(createCategoryButton(''));
   updateCategoryState();
 }
 
@@ -211,6 +269,8 @@ function loadCatalog() {
     debounceMs = catalog.searchDebounceMs;
     ready = true;
     renderCategories();
+    inspirationBook.setAttribute('aria-busy', 'false');
+    openInspiration.disabled = false;
     return refresh();
   }).catch(() => {
     catalogPromise = undefined;
@@ -234,4 +294,6 @@ next.addEventListener('click', () => changePage(pageNumber + 1));
 pageSelect.addEventListener('change', () => changePage(Number(pageSelect.value)));
 resetButton.addEventListener('click', () => { search.value = ''; selectedCategory = ''; sort.value = 'recommended'; updateCategoryState(); refresh(); search.focus(); });
 retry.addEventListener('click', () => { if (ready) refresh(); else loadCatalog(); });
+openInspiration.addEventListener('click', () => revealInspiration());
+anotherInspiration.addEventListener('click', revealAnotherInspiration);
 loadCatalog();

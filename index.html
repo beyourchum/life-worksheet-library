@@ -4,46 +4,85 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="從最近的煩惱出發，搜尋碩說說影片與互動式學習單，找到可以開始行動的下一步。">
+  <meta property="og:title" content="靈感之書：生活解題設計｜碩說說">
+  <meta name="twitter:title" content="靈感之書：生活解題設計｜碩說說">
   <meta name="theme-color" content="#fffefa">
-  <title>生活解題設計｜碩說說</title>
+  <title>靈感之書：生活解題設計｜碩說說</title>
   <link rel="preload" href="assets/fonts/worksheet/compact/home/glow-800.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts/worksheet/compact/home/fonts.css">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <a class="skip-link" href="#search">跳到搜尋</a>
+  <a class="skip-link" href="#search-folder">跳到搜尋</a>
   <header class="site-header">
-    <a class="wordmark" href="https://youtube.com/@socialtalk24?si=GKlSAFyK3wD9Npxg" target="_blank" rel="noopener noreferrer" aria-label="前往碩說說 YouTube 頻道">碩說說：拆解生活小事的影音頻道<span class="brand-arrow" aria-hidden="true">↗︎</span></a>
-    <nav class="site-nav" aria-label="主要導覽"><a href="#explore">探索內容</a><a href="#about">關於本站</a></nav>
+    <nav class="site-nav" aria-label="主要導覽"><a href="#inspiration">翻開靈感</a><a href="#explore">尋找線索</a></nav>
     <p class="edition">KNOWLEDGE INDEX<br>TAIPEI · 2026</p>
   </header>
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <p class="hero-index" aria-hidden="true">001</p>
-      <div><p class="kicker">SOCIALTALK KNOWLEDGE INDEX</p><h1 id="hero-title"><span>讓想法變成</span><span>具體的下一步</span></h1></div>
+      <p class="hero-index" aria-hidden="true">00</p>
+      <div><p class="kicker">SOCIALTALK · THE BOOK OF EVERYDAY LIFE</p><h1 id="hero-title"><span>生活沒有標準答案</span><span>但總有下一個提示</span></h1></div>
       <div class="hero-deck">
-        <p>很多事情，沒有人特別教過我們。</p>
-        <p>怎麼跟人相處、怎麼做選擇、怎麼看待自己，我們常常只是看著別人怎麼做，就這樣走下去。</p>
-        <p>其實不想清楚，也能生活，只是偶爾，我們會忍不住問：「一定只能這樣嗎？」</p>
-        <p>拆解那些習以為常的小事，讓你<strong>找到方法、看見選擇，把決定留給自己。</strong></p>
+        <p>有些問題不需要立刻回答，只需要一個剛剛好的提示。</p>
+        <p>把最近卡住你的事放在心裡，翻開一頁，也許會看見原本沒想到的方向。</p>
+        <p><strong>靈感不替你決定，只陪你找到可以開始的下一步。</strong></p>
       </div>
 
     </section>
-    <section id="explore" class="search-section" aria-labelledby="search-label">
-      <div class="section-label"><span>01</span><p>SEARCH / 搜尋</p></div>
-      <form id="search-form" class="search-form" role="search">
-        <label id="search-label" for="search">你最近有什麼煩惱？</label>
-        <div class="search-control"><input id="search" type="search" placeholder="輸入一個問題或關鍵字" autocomplete="off" aria-describedby="search-hint"><button id="search-button" type="submit" aria-label="搜尋"><span>SEARCH</span><span aria-hidden="true">→</span></button></div>
-        <p id="search-hint">試著輸入最近的煩惱，例如：不想上班、總是拖延、容易想太多。搜尋內容不會被儲存。</p>
-      </form>
+    <section id="inspiration" class="inspiration-section" aria-labelledby="inspiration-title">
+      <div class="inspiration-copy">
+        <div class="section-label"><span>01</span><p>THE BOOK OF INSPIRATION</p></div>
+        <h2 id="inspiration-title">今天，靈感之書想告訴你什麼？</h2>
+        <p class="inspiration-intro">想一個最近卡在心裡的小問題。不必急著找到答案，先看看今天出現的提示，它也許會帶你找到一個可以開始的小行動。</p>
+        <p class="inspiration-motto">解開一個小問題，<br>生活就多一點選擇。</p>
+      </div>
+      <div class="book-stage">
+        <div id="inspiration-book" class="inspiration-book" aria-busy="true">
+          <div class="book-inner">
+            <div id="book-cover" class="book-face book-cover">
+              <p class="book-volume">SOCIALTALK · VOL. 000</p>
+              <div class="book-cover-title"><span>靈感</span><span>之書</span></div>
+              <p>給正在生活裡尋找下一步的你</p>
+              <button id="open-inspiration" type="button" disabled>翻開靈感之書 <span aria-hidden="true">→</span></button>
+            </div>
+            <article id="book-answer" class="book-face book-answer" aria-hidden="true" inert>
+              <p class="book-answer-label">TODAY'S INSPIRATION / 今天的靈感</p>
+              <p id="inspiration-meta" class="book-answer-meta"></p>
+              <h3><a id="inspiration-link" href="./"></a></h3>
+              <p id="inspiration-summary" class="book-answer-summary"></p>
+              <div class="book-answer-actions">
+                <a id="inspiration-action" href="./">從這個問題開始 <span aria-hidden="true">→</span></a>
+                <button id="another-inspiration" type="button">再翻一次 <span aria-hidden="true">↻</span></button>
+              </div>
+            </article>
+          </div>
+        </div>
+        <p id="inspiration-status" class="visually-hidden" role="status" aria-live="polite"></p>
+      </div>
     </section>
-    <section class="filter-section" aria-labelledby="filter-title">
-      <div class="section-label"><span>02</span><p id="filter-title">FILTER / 主題</p></div>
+    <section id="explore" class="filter-section" aria-labelledby="filter-title">
+      <div class="chapter-heading">
+        <div class="section-label"><span>02</span><p>CHAPTERS / 生活章節</p></div>
+        <div><h2 id="filter-title">從一個主題開始</h2><p>像翻目錄一樣，選一個此刻最想處理的生活章節。</p></div>
+      </div>
       <div id="categories" class="categories" aria-label="依主題篩選"></div>
+      <div class="explore-utilities">
+        <div id="all-category" class="all-category"></div>
+        <section class="search-section" aria-label="搜尋更多生活線索">
+          <details id="search-folder" class="search-folder">
+            <summary><span class="search-folder-title"><strong>找不到合適的主題？</strong><small>搜尋更多生活線索</small></span><span class="search-folder-action">展開搜尋 <span aria-hidden="true">＋</span></span></summary>
+            <form id="search-form" class="search-form" role="search">
+              <label id="search-label" for="search">寫下你想找的問題或關鍵字</label>
+              <div class="search-control"><input id="search" type="search" placeholder="例如：不想上班、總是拖延、容易想太多" autocomplete="off" aria-describedby="search-hint"><button id="search-button" type="submit" aria-label="搜尋"><span>SEARCH</span><span aria-hidden="true">→</span></button></div>
+              <p id="search-hint">搜尋內容只用來尋找站內線索，不會被儲存。</p>
+            </form>
+          </details>
+        </section>
+      </div>
     </section>
     <section class="result-section" aria-labelledby="results-title">
-      <div class="result-heading"><div class="section-label"><span>03</span><h2 id="results-title" tabindex="-1">INDEX / 內容索引</h2></div><p id="status" role="status" aria-live="polite">正在載入內容…</p></div>
-      <div class="browse-tools"><p>不確定從哪裡開始？先選主題，或從最近的集數逛起。</p><label for="sort">排列方式 <select id="sort"><option value="recommended">建議順序</option><option value="newest">集數由新到舊</option><option value="oldest">集數由舊到新</option></select></label></div>
+      <div class="result-heading"><div class="section-label"><span>03</span><h2 id="results-title" tabindex="-1">LIBRARY / 所有生活靈感</h2></div><p id="status" role="status" aria-live="polite">正在載入內容…</p></div>
+      <div class="browse-tools"><p>慢慢翻，也可以從一個此刻在意的主題開始。</p><label for="sort">排列方式 <select id="sort"><option value="recommended">建議順序</option><option value="newest">集數由新到舊</option><option value="oldest">集數由舊到新</option></select></label></div>
       <button id="retry-load" type="button" hidden>重新載入</button>
       <div class="list-header" aria-hidden="true"><span>EP.</span><span>QUESTION / 問題</span><span>OPEN</span></div>
       <div id="results" class="results" aria-busy="true"></div>
@@ -53,8 +92,8 @@
     </section>
   </main>
   <footer id="about" class="site-footer">
-    <p class="footer-mark">碩說說 @socialtalk24</p>
-    <p>影片、觀點與互動式學習單，<br>一起聊聊那些一直卡在腦袋裡的小事，<br>把想法變成可以執行的下一步。</p>
+    <p class="footer-mark"><a href="https://www.youtube.com/@socialtalk24" target="_blank" rel="noopener noreferrer" aria-label="前往碩說說 YouTube 頻道首頁">碩說說 @socialtalk24</a></p>
+    <p>一本持續增加頁數的生活靈感書。<br>從影片、觀點與互動式學習單裡，<br>找到下一個可以開始的小行動。</p>
     <div class="footer-note"><p>EDUCATIONAL USE</p><p>本站提供教育內容，不是心理診斷或緊急服務。如有傷害自己或他人的想法，請立即聯絡可信任的人、學校諮商中心、資源教室或當地緊急求助單位。</p></div>
   </footer>
   <script src="assets/search-core.js" defer></script>
