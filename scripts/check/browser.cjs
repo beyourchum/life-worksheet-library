@@ -160,6 +160,23 @@ async function withinFontBudget(page, home) {
         assert.equal(await firstOther.locator('input[type="text"]').inputValue(), '書桌旁的紙袋', '其他填寫欄應能輸入');
       } finally { await fixture.close(); }
     });
+    await record('EP86 困擾選項沿用一般選項樣式', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      try {
+        await fixture.goto(`${base}/worksheets/EP86/`);
+        const nestedChoice = fixture.locator('.choice:has(input[name="ep86-impact"])').first();
+        const regularChoice = fixture.locator('.choice:has(input[name="ep86-situation"])').first();
+        const nestedStyle = await nestedChoice.evaluate((element) => ({
+          display: getComputedStyle(element).display,
+          fontWeight: getComputedStyle(element).fontWeight
+        }));
+        const regularStyle = await regularChoice.evaluate((element) => ({
+          display: getComputedStyle(element).display,
+          fontWeight: getComputedStyle(element).fontWeight
+        }));
+        assert.deepEqual(nestedStyle, regularStyle, 'answer-field 內的選項應與其他一般選項使用相同排版與字重');
+      } finally { await fixture.close(); }
+    });
     await record('EP86 五分鐘整理法維持一般選項樣式', async () => {
       const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
       try {

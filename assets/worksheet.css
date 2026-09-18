@@ -322,7 +322,7 @@ p { margin: .6rem 0; }
 }
 
 .answer-field { margin-top: 1.2rem; }
-.answer-field label { display: block; margin-bottom: .55rem; font-weight: 600; }
+.answer-field > label { display: block; margin-bottom: .55rem; font-weight: 600; }
 .answer-field .short-answer {
   width: 100%;
   padding: .4rem .2rem;
@@ -556,7 +556,7 @@ p { margin: .6rem 0; }
     padding: .5mm 1mm;
   }
   .answer-field { margin-top: 2.5mm; }
-  .answer-field label { margin-bottom: 1mm; }
+  .answer-field > label { margin-bottom: 1mm; }
   .answer-field .short-answer { padding: 0; }
   .answer-field textarea {
     min-height: 14mm;
