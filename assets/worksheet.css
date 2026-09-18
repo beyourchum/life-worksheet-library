@@ -210,6 +210,8 @@ p { margin: .6rem 0; }
 }
 .choice:hover, .choice:focus-within { background: #cfe2d8; }
 .choice input { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; margin: 0; accent-color: var(--green); }
+.choice-copy { min-width: 0; font-size: .92em; line-height: 1.42; }
+.choice-title { font-family: var(--font-subheading); font-size: 1.14em; font-weight: 700; line-height: 1.2; }
 .choice.other-choice { flex-wrap: wrap; }
 .choice-toggle { display: flex; align-items: center; gap: .65rem; cursor: pointer; }
 .worksheet[data-worksheet-id="EP86"] .choices-inline .choice input { margin-right: .2rem; }
@@ -229,6 +231,7 @@ p { margin: .6rem 0; }
   line-height: 1.25;
 }
 .worksheet[data-worksheet-id="EP85"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP90"] .choice-copy { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP103"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP103"] h3 { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP85"] .ep85-card-content {
@@ -521,6 +524,8 @@ p { margin: .6rem 0; }
     width: 3.2mm;
     height: 3.2mm;
   }
+  .choice-copy { font-size: 7.5pt; }
+  .choice-title { font-size: 8.5pt; }
   .other-input { padding: 0; }
   .matrix {
     margin: 1mm 0 2mm;

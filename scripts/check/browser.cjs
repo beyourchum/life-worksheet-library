@@ -105,6 +105,26 @@ async function withinFontBudget(page, home) {
       try { await require('./tests/ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
       finally { await fixture.close(); }
     });
+    await record('冒號選項分層排版與句尾冒號保留', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      try {
+        await fixture.goto(`${base}/worksheets/EP90/`);
+        const firstChoice = fixture.locator('label[for="ep90-fear-1"]');
+        assert.equal(await firstChoice.locator('.choice-title').innerText(), '全場焦點恐懼');
+        assert.match(await firstChoice.locator('.choice-copy').innerText(), /^全場焦點恐懼\n覺得台下所有人/);
+        assert.equal(await firstChoice.locator('.choice-copy br').count(), 1);
+        assert(
+          await firstChoice.evaluate((element) => {
+            const title = Number.parseFloat(getComputedStyle(element.querySelector('.choice-title')).fontSize);
+            const detail = Number.parseFloat(getComputedStyle(element.querySelector('.choice-copy')).fontSize);
+            return title > detail;
+          }),
+          '冒號前標題字級應大於說明文字'
+        );
+        await fixture.goto(`${base}/worksheets/EP107/`);
+        assert.equal(await fixture.locator('label[for="choice-12"] .choice-title').count(), 0, '句尾冒號不應拆成兩層');
+      } finally { await fixture.close(); }
+    });
     await record('EP103 與 EP106 共用複選上限、暫存與清除', async () => {
       const fixture = await browser.newPage();
       try { await require('./tests/shared-choice-limits.test.cjs').testSharedChoiceLimits(fixture, base); }
@@ -248,6 +268,18 @@ async function withinFontBudget(page, home) {
         assert.deepEqual(await require('./rules/worksheet-style-check.cjs').worksheetStyleIssues(page), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
+        const prefixedChoices = await page.locator('.choice > span').evaluateAll((copies) => copies
+          .map((copy) => copy.innerText.trim())
+          .filter((text) => /^[A-ZＡ-Ｚ][.．、]\s*/.test(text)));
+        assert.deepEqual(prefixedChoices, [], `${item.ep}: 選項文字不得使用 A／B／C 等人工標號`);
+        const promptConfiguration = page.locator('.prompt-quote[data-prompt-status]');
+        if (await promptConfiguration.count()) {
+          assert.equal(
+            await promptConfiguration.getAttribute('data-prompt-configured'),
+            'true',
+            `${item.ep}: AI 提示詞缺少完整的作答欄位對應；請更新 assets/worksheet.js 的 promptBindings`
+          );
+        }
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false);
         const field = page.locator('textarea:not([readonly]),input[type=text]:not([readonly])').first();

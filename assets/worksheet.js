@@ -1,6 +1,25 @@
 (() => {
   const worksheet = document.querySelector(".worksheet");
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
+  worksheet.querySelectorAll(".choice > span").forEach((copy) => {
+    const original = copy.textContent.trim();
+    const separator = original.indexOf("：");
+    if (separator <= 0 || separator === original.length - 1) return;
+    const title = original.slice(0, separator).trim();
+    const detail = original.slice(separator + 1).trim();
+    const looksLikeHeading = title.length <= 10
+      && !/[（(「『，,。！？!?]/.test(title)
+      && !/(?:例如|如)$/.test(title)
+      && !/^[「『]/.test(detail);
+    if (!title || !detail || !looksLikeHeading) return;
+    copy.classList.add("choice-copy");
+    copy.replaceChildren(
+      Object.assign(document.createElement("strong"), { className: "choice-title", textContent: title }),
+      document.createElement("br"),
+      document.createTextNode(detail)
+    );
+    copy.closest("label")?.querySelector("input")?.setAttribute("data-choice-label", original);
+  });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
     EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
@@ -9,9 +28,14 @@
     EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
     EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
     EP87: [["[name=ep87-a]", "[name=ep87-b]", "[name=ep87-c]"], ["[name=ep87-focus]", "#ep87-focus-other"], ["[name=ep87-action]", "#ep87-action-custom", "#ep87-reminder"]],
-    EP88: [["[name=ep88-situation]"], ["#ep88-one-action"], ["#ep88-when"]],
+    EP88: [["[id^=ep88-situation-]"], ["#ep88-one-action"], ["#ep88-when"]],
     EP89: [["#ep89-start-point"]],
-    EP90: [[], ["[name=ep90-fear]", "#ep90-fear-other-text"], ["[name=ep90-fact]", "#ep90-fact-other-text"], ["#ep90-breaths", "#ep90-object", "[name=ep90-phrase]", "#ep90-phrase-other-text", "[name=ep90-after]", "#ep90-after-other-text"]],
+    EP90: [
+      { manual: "題目情境固定為簡報出錯，前文沒有獨立輸入欄位" },
+      ["[id^=ep90-fear-]"],
+      ["[id^=ep90-fact-]"],
+      ["#ep90-breaths", "#ep90-object", "[id^=ep90-phrase-]", "[id^=ep90-after-]"]
+    ],
     EP91: [["#ep91-major", "[name=ep91-field]", "#ep91-field-other-text"], ["#ep91-hours", "[id^=ep91-skill-]"], ["#ep91-unique"], ["[id^=ep91-goal-]"], ["[id^=ep91-difficulty-]"]],
     EP92: [["#ep92-situation"], ["[id^=ep92-emotion-]", "[id^=ep92-result-]"], ["[id^=ep92-maintain]", "[id^=ep92-adjust]", "[id^=ep92-response-]", "#ep92-old-goal", "#ep92-new-goal", "[name=ep92-goal-relation]", "#ep92-goal-relation-other-text"], ["[id^=ep92-knowledge-]", "[id^=ep92-skill-]", "[name=ep92-frequency]", "[id^=ep92-resource-]", "#ep92-now-other"], ["[id^=ep92-short-]", "[id^=ep92-long-]"]],
     EP93: [["#ep93-reading-topic"], ["#ep93-discovery"], ["#ep93-ask-name"], ["#ep93-ask-person"], ["#ep93-ask-skill"], ["#ep93-help-skill", "#ep93-help-person"]],
@@ -30,7 +54,11 @@
     EP110: [["#short-13"], ["[name=group-4]", "#other-26", "#short-27", "#short-29", "#short-31", "#short-33", "#short-35", "#short-37"]],
     EP111: [["#short-1"]],
     EP112: [["#short-8"]],
-    EP113: [[], [], []],
+    EP113: [
+      { manual: "前文沒有要求讀者填寫煩惱" },
+      { manual: "前文沒有要求讀者填寫選項 A" },
+      { manual: "前文沒有要求讀者填寫選項 B" }
+    ],
     EP114: [["#short-23"]],
     EP115: [["#short-16"], ["[name=group-3]", "#other-12", "#short-17"]],
     EP117: [["#long-1"]]
@@ -49,7 +77,7 @@
     if (control.type === "checkbox" || control.type === "radio") {
       if (!control.checked) return "";
       if (control.value && control.value !== "on") return normalize(control.value);
-      return normalize(control.closest("label")?.innerText || "");
+      return normalize(control.dataset.choiceLabel || control.closest("label")?.innerText || "");
     }
     return normalize(control.value || "");
   };
@@ -57,6 +85,12 @@
     const selectors = Array.isArray(binding) ? binding : [];
     const matched = selectors.flatMap((selector) => [...worksheet.querySelectorAll(selector)]);
     return [...new Set(matched.map(answerFor).filter(Boolean))].join("、");
+  };
+  const bindingIsConfigured = (binding) => {
+    if (binding?.manual) return true;
+    return Array.isArray(binding)
+      && binding.length > 0
+      && binding.some((selector) => worksheet.querySelector(selector));
   };
   const promptTemplates = new WeakMap();
   const templateFor = (root) => {
@@ -102,6 +136,12 @@
       root.innerHTML = template.html;
       const state = promptState(root);
       const bindings = promptBindings[worksheet.dataset.worksheetId] || [];
+      const hasWorksheetConfig = Object.prototype.hasOwnProperty.call(promptBindings, worksheet.dataset.worksheetId);
+      root.parentElement.dataset.promptConfigured = String(
+        hasWorksheetConfig
+        && bindings.length === state.total
+        && bindings.every(bindingIsConfigured)
+      );
       const matches = [...root.textContent.matchAll(/【[^】]+】/g)];
       matches.reverse().forEach((match, reverseIndex) => {
         const value = bindingValue(bindings[matches.length - reverseIndex - 1]);
