@@ -215,9 +215,9 @@
     if (uncertain) {
       const label = uncertain.closest('label');
       const field = label.querySelector('input[type="text"]');
+      const text = label.querySelector('span');
+      if (text) text.textContent = '我還不能判斷';
       if (field) {
-        const text = label.querySelector('span');
-        if (text) text.textContent = '我還不能判斷';
         field.remove();
         const group = label.closest('.choices');
         const answer = document.createElement('div');
