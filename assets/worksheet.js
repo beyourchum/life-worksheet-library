@@ -14,7 +14,11 @@
     if (!title || !detail || !looksLikeHeading) return;
     copy.classList.add("choice-copy");
     const exampleMatch = detail.match(/^(.*?)（((?:例如|如)：[^()（）]+)）(.*)$/);
-    const detailMain = exampleMatch ? `${exampleMatch[1]}${exampleMatch[3]}`.trim() : detail;
+    const exampleSuffix = exampleMatch?.[3].trim() || "";
+    const examplePunctuation = /^[。！？!?]+$/.test(exampleSuffix) ? exampleSuffix : "";
+    const detailMain = exampleMatch
+      ? `${exampleMatch[1]}${examplePunctuation ? "" : exampleSuffix}`.trim()
+      : detail;
     const children = [
       Object.assign(document.createElement("strong"), { className: "choice-title", textContent: title }),
       document.createElement("br"),
@@ -24,7 +28,7 @@
       copy.classList.add("choice-copy-with-example");
       children.push(Object.assign(document.createElement("small"), {
         className: "choice-inline-example",
-        textContent: exampleMatch[2].trim()
+        textContent: `${exampleMatch[2].trim()}${examplePunctuation}`
       }));
     }
     copy.replaceChildren(...children);
