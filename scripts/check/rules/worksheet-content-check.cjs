@@ -24,6 +24,9 @@ async function worksheetStructureIssues(page, title, ep) {
     const headings = document.querySelectorAll('main h1');
     if (headings.length !== 1 || clean(headings[0].textContent) !== clean(title)) issues.push('學習單主標題與索引不一致或不是唯一 h1');
     if (clean(document.title) !== clean(`${ep}｜${title}`)) issues.push('瀏覽器標題須為 EP｜學習單主標題');
+    const heroQuestions = document.querySelectorAll('main .worksheet-hero .hero-question');
+    if (heroQuestions.length !== 1) issues.push('主標下方須有且只有一則 hero-question 小標題');
+    else if (!/[？?]$/.test(heroQuestions[0].textContent.trim())) issues.push('主標下方小標題須以問句指出學習單可以解決的問題');
     const endings = document.querySelectorAll('main .final-reminder');
     const ai = document.querySelectorAll('main .prompt-intro');
     const prompts = document.querySelectorAll('main [data-prompt-text]');

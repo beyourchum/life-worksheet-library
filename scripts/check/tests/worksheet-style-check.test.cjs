@@ -6,11 +6,17 @@ async function testWorksheetStyles(page) {
   const answer = '<textarea id="answer"></textarea>';
   const ending = '<aside class="final-reminder">結尾</aside>';
   const ai = '<aside class="prompt-intro">AI 幫幫忙</aside><div data-prompt-text>提示詞</div>';
+  const hero = '<div class="worksheet-hero"><p class="hero-question">我可以怎麼練習表達？</p></div>';
   const structure = async (body, title = '練習表達') => {
-    await page.setContent(`<title>EP1｜${title}</title><main><h1>練習<em>表達</em></h1>${body}</main>`);
+    await page.setContent(`<title>EP1｜${title}</title><main><h1>練習<em>表達</em></h1>${hero}${body}</main>`);
     return worksheetStructureIssues(page, '練習表達', 'EP1');
   };
   assert.deepEqual(await structure('<aside class="closing">作答引導</aside>' + answer + ending + ai), []);
+  assert((await structure(answer + ending + ai + '<div class="worksheet-hero"><p class="hero-question">另一個問題？</p></div>')).some(x => x.includes('有且只有一則')));
+  await page.setContent(`<title>EP1｜練習表達</title><main><h1>練習表達</h1>${answer}${ending}${ai}</main>`);
+  assert((await worksheetStructureIssues(page, '練習表達', 'EP1')).some(x => x.includes('有且只有一則')));
+  await page.setContent(`<title>EP1｜練習表達</title><main><h1>練習表達</h1><div class="worksheet-hero"><p class="hero-question">練習表達的方法</p></div>${answer}${ending}${ai}</main>`);
+  assert((await worksheetStructureIssues(page, '練習表達', 'EP1')).some(x => x.includes('須以問句')));
   assert((await structure(answer + ending + ai, '原文章長標題')).some(x => x.includes('瀏覽器標題')));
   await structure(answer + ending + ai);
   await page.locator('h1').evaluate(node => { node.textContent = '另一個標題'; });
