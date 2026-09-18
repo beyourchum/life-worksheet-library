@@ -18,7 +18,24 @@
       document.createElement("br"),
       document.createTextNode(detail)
     );
-    copy.closest("label")?.querySelector("input")?.setAttribute("data-choice-label", original);
+    const input = copy.closest("label")?.querySelector("input");
+    input?.setAttribute("data-choice-label", original);
+  });
+  worksheet.querySelectorAll('.choice > span:not(.choice-copy)').forEach((copy) => {
+    const original = copy.textContent.trim();
+    const match = original.match(/^(.*?)（((?:例如|如)：[^()（）]+)）(.*)$/);
+    if (!match) return;
+    const main = `${match[1]}${match[3]}`.trim();
+    const example = match[2].trim();
+    if (!main || !example) return;
+    copy.classList.add("choice-copy", "choice-copy-with-example");
+    copy.replaceChildren(
+      document.createTextNode(main),
+      Object.assign(document.createElement("small"), { className: "choice-inline-example", textContent: example })
+    );
+    const input = copy.closest("label")?.querySelector("input");
+    input?.setAttribute("data-choice-label", original);
+    input?.setAttribute("data-content-label", original);
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {

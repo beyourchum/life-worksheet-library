@@ -212,18 +212,33 @@ p { margin: .6rem 0; }
 .choice input { width: 1.15rem; height: 1.15rem; flex: 0 0 auto; margin: 0; accent-color: var(--green); }
 .choice-copy { min-width: 0; font-size: .92em; line-height: 1.42; }
 .choice-title { font-family: var(--font-subheading); font-size: 1.14em; font-weight: 700; line-height: 1.2; }
+.choice-inline-example {
+  display: block;
+  margin-top: .12rem;
+  color: var(--muted);
+  font-size: .82em;
+  line-height: 1.35;
+}
 .choice.other-choice { flex-wrap: wrap; }
 .choice-toggle { display: flex; align-items: center; gap: .65rem; cursor: pointer; }
 .worksheet[data-worksheet-id="EP86"] .choices-inline .choice input { margin-right: .2rem; }
 .worksheet[data-worksheet-id="EP86"] .choices-inline .choice > span { margin-left: .2rem; }
-.other-input, .short-answer, textarea {
+.other-input, .inline-input, .short-answer, textarea {
   min-width: 0;
   border: 0;
   border-bottom: 1px solid var(--foreground);
   border-radius: 0;
   background: transparent;
 }
-.other-input { min-width: 7rem; flex: 1; padding: .3rem .2rem; }
+.other-input, .inline-input:not(.compact-input) { min-width: 7rem; flex: 1; padding: .3rem .2rem; }
+.choice > span:has(.inline-input) {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: .35rem;
+}
+.inline-input.compact-input { width: 5rem; padding: .3rem .2rem; }
 .choice:has(.other-input) { flex-wrap: wrap; }
 .worksheet[data-worksheet-id="EP85"] .ep85-situation-card {
   align-items: flex-start;
@@ -526,6 +541,7 @@ p { margin: .6rem 0; }
   }
   .choice-copy { font-size: 7.5pt; }
   .choice-title { font-size: 8.5pt; }
+  .choice-inline-example { font-size: 6.5pt; }
   .other-input { padding: 0; }
   .matrix {
     margin: 1mm 0 2mm;

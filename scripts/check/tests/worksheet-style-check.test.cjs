@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
-const { worksheetStyleIssues } = require('../rules/worksheet-style-check.cjs');
+const { worksheetStyleIssues, inlineInputLayoutIssues } = require('../rules/worksheet-style-check.cjs');
+const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('../rules/worksheet-heading-check.cjs');
 
 async function testWorksheetStyles(page) {
   const { worksheetStructureIssues } = require('../rules/worksheet-content-check.cjs');
@@ -61,6 +62,12 @@ async function testWorksheetStyles(page) {
   assert((await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('完整敘述須放在下方內文')));
   assert.deepEqual(await check('<h3 class="subheading">情境</h3><p>朋友臨時約吃飯；選出較像你的描述。</p>'), []);
   assert((await check('<h3>情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('h3.subheading')));
+  assert((await check('<div class="question-heading"><h3>1. 選一個</h3><span class="answer-mode">單選</span></div>')).some(x => x.includes('不應加數字編號')));
+  assert((await check('<h3 class="subheading">2、整理下一步</h3>')).some(x => x.includes('不應加數字編號')));
+  assert.deepEqual(numberedHtmlHeadings('<h3>1. 選一個</h3><h3 class="subheading">2、整理下一步</h3>'), ['1. 選一個', '2、整理下一步']);
+  assert.deepEqual(numberedHtmlHeadings('<h2><span>01</span>整理情境</h2><h3>選一個</h3>'), []);
+  assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 1. 選一個\n\n### 2、整理下一步'), ['1. 選一個', '2、整理下一步']);
+  assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 選一個'), []);
   assert((await check('<div class="subheading">情境：朋友臨時約吃飯</div>')).some(x => x.includes('灰綠底活動標題')));
   assert((await check(group)).some(x => x.includes('缺少題目')));
   assert((await check(heading.replace('<span class="answer-mode">單選</span>', '') + group)).some(x => x.includes('題型標示')));
@@ -70,6 +77,22 @@ async function testWorksheetStyles(page) {
     assert.deepEqual(await check(`<p><span class="example-note">${text}</span></p>`), []);
   }
   assert.deepEqual(await check('<p>填入你的任務：<span class="example-note">例如：整理房間</span>，再提出問題。</p>'), []);
+  const choiceExample = heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span class="choice-copy choice-copy-with-example">先找一個小課程<small class="choice-inline-example">如：YouTube 教學</small></span></label></div>';
+  assert.deepEqual(await check(choiceExample), []);
+  assert((await check(heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span>先找一個小課程（如：YouTube 教學）</span></label></div>')).some(x => x.includes('另起一行')));
+  assert((await check(choiceExample.replace('如：YouTube 教學', '範例：YouTube 教學'))).some(x => x.includes('「如：」或「例如：」')));
   assert((await check(heading + '<div class="choices"><label class="choice"><input id="other" type="radio" name="q">其他<input type="text"></label></div>')).some(x => x.includes('配對')));
+  const inlineChoice = '<div class="choices"><label class="choice"><input type="radio" name="q"><span>我還不確定，因為：<input id="reason" class="inline-input" type="text"></span></label></div>';
+  assert.deepEqual(await check(heading + inlineChoice), []);
+  assert((await check(heading + inlineChoice.replace(' class="inline-input"', ''))).some(x => x.includes('相同長度')));
+  assert((await check(heading + inlineChoice.replace('class="inline-input"', 'class="inline-input compact-input"'))).some(x => x.includes('numeric 或 decimal')));
+  assert.deepEqual(await check(heading + inlineChoice.replace('class="inline-input"', 'class="inline-input compact-input" inputmode="numeric"')), []);
+  await page.setContent(`<style>
+    .choice{display:flex}.choice>span:has(.inline-input){display:flex;flex:1;min-width:0}
+    .inline-input{min-width:7rem;flex:1;border:0;border-bottom:1px solid #000}
+  </style><main>${heading}${inlineChoice}</main>`);
+  assert.deepEqual(await inlineInputLayoutIssues(page), []);
+  await page.locator('#reason').evaluate((input) => { input.style.flex = '0 0 auto'; input.style.minWidth = '0'; });
+  assert((await inlineInputLayoutIssues(page)).some(x => x.includes('伸展長度')));
 }
 module.exports = { testWorksheetStyles };

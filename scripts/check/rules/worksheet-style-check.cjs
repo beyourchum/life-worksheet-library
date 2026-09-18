@@ -24,13 +24,23 @@ async function worksheetStyleIssues(page) {
           (!choice.matches('.other-choice') || !choice.querySelector('.choice-toggle input[type=radio],.choice-toggle input[type=checkbox]')))
         issues.push('其他選項與填寫欄未正確配對：' + choice.textContent.trim());
     }
-    for (const example of document.querySelectorAll('.example-note,.choice-example')) {
+    for (const example of document.querySelectorAll('.example-note,.choice-example,.choice-inline-example')) {
       const text = example.textContent.trim();
-      if (/(?:範例|起手句|示範答案|舉例)[：:]/.test(text))
-        issues.push('示範文字須以「例如：」開頭：' + text);
+      const inlineChoiceExample = example.matches('.choice-inline-example');
+      if (/(?:範例|起手句|示範答案|舉例)[：:]/.test(text) ||
+          (inlineChoiceExample && !/^(?:例如|如)：/.test(text)))
+        issues.push(inlineChoiceExample
+          ? '選項舉例須以「如：」或「例如：」開頭：' + text
+          : '示範文字須以「例如：」開頭：' + text);
+    }
+    for (const copy of document.querySelectorAll('.choice > span')) {
+      if (/（(?:例如|如)：[^）]+）/.test(copy.textContent) && !copy.querySelector('.choice-inline-example'))
+        issues.push('選項內的舉例須另起一行並使用灰色小字：' + copy.textContent.trim());
     }
     for (const heading of document.querySelectorAll('main h3')) {
       const text = heading.textContent.trim();
+      if (/^\d+[.、]\s*/.test(text))
+        issues.push('題目標題不應加數字編號：' + text);
       if (/^(?:情境|例如[：:])/.test(text) && !heading.closest('.question-heading') && !heading.matches('h3.subheading'))
         issues.push('情境或示範標題須使用 h3.subheading：' + text);
       if (heading.matches('h3.subheading') && /^情境[：:]/.test(text))
@@ -42,13 +52,20 @@ async function worksheetStyleIssues(page) {
     const walker = document.createTreeWalker(document.querySelector('main') || document.body, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
       const node = walker.currentNode;
-      if (node.parentElement.closest('script,style,h1,h2,h3,h4,.example-note,.choice-example')) continue;
+      if (node.parentElement.closest('script,style,h1,h2,h3,h4,.example-note,.choice-example,.choice-inline-example')) continue;
       if (/例如|舉例[：:]|例[：:]|示範答案[：:]|起手句[：:]/.test(node.textContent))
         issues.push('句中範例或示範需套用灰字樣式：' + node.textContent.trim());
     }
     for (const input of document.querySelectorAll('.other-input')) {
       if (!input.closest('.other-choice')?.querySelector('.choice-toggle'))
         issues.push('其他填寫欄未與選項放在同一格：' + input.id);
+    }
+    for (const input of document.querySelectorAll('.choice input[type=text]')) {
+      if (!input.matches('.other-input,.inline-input'))
+        issues.push('選項內的一般文字欄須使用與「其他」相同長度的 inline-input：' + (input.id || input.getAttribute('aria-label') || '未命名欄位'));
+      if (input.matches('.compact-input') &&
+          !input.matches('.inline-input[inputmode=numeric],.inline-input[inputmode=decimal]'))
+        issues.push('短欄位例外須以 inline-input compact-input 搭配 numeric 或 decimal inputmode：' + (input.id || input.getAttribute('aria-label') || '未命名欄位'));
     }
     for (const heading of document.querySelectorAll('.question-heading')) {
       const mode = heading.querySelector('.answer-mode')?.textContent || '';
@@ -70,4 +87,21 @@ async function worksheetStyleIssues(page) {
     return issues;
   });
 }
-module.exports = { worksheetStyleIssues };
+async function inlineInputLayoutIssues(page) {
+  return page.evaluate(() => [...document.querySelectorAll('.choice input[type=text].inline-input:not(.compact-input)')]
+    .flatMap((input) => {
+      const id = input.id || input.getAttribute('aria-label') || '未命名欄位';
+      const wrapper = input.parentElement;
+      const style = getComputedStyle(input);
+      const wrapperStyle = getComputedStyle(wrapper);
+      const issues = [];
+      if (Number.parseFloat(style.flexGrow) < 1 || Number.parseFloat(style.minWidth) < 112)
+        issues.push(`選項內的一般文字欄未套用與「其他」相同的伸展長度：${id}`);
+      if (style.borderBottomStyle === 'none' || style.borderBottomWidth === '0px')
+        issues.push(`選項內的一般文字欄缺少共通填寫線：${id}`);
+      if (wrapperStyle.display !== 'flex' || Number.parseFloat(wrapperStyle.flexGrow) < 1)
+        issues.push(`選項內的一般文字欄外層未填滿剩餘寬度：${id}`);
+      return issues;
+    }));
+}
+module.exports = { worksheetStyleIssues, inlineInputLayoutIssues };

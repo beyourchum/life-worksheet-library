@@ -3,6 +3,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const { createHash } = require('node:crypto');
+const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
 process.chdir(path.join(__dirname, '../..'));
 const read = (file) => fs.readFileSync(file, 'utf8');
 const items = JSON.parse(read('catalog/worksheets.json'));
@@ -154,6 +155,8 @@ for (const item of items) {
     check(!/(?:適用對象|目標對象|建議年級|預備知識|建議時間)[：:]/.test(worksheetIntro), `${item.ep}: 第一個活動前不得另列適用對象等前置資訊`);
   }
   const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
+  const numberedHtml = numberedHtmlHeadings(html);
+  check(numberedHtml.length === 0, `${item.ep}: 題目或活動小標題不應加數字編號：${numberedHtml.join('、')}`);
   if (process.env.GITHUB_ACTIONS !== 'true') {
     for (const role of ['source', 'corrected']) {
       const sourceFile = `content/${item.ep}/${item.ep}_${role}.md`;
@@ -162,6 +165,8 @@ for (const item of items) {
   }
   if (fs.existsSync(correctedFile)) {
     const md = read(correctedFile);
+    const numberedMarkdown = numberedMarkdownHeadings(md);
+    check(numberedMarkdown.length === 0, `${correctedFile}: 題目或活動小標題不應加數字編號：${numberedMarkdown.join('、')}`);
     check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);
     check(md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`), `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])

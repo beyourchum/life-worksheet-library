@@ -94,7 +94,7 @@ async function withinFontBudget(page, home) {
   };
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-    await record('題型與句中範例負向測試', async () => {
+    await record('題型、填寫欄與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
       try { await require('./tests/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
       finally { await fixture.close(); }
@@ -123,6 +123,26 @@ async function withinFontBudget(page, home) {
         );
         await fixture.goto(`${base}/worksheets/EP107/`);
         assert.equal(await fixture.locator('label[for="choice-12"] .choice-title').count(), 0, '句尾冒號不應拆成兩層');
+      } finally { await fixture.close(); }
+    });
+    await record('選項括號舉例的共用換行灰字規則', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
+      try {
+        await fixture.goto(`${base}/worksheets/EP89/`);
+        const examples = fixture.locator('.choice-inline-example');
+        assert.equal(await examples.count(), 4);
+        assert.equal(await fixture.locator('label[for="ep89-skill-a"] .choice-copy').innerText(), '練習一個工作會用到的軟體功能\n如：Excel／Canva');
+        assert.equal(await fixture.locator('label[for="ep89-skill-b"] .choice-copy').innerText(), '找一個線上免費的小課程看 10 分鐘\n如：YouTube 教學');
+        assert(
+          await examples.first().evaluate((element) => {
+            const style = getComputedStyle(element);
+            const parentStyle = getComputedStyle(element.parentElement);
+            return style.display === 'block'
+              && style.color !== parentStyle.color
+              && Number.parseFloat(style.fontSize) < Number.parseFloat(parentStyle.fontSize);
+          }),
+          '選項舉例應另起一行，並使用較小的灰字'
+        );
       } finally { await fixture.close(); }
     });
     await record('EP103 與 EP106 共用複選上限、暫存與清除', async () => {
@@ -265,7 +285,9 @@ async function withinFontBudget(page, home) {
         await page.locator('[data-video-link]').waitFor({ state: item.videoUrl ? 'visible' : 'hidden' });
         if (item.videoUrl) assert.equal(await page.locator('[data-video-link]').getAttribute('href'), item.videoUrl);
         await page.evaluate(() => document.fonts.ready);
-        assert.deepEqual(await require('./rules/worksheet-style-check.cjs').worksheetStyleIssues(page), []);
+        const worksheetStyleRules = require('./rules/worksheet-style-check.cjs');
+        assert.deepEqual(await worksheetStyleRules.worksheetStyleIssues(page), []);
+        assert.deepEqual(await worksheetStyleRules.inlineInputLayoutIssues(page), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         const prefixedChoices = await page.locator('.choice > span').evaluateAll((copies) => copies
