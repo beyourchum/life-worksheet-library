@@ -3,6 +3,8 @@
 .calculator-results { margin: .5rem 0; padding: .6rem .9rem; background: var(--soft-green); }
 .calculator-fields .answer-field,
 .calculator-results .answer-field { margin: 0; }
+.calculator-fields .answer-field-group { min-width: 0; }
+.calculator-fields .answer-field-group .answer-field { margin: 0; }
 .calculator-fields .short-answer,
 .calculator-results .short-answer { width: 100%; min-height: 2rem; }
 .calculator-mode { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -50,6 +52,8 @@
   .calculator-fields .short-answer,
   .calculator-results .short-answer { min-height: 6mm; padding: .5mm; font-size: 10pt; }
   .calculator-fields .example-note { margin: .5mm 0 1mm; }
+  [data-worksheet-id="EP94"] .calculator-fields .example-note { margin: 0; font-size: 8pt; }
+  [data-worksheet-id="EP94"] .worksheet-page:nth-of-type(3) { padding-top: 4mm; padding-bottom: 5mm; font-size: .96em; }
   .ranking-actions,
   .ranking-confirm { display: none; }
   .ranking-paper-hint { display: block; }

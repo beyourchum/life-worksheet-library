@@ -133,7 +133,7 @@ for (const item of items) {
     /<strong>使用說明：<\/strong>\s*[^<\s]/,
     /class="[^"]*\bfinal-reminder\b[^"]*"/,
     /class="[^"]*\bprompt-intro\b[^"]*"[^>]*>[\s\S]*?AI 幫幫忙/,
-    /data-prompt-text[^>]*>\s*<p>\s*[^<\s]/,
+    /class="[^"]*\bprompt-copy-text\b[^"]*"[^>]*data-prompt-text[^>]*>\s*<p>\s*[^<\s]/,
     /<button\b[^>]*data-prompt-copy/
   ];
   const partNames = ['學習目標', '使用說明', '結尾', 'AI 幫幫忙', 'AI 提示詞', '複製提示詞按鈕'];
@@ -143,6 +143,13 @@ for (const item of items) {
     return match?.index ?? -1;
   });
   check(positions.every((p, i) => p >= 0 && (!i || p > positions[i - 1])), `${item.ep}: 共通開頭與結尾順序錯誤`);
+  const promptIntro = /<aside class="[^"]*\bprompt-intro\b[^"]*"[^>]*>([\s\S]*?)<\/aside>/.exec(html)?.[1] || '';
+  check(/class="closing-mark"[^>]*>→<\//.test(promptIntro), `${item.ep}: AI 幫幫忙缺少共通綠色箭頭`);
+  const promptIntroText = promptIntro.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  check(promptIntroText.length > '→AI 幫幫忙'.length, `${item.ep}: AI 幫幫忙須說明用途及代入或填寫方式`);
+  const promptTextHtml = /<div[^>]*\bdata-prompt-text\b[^>]*>([\s\S]*?)<\/div>/.exec(html)?.[1] || '';
+  const promptText = promptTextHtml.replace(/<[^>]+>/g, '').trim();
+  check(!(promptText.startsWith('「') && promptText.endsWith('」')), `${item.ep}: AI 提示詞全文不使用成對引號包住`);
   const firstActivityPosition = html.indexOf('<div class="section-heading"', positions[1]);
   check(firstActivityPosition > positions[1], `${item.ep}: 使用說明後缺少第一個活動`);
   if (firstActivityPosition > positions[1]) {

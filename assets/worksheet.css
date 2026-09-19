@@ -247,6 +247,10 @@ p { margin: .6rem 0; }
 }
 .worksheet[data-worksheet-id="EP85"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP90"] .choice-copy { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) .section-heading:last-of-type { break-before: page; page-break-before: always; }
+@media print {
+  .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) { font-size: .86em; }
+}
 .worksheet[data-worksheet-id="EP103"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP103"] h3 { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP85"] .ep85-card-content {

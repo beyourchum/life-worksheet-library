@@ -44,7 +44,10 @@ async function testEp94Backup(page, base) {
   await page.evaluate(()=>document.fonts.ready);
   await page.emulateMedia({media:'print'});
   await page.pdf({path:'.qa/reports/EP94-filled.pdf',preferCSSPageSize:true,printBackground:true});
-  for(const pageBox of await page.locator('.worksheet-page').all()) assert(await pageBox.evaluate(el=>el.scrollHeight<=el.clientHeight+2));
+  for(const [index,pageBox] of (await page.locator('.worksheet-page').all()).entries()) {
+    const metrics=await pageBox.evaluate(el=>({scrollHeight:el.scrollHeight,clientHeight:el.clientHeight}));
+    assert(metrics.scrollHeight<=metrics.clientHeight+2,`EP94 print page ${index+1}: ${JSON.stringify(metrics)}`);
+  }
   await page.emulateMedia({media:'screen'});
   page.once('dialog',d=>d.dismiss());await page.locator('[data-clear]').click();assert.equal(await value('money-limit'),'28000');
   page.once('dialog',d=>d.accept());await page.locator('[data-clear]').click();

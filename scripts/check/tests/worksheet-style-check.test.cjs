@@ -59,6 +59,8 @@ async function testWorksheetStyles(page) {
   assert.deepEqual(await check('<p><span class="example-note">例如：整理房間</span></p>'), []);
   assert((await check('<p class="example-note">範例：整理房間</p>')).some(x => x.includes('以「例如：」開頭')));
   assert((await check('<p class="example-note">起手句：我先整理桌面。</p>')).some(x => x.includes('以「例如：」開頭')));
+  for (const prefix of ['如：', '像是：', '比如：', '舉例：'])
+    assert((await check(`<p class="example-note">${prefix}整理房間</p>`)).some(x => x.includes('以「例如：」開頭')));
   assert((await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('完整敘述須放在下方內文')));
   assert.deepEqual(await check('<h3 class="subheading">情境</h3><p>朋友臨時約吃飯；選出較像你的描述。</p>'), []);
   assert((await check('<h3>情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('h3.subheading')));
@@ -72,15 +74,20 @@ async function testWorksheetStyles(page) {
   assert((await check(group)).some(x => x.includes('缺少題目')));
   assert((await check(heading.replace('<span class="answer-mode">單選</span>', '') + group)).some(x => x.includes('題型標示')));
   assert((await check(heading + '<p>先讀說明。</p>' + group.replace('type="radio"', 'type="checkbox"'))).some(x => x.includes('不一致')));
-  for (const text of ['填入任務，例如：整理房間', '選項（例：期末報告）']) {
+  for (const text of ['填入任務，例如：整理房間', '選項（例：期末報告）', '像是：期末報告', '比如：整理房間']) {
     assert((await check(`<p>${text}</p>`)).some(x => x.includes('灰字')));
-    assert.deepEqual(await check(`<p><span class="example-note">${text}</span></p>`), []);
+    assert((await check(`<p><span class="example-note">${text}</span></p>`)).some(x => x.includes('以「例如：」開頭')));
   }
   assert.deepEqual(await check('<p>填入你的任務：<span class="example-note">例如：整理房間</span>，再提出問題。</p>'), []);
-  const choiceExample = heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span class="choice-copy choice-copy-with-example">先找一個小課程<small class="choice-inline-example">如：YouTube 教學</small></span></label></div>';
+  const choiceExample = heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span class="choice-copy choice-copy-with-example">先找一個小課程<small class="choice-inline-example">例如：YouTube 教學</small></span></label></div>';
   assert.deepEqual(await check(choiceExample), []);
   assert((await check(heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span>先找一個小課程（如：YouTube 教學）</span></label></div>')).some(x => x.includes('另起一行')));
-  assert((await check(choiceExample.replace('如：YouTube 教學', '範例：YouTube 教學'))).some(x => x.includes('「如：」或「例如：」')));
+  assert((await check(choiceExample.replace('例如：YouTube 教學', '如：YouTube 教學'))).some(x => x.includes('以「例如：」開頭')));
+  assert((await check('<small class="choice-inline-example">例如：YouTube 教學</small>')).some(x => x.includes('綠色選項格內')));
+  const otherWithInsideExample = heading + '<div class="choices"><label class="choice other-choice"><span class="choice-toggle"><input type="radio" name="q">其他</span><input class="other-input" type="text"><small class="choice-inline-example">例如：社團教室</small></label></div>';
+  assert((await check(otherWithInsideExample)).some(x => x.includes('綠色選項格外')));
+  assert.deepEqual(await check('<div class="answer-field"><input type="text"><small class="example-note">例如：整理房間</small></div>'), ['填答欄的示範須放在橫線下方，不得放進填答欄內：例如：整理房間']);
+  assert.deepEqual(await check('<div class="answer-field"><input type="text"></div><p class="example-note">例如：整理房間</p>'), []);
   assert((await check(heading + '<div class="choices"><label class="choice"><input id="other" type="radio" name="q">其他<input type="text"></label></div>')).some(x => x.includes('配對')));
   const inlineChoice = '<div class="choices"><label class="choice"><input type="radio" name="q"><span>我還不確定，因為：<input id="reason" class="inline-input" type="text"></span></label></div>';
   assert.deepEqual(await check(heading + inlineChoice), []);

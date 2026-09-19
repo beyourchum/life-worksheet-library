@@ -1017,5 +1017,20 @@
     },
     "worksheetUrl": "worksheets/EP90/",
     "videoUrl": "https://youtu.be/dwnS_vtJWss?si=S31U4ZHn8ND_97db"
+  },
+  {
+    "ep": "EP82",
+    "title": "送禮的社交密碼",
+    "summary": "這個禮物，對對方來說是剛剛好，還是有點太靠近？",
+    "category": "學會和別人相處、不互相傷害",
+    "worksheetUrl": "worksheets/EP82/",
+    "videoUrl": "https://youtu.be/ZHU5BSmjAZA?si=km7bwuJxduEcnhXi",
+    "searchTerms": {
+      "situations": ["交換禮物", "節日送禮", "不知道送什麼", "送禮有壓力"],
+      "feelings": ["怕送錯", "怕對方有壓力", "不確定對方喜好", "覺得禮物太私密"],
+      "decisions": ["怎麼判斷禮物適不適合", "送消耗品好嗎", "衣服會不會太私密", "怎麼挑禮物"],
+      "phrases": ["送禮的社交密碼", "實用", "娛樂", "私密", "距離感"],
+      "concepts": ["送禮情境", "關係距離", "禮物選擇", "社交壓力", "消耗品"]
+    }
   }
 ]

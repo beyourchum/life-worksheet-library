@@ -131,8 +131,8 @@ async function withinFontBudget(page, home) {
         await fixture.goto(`${base}/worksheets/EP89/`);
         const examples = fixture.locator('.choice-inline-example');
         assert.equal(await examples.count(), 4);
-        assert.equal(await fixture.locator('label[for="ep89-skill-a"] .choice-copy').innerText(), '練習一個工作會用到的軟體功能\n如：Excel／Canva');
-        assert.equal(await fixture.locator('label[for="ep89-skill-b"] .choice-copy').innerText(), '找一個線上免費的小課程看 10 分鐘\n如：YouTube 教學');
+        assert.equal(await fixture.locator('label[for="ep89-skill-a"] .choice-copy').innerText(), '練習一個工作會用到的軟體功能\n例如：Excel／Canva');
+        assert.equal(await fixture.locator('label[for="ep89-skill-b"] .choice-copy').innerText(), '找一個線上免費的小課程看 10 分鐘\n例如：YouTube 教學');
         assert(
           await examples.first().evaluate((element) => {
             const style = getComputedStyle(element);

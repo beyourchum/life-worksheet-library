@@ -1,7 +1,33 @@
 (() => {
   const worksheet = document.querySelector(".worksheet");
+  if (worksheet.dataset.worksheetId === "EP82") {
+    const checks = worksheet.querySelector("#ep82-check-label")?.closest(".choices");
+    if (checks && !checks.previousElementSibling?.classList.contains("question-heading")) {
+      const heading = document.createElement("div");
+      heading.className = "question-heading";
+      heading.innerHTML = '<h3>我可以放心送出嗎？</h3><span class="answer-mode">可複選</span>';
+      checks.before(heading);
+    }
+    worksheet.querySelectorAll("label.choice").forEach((label) => {
+      if (label.textContent.includes("其他：")) {
+        label.classList.add("other-choice");
+        const toggle = label.querySelector(".choice-toggle");
+        const checkbox = label.querySelector('input[type="checkbox"], input[type="radio"]');
+        if (!toggle && checkbox) {
+          const wrapper = document.createElement("span");
+          wrapper.className = "choice-toggle";
+          checkbox.replaceWith(wrapper);
+          wrapper.append(checkbox);
+        }
+      }
+    });
+    worksheet.querySelectorAll(".example-note").forEach((note) => {
+      if (!note.textContent.trim().startsWith("例如：")) note.prepend("例如：");
+    });
+  }
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   worksheet.querySelectorAll(".choice > span").forEach((copy) => {
+    if (copy.querySelector("input")) return;
     const original = copy.textContent.trim();
     const separator = original.indexOf("：");
     if (separator <= 0 || separator === original.length - 1) return;
@@ -55,6 +81,16 @@
   const promptBindings = {
     EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
     EP83: [["[id^=ep83-feel-]"], ["#ep83-expectation"], ["[id^=ep83-understand-]"], ["[id^=ep83-prepare-]", "#ep83-question"]],
+    EP82: [
+      ["[name=ep82-recipient]", "[name=ep82-limit]", "#ep82-recipient-other-text", "#ep82-limit-budget-text", "#ep82-limit-other-text"],
+      ["#ep82-gift"],
+      ["[name=ep82-useful-1]", "[name=ep82-useful-2]", "[name=ep82-useful-3]"],
+      ["[name=ep82-fun-1]", "[name=ep82-fun-2]", "[name=ep82-fun-3]"],
+      ["[name=ep82-private-1]", "[name=ep82-private-2]", "[name=ep82-private-3]"],
+      ["[name=ep82-result]", "#ep82-result-adjust-text", "#ep82-result-stop-text"],
+      ["#ep82-fit"],
+      ["#ep82-watch"]
+    ],
     EP84: [["#ep84-point"], ["#ep84-action"]],
     EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
     EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
@@ -62,7 +98,6 @@
     EP88: [["[id^=ep88-situation-]"], ["#ep88-one-action"], ["#ep88-when"]],
     EP89: [["#ep89-start-point"]],
     EP90: [
-      { manual: "題目情境固定為簡報出錯，前文沒有獨立輸入欄位" },
       ["[id^=ep90-fear-]"],
       ["[id^=ep90-fact-]"],
       ["#ep90-breaths", "#ep90-object", "[id^=ep90-phrase-]", "[id^=ep90-after-]"]
@@ -135,7 +170,7 @@
     let filled = 0;
     const text = template.replace(/【[^】]+】/g, (placeholder) => {
       const value = bindingValue(bindings[index++]);
-      if (!value) return placeholder;
+      if (!value) return worksheet.dataset.worksheetId === "EP82" ? "不提供" : placeholder;
       filled += 1;
       return value;
     });

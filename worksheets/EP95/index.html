@@ -45,8 +45,8 @@
 <div class="answer-field">
 <label for="ep95-age">我的年齡（歲）</label>
 <input id="ep95-age" class="short-answer" type="number" min="1" max="120" step="1" inputmode="numeric" aria-describedby="ep95-age-error">
-<p class="example-note">例如：20</p>
-</div>
+
+</div><p class="example-note">例如：20</p>
 <p id="ep95-age-error" hidden role="status">請填入 1～120 的整數年齡，才能估算心率。</p>
 <div class="answer-field">
 <label for="ep95-rate">估算最大心率＝220－年齡（下／分鐘，自動計算）</label>
@@ -308,18 +308,18 @@
 <div class="answer-field">
 <label for="ep95-next-minutes">下週我願意抽出的運動時間（分鐘）</label>
 <input id="ep95-next-minutes" class="short-answer" type="number" min="0" step="1" inputmode="numeric">
-<p class="example-note">例如：30</p>
-</div>
+
+</div><p class="example-note">例如：30</p>
 <div class="answer-field">
 <label for="ep95-next-sport">我想試試的運動</label>
 <input id="ep95-next-sport" class="short-answer" type="text">
-<p class="example-note">例如：散步</p>
-</div>
+
+</div><p class="example-note">例如：散步</p>
 <div class="answer-field">
 <label for="ep95-next-percent">目標是最大心率的百分之幾（％）</label>
 <input id="ep95-next-percent" class="short-answer" type="number" min="0" max="100" step="any" inputmode="decimal" aria-describedby="ep95-percent-error">
-<p class="example-note">例如：60</p>
-</div>
+
+</div><p class="example-note">例如：60</p>
 <p id="ep95-percent-error" hidden role="status">請填入大於 0、且不超過 100 的比例，才能估算目標心率。</p>
 <div class="answer-field">
 <label for="ep95-target-rate">目標心率＝估算最大心率×目標比例（下／分鐘，自動計算）</label>
@@ -330,13 +330,10 @@
 <aside class="closing final-reminder no-arrow">
 <p>從自己目前能承受的強度開始，才有機會讓運動變成可持續的習慣。</p>
 </aside>
-<aside class="closing prompt-intro">
-<span class="closing-mark">→</span>
-<p>AI 幫幫忙</p>
-</aside>
+<aside class="closing prompt-intro"><span class="closing-mark">→</span><p>AI 幫幫忙：下方提示詞會帶入你前面的作答。複製到 AI 後，請它協助你安排下週可完成的運動小目標；送出前請刪除不想分享的個人資料，並自行確認結果是否符合你的情況。</p></aside>
 <aside class="prompt-quote">
 <div class="prompt-copy-text" data-prompt-text>
-<p>我的年齡是【年齡】，目前運動狀態是【狀態】，我願意嘗試【運動】；困難是【困難】。請保留我的身體感受，協助我安排下週可完成的小目標。</p>
+<p>我的年齡是【年齡】，目前運動狀態是【目前運動狀態】，我願意嘗試【願意嘗試的運動】；困難是【目前的困難】。請保留我的身體感受，協助我安排下週可完成的小目標。</p>
 </div>
 <button class="prompt-copy-button" data-prompt-copy type="button">複製提示詞</button>
 </aside>

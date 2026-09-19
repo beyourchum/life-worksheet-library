@@ -26,15 +26,17 @@ async function worksheetStyleIssues(page) {
     }
     for (const example of document.querySelectorAll('.example-note,.choice-example,.choice-inline-example')) {
       const text = example.textContent.trim();
-      const inlineChoiceExample = example.matches('.choice-inline-example');
-      if (/(?:範例|起手句|示範答案|舉例)[：:]/.test(text) ||
-          (inlineChoiceExample && !/^(?:例如|如)：/.test(text)))
-        issues.push(inlineChoiceExample
-          ? '選項舉例須以「如：」或「例如：」開頭：' + text
-          : '示範文字須以「例如：」開頭：' + text);
+      if (!/^例如：/.test(text))
+        issues.push('示範文字須以「例如：」開頭：' + text);
+      if (example.matches('.choice-inline-example') && !example.closest('.choice'))
+        issues.push('一般選項的示範須放在同一個綠色選項格內：' + text);
+      if (example.closest('.other-choice'))
+        issues.push('「其他」的示範須放在綠色選項格外：' + text);
+      if (example.matches('.example-note') && example.closest('.answer-field'))
+        issues.push('填答欄的示範須放在橫線下方，不得放進填答欄內：' + text);
     }
     for (const copy of document.querySelectorAll('.choice > span')) {
-      if (/（(?:例如|如)：[^）]+）/.test(copy.textContent) && !copy.querySelector('.choice-inline-example'))
+      if (/（(?:例如|如|像是|比如|舉例|範例|例)：[^）]+）/.test(copy.textContent) && !copy.querySelector('.choice-inline-example'))
         issues.push('選項內的舉例須另起一行並使用灰色小字：' + copy.textContent.trim());
     }
     for (const heading of document.querySelectorAll('main h3')) {
@@ -53,7 +55,7 @@ async function worksheetStyleIssues(page) {
     while (walker.nextNode()) {
       const node = walker.currentNode;
       if (node.parentElement.closest('script,style,h1,h2,h3,h4,.example-note,.choice-example,.choice-inline-example')) continue;
-      if (/例如|舉例[：:]|例[：:]|示範答案[：:]|起手句[：:]/.test(node.textContent))
+      if (/(?:例如|如|像是|比如|舉例|範例|例|示範答案|起手句)[：:]/.test(node.textContent))
         issues.push('句中範例或示範需套用灰字樣式：' + node.textContent.trim());
     }
     for (const input of document.querySelectorAll('.other-input')) {
