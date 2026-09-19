@@ -163,7 +163,7 @@ for (const item of items) {
   }
   const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
   const numberedHtml = numberedHtmlHeadings(html);
-  check(numberedHtml.length === 0, `${item.ep}: 題目或活動小標題不應加數字編號：${numberedHtml.join('、')}`);
+  check(numberedHtml.length === 0, `${item.ep}: 題目或活動小標題不應加數字或字母編號：${numberedHtml.join('、')}`);
   if (process.env.GITHUB_ACTIONS !== 'true') {
     for (const role of ['source', 'corrected']) {
       const sourceFile = `content/${item.ep}/${item.ep}_${role}.md`;
@@ -173,7 +173,7 @@ for (const item of items) {
   if (fs.existsSync(correctedFile)) {
     const md = read(correctedFile);
     const numberedMarkdown = numberedMarkdownHeadings(md);
-    check(numberedMarkdown.length === 0, `${correctedFile}: 題目或活動小標題不應加數字編號：${numberedMarkdown.join('、')}`);
+    check(numberedMarkdown.length === 0, `${correctedFile}: 題目或活動小標題不應加數字或字母編號：${numberedMarkdown.join('、')}`);
     check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);
     check(md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`), `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])

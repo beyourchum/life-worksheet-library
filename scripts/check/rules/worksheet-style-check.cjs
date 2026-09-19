@@ -41,8 +41,8 @@ async function worksheetStyleIssues(page) {
     }
     for (const heading of document.querySelectorAll('main h3')) {
       const text = heading.textContent.trim();
-      if (/^\d+[.、]\s*/.test(text))
-        issues.push('題目標題不應加數字編號：' + text);
+      if (/^(?:\d+|[A-Za-z])[.、]\s*/.test(text))
+        issues.push('題目標題不應加數字或字母編號：' + text);
       if (/^(?:情境|例如[：:])/.test(text) && !heading.closest('.question-heading') && !heading.matches('h3.subheading'))
         issues.push('情境或示範標題須使用 h3.subheading：' + text);
       if (heading.matches('h3.subheading') && /^情境[：:]/.test(text))

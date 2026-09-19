@@ -64,11 +64,12 @@ async function testWorksheetStyles(page) {
   assert((await check('<h3 class="subheading">情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('完整敘述須放在下方內文')));
   assert.deepEqual(await check('<h3 class="subheading">情境</h3><p>朋友臨時約吃飯；選出較像你的描述。</p>'), []);
   assert((await check('<h3>情境：朋友臨時約吃飯</h3><p>選出較像你的描述。</p>')).some(x => x.includes('h3.subheading')));
-  assert((await check('<div class="question-heading"><h3>1. 選一個</h3><span class="answer-mode">單選</span></div>')).some(x => x.includes('不應加數字編號')));
-  assert((await check('<h3 class="subheading">2、整理下一步</h3>')).some(x => x.includes('不應加數字編號')));
-  assert.deepEqual(numberedHtmlHeadings('<h3>1. 選一個</h3><h3 class="subheading">2、整理下一步</h3>'), ['1. 選一個', '2、整理下一步']);
+  assert((await check('<div class="question-heading"><h3>1. 選一個</h3><span class="answer-mode">單選</span></div>')).some(x => x.includes('不應加數字或字母編號')));
+  assert((await check('<h3 class="subheading">2、整理下一步</h3>')).some(x => x.includes('不應加數字或字母編號')));
+  assert((await check('<h3 class="subheading">A. 實用</h3>')).some(x => x.includes('不應加數字或字母編號')));
+  assert.deepEqual(numberedHtmlHeadings('<h3>1. 選一個</h3><h3 class="subheading">2、整理下一步</h3><h3 class="subheading">A. 實用</h3>'), ['1. 選一個', '2、整理下一步', 'A. 實用']);
   assert.deepEqual(numberedHtmlHeadings('<h2><span>01</span>整理情境</h2><h3>選一個</h3>'), []);
-  assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 1. 選一個\n\n### 2、整理下一步'), ['1. 選一個', '2、整理下一步']);
+  assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 1. 選一個\n\n### 2、整理下一步\n\n### B、娛樂'), ['1. 選一個', '2、整理下一步', 'B、娛樂']);
   assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 選一個'), []);
   assert((await check('<div class="subheading">情境：朋友臨時約吃飯</div>')).some(x => x.includes('灰綠底活動標題')));
   assert((await check(group)).some(x => x.includes('缺少題目')));
