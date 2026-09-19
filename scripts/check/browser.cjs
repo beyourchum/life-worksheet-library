@@ -210,6 +210,15 @@ async function withinFontBudget(page, home) {
       assert.equal(await page.locator('#book-answer').getAttribute('aria-hidden'), 'false');
       assert.match(await page.locator('#inspiration-meta').innerText(), /^EP\d+ · /);
       assert(await page.locator('#inspiration-link').innerText());
+      await page.evaluate(() => {
+        document.querySelector('#inspiration-link').textContent = '當一個問題需要更多文字才能說清楚時，怎麼保留完整內容又不失去下一步？';
+        document.querySelector('#inspiration-summary').textContent = '這是一段刻意加長的摘要，用來確認靈感之書會隨內容長高，不會把下方操作裁掉。即使標題與摘要同時換行，讀者仍然要能看見並操作從這個問題開始與再翻一次。';
+      });
+      const answerBox = await page.locator('#book-answer').boundingBox();
+      const actionsBox = await page.locator('.book-answer-actions').boundingBox();
+      assert(answerBox && actionsBox && actionsBox.y + actionsBox.height <= answerBox.y + answerBox.height + 1, '較長靈感內容不應裁掉操作按鈕');
+      assert.equal(await page.locator('#inspiration-action').isVisible(), true, '較長靈感內容仍應顯示開始按鈕');
+      assert.equal(await page.locator('#another-inspiration').isVisible(), true, '較長靈感內容仍應顯示再翻一次按鈕');
       const firstInspiration = await page.locator('#inspiration-meta').innerText();
       await page.locator('#another-inspiration').click();
       await page.waitForFunction((previous) => document.querySelector('#inspiration-meta').textContent !== previous, firstInspiration);
