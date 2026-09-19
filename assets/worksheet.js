@@ -92,6 +92,7 @@
       ["#ep82-watch"]
     ],
     EP84: [["#ep84-point"], ["#ep84-action"]],
+    EP80: [["[id^=ep80-tired-]", "#ep80-tired-other-text"], ["[id^=ep80-regret-]", "#ep80-regret-other-text"], ["[id^=ep80-shopping-]", "#ep80-shopping-other-text"], ["[id^=ep80-invite-]", "#ep80-invite-other-text"], ["[id^=ep80-late-]", "#ep80-late-other-text"], ["[id^=ep80-eat-]", "#ep80-eat-other-text"], ["[id^=ep80-queue-]", "#ep80-queue-other-text"], ["#ep80-reminder-time", "#ep80-reminder-decision", "#ep80-reminder-action"]],
     EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
     EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
     EP87: [["[name=ep87-a]", "[name=ep87-b]", "[name=ep87-c]"], ["[name=ep87-focus]", "#ep87-focus-other"], ["[name=ep87-action]", "#ep87-action-custom", "#ep87-reminder"]],

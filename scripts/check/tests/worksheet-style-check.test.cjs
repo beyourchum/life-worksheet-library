@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { worksheetStyleIssues, inlineInputLayoutIssues } = require('../rules/worksheet-style-check.cjs');
+const { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues } = require('../rules/worksheet-style-check.cjs');
 const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('../rules/worksheet-heading-check.cjs');
 
 async function testWorksheetStyles(page) {
@@ -54,6 +54,8 @@ async function testWorksheetStyles(page) {
       node.parentElement.nextElementSibling?.matches('.example-note')), true);
   }
   assert.deepEqual(await check(heading + group), []);
+  assert((await check(heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span>如果不排隊，我會拿這段時間做＿＿＿＿</span></label></div>')).some(x => x.includes('不得用底線')));
+  assert.deepEqual(await check(heading + '<div class="choices"><label class="choice"><input type="radio" name="q"><span>如果不排隊，我會拿這段時間做什麼？</span></label></div>'), []);
   assert.deepEqual(await check(heading + group + '<div class="answer-field"><input type="text"></div>' + group.replace('id="a"', 'id="b"')), []);
   assert((await check(heading + group + '<p>補充說明</p>' + group.replace('name="q"', 'name="other"'))).some(x => x.includes('同組 radio')));
   assert.deepEqual(await check('<p><span class="example-note">例如：整理房間</span></p>'), []);
@@ -102,5 +104,14 @@ async function testWorksheetStyles(page) {
   assert.deepEqual(await inlineInputLayoutIssues(page), []);
   await page.locator('#reason').evaluate((input) => { input.style.flex = '0 0 auto'; input.style.minWidth = '0'; });
   assert((await inlineInputLayoutIssues(page)).some(x => x.includes('伸展長度')));
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.setContent(`<style>
+    .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:816px}
+    .choices-stacked{grid-template-columns:1fr}
+    .choice{display:flex}.choice>span{font-size:16px;line-height:24px}
+  </style><main>${heading}<div class="choices"><label class="choice"><input type="checkbox"><span>這是一個會在桌面三欄版面換行的很長選項文字</span></label><label class="choice"><input type="checkbox"><span>第二個同樣會在桌面三欄版面換行的很長選項</span></label><label class="choice"><input type="checkbox"><span>第三個同樣會在桌面三欄版面換行的很長選項</span></label><label class="choice"><input type="checkbox"><span>短選項</span></label></div></main>`);
+  assert((await choiceLayoutIssues(page)).some(x => x.includes('choices-stacked')));
+  await page.locator('.choices').evaluate((group) => group.classList.add('choices-stacked'));
+  assert.deepEqual(await choiceLayoutIssues(page), []);
 }
 module.exports = { testWorksheetStyles };

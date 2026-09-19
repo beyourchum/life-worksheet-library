@@ -340,6 +340,7 @@ async function withinFontBudget(page, home) {
         const worksheetStyleRules = require('./rules/worksheet-style-check.cjs');
         assert.deepEqual(await worksheetStyleRules.worksheetStyleIssues(page), []);
         assert.deepEqual(await worksheetStyleRules.inlineInputLayoutIssues(page), []);
+        assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         const prefixedChoices = await page.locator('.choice > span').evaluateAll((copies) => copies

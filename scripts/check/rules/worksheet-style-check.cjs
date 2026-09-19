@@ -23,6 +23,10 @@ async function worksheetStyleIssues(page) {
       if (/其他/.test(choice.textContent) && choice.querySelector('input[type=text]') &&
           (!choice.matches('.other-choice') || !choice.querySelector('.choice-toggle input[type=radio],.choice-toggle input[type=checkbox]')))
         issues.push('其他選項與填寫欄未正確配對：' + choice.textContent.trim());
+      const copy = choice.cloneNode(true);
+      copy.querySelectorAll('input,textarea,.choice-inline-example').forEach((node) => node.remove());
+      if (/[＿_]{2,}/.test(copy.textContent))
+        issues.push('選項文字不得用底線模擬填答欄；需要填寫時請使用 inline-input：' + copy.textContent.trim());
     }
     for (const example of document.querySelectorAll('.example-note,.choice-example,.choice-inline-example')) {
       const text = example.textContent.trim();
@@ -106,4 +110,26 @@ async function inlineInputLayoutIssues(page) {
       return issues;
     }));
 }
-module.exports = { worksheetStyleIssues, inlineInputLayoutIssues };
+async function choiceLayoutIssues(page) {
+  return page.evaluate(() => {
+    if (window.innerWidth < 700) return [];
+    const issues = [];
+    for (const group of document.querySelectorAll('.choices:not(.choices-stacked)')) {
+      const choices = [...group.querySelectorAll(':scope > .choice:not(.other-choice)')];
+      const wrapped = [];
+      for (const choice of choices) {
+        const copy = choice.querySelector(':scope > span:not(.choice-toggle), :scope > .choice-toggle > span');
+        if (!copy) continue;
+        const style = getComputedStyle(copy);
+        const lineHeight = Number.parseFloat(style.lineHeight);
+        if (Number.isFinite(lineHeight) && copy.getBoundingClientRect().height > lineHeight * 1.5) {
+          wrapped.push(choice.querySelector('input')?.id || copy.textContent.trim());
+        }
+      }
+      if (wrapped.length >= 3)
+        issues.push(`桌面版有三個以上選項會換行時須使用 choices-stacked：${wrapped.join('、')}`);
+    }
+    return issues;
+  });
+}
+module.exports = { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues };
