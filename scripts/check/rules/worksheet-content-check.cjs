@@ -40,10 +40,11 @@ async function worksheetContentIssues(page, ep) {
   const file = `content/${ep}/${ep}_corrected.md`;
   if (!fs.existsSync(file)) return process.env.GITHUB_ACTIONS === 'true' ? [] : [`${file}: 缺少修訂稿，請查來源後完成同步`];
   const md = fs.readFileSync(file, 'utf8');
-  const blocks = await page.locator('main h1,main h2,main h3,main h4,main p,main li,main label').evaluateAll((elements) =>
+  const blocks = await page.locator('main h1,main h2,main h3,main h4,main p,main li,main label,main th,main td').evaluateAll((elements) =>
     elements.map((element) => element.matches('label')
       ? element.querySelector('input[data-content-label]')?.dataset.contentLabel || element.textContent
-      : element.textContent));
+      : element.textContent)
+      .filter(text => !/先前暫存|紙本作答/.test(text)));
   const pageText = await page.locator('main').innerText();
   return [
     ...missingText(md, blocks).map(text => `${file}: HTML 文字未出現在修訂稿，請逐段核對：${text.trim()}`),

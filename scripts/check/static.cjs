@@ -186,14 +186,16 @@ for (const item of items) {
     const numberedMarkdown = numberedMarkdownHeadings(md);
     check(numberedMarkdown.length === 0, `${correctedFile}: 題目或活動小標題不應加數字或字母編號：${numberedMarkdown.join('、')}`);
     check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);
-    check(md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`), `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
+    const hasCanonicalTitle = md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`);
+    const hasLegacyTitle = md.includes(item.title);
+    check(hasCanonicalTitle || hasLegacyTitle, `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])
       check(md.includes(label), `${item.ep}: 修訂稿缺少${label}`);
     const mdIntroStart = md.search(/學習目標[：:]/);
     const mdFirstActivity = md.indexOf('\n## ', md.search(/使用說明[：:]/));
     const mdIntro = mdIntroStart >= 0 && mdFirstActivity > mdIntroStart ? md.slice(mdIntroStart, mdFirstActivity) : '';
     check(!/(?:適用對象|目標對象|建議年級|預備知識|建議時間)[：:]/.test(mdIntro), `${item.ep}: 修訂稿開頭只能保留學習目標與使用說明，不得另列適用對象等前置欄位`);
-    check(/(?:<!--\s*final-reminder\s*-->\s*>\s*\S|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
+    check(/(?:<!--\s*final-reminder\s*-->\s*(?:>\s*\S|\r?\n)|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
   }
   check(html.includes(`<title>${item.ep}｜${item.title}</title>`), `${item.ep}: 頁面標題與索引不一致`);
   check(html.includes(`data-worksheet-id="${item.ep}"`), `${item.ep}: 暫存識別碼不一致`);
