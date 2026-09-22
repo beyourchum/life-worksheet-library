@@ -185,7 +185,7 @@
     const heading = document.createElement('div');
     heading.className = 'question-heading';
     const mode = group.querySelector('input[type="radio"]') ? '單選' : '可複選';
-    heading.innerHTML = `<h3>請勾選你的回答：</h3><span class="answer-mode">${mode}</span>`;
+    heading.innerHTML = `<h3>請選出你的回答：</h3><span class="answer-mode">${mode}</span>`;
     group.before(heading);
   });
   if (worksheet.dataset.worksheetId === 'EP85') {

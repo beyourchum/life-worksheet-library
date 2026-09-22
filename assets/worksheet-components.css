@@ -56,6 +56,55 @@
   .ranking-actions { margin-left: auto; }
 }
 @media print {
+  .video-embed {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+  }
+  .worksheet:is(
+    [data-worksheet-id="EP62"],
+    [data-worksheet-id="EP75"],
+    [data-worksheet-id="EP91"],
+    [data-worksheet-id="EP92"],
+    [data-worksheet-id="EP93"],
+    [data-worksheet-id="EP95"],
+    [data-worksheet-id="EP96"],
+    [data-worksheet-id="EP104"],
+    [data-worksheet-id="EP107"],
+    [data-worksheet-id="EP109"],
+    [data-worksheet-id="EP110"],
+    [data-worksheet-id="EP113"],
+    [data-worksheet-id="EP114"],
+    [data-worksheet-id="EP117"]
+  ) .page {
+    width: 233.333mm;
+    height: 330mm;
+    min-height: 330mm;
+    max-height: 330mm;
+    padding: 4mm 10mm 6mm;
+    zoom: .9;
+  }
+  .worksheet:is(
+    [data-worksheet-id="EP62"], [data-worksheet-id="EP75"], [data-worksheet-id="EP91"],
+    [data-worksheet-id="EP92"], [data-worksheet-id="EP93"], [data-worksheet-id="EP95"],
+    [data-worksheet-id="EP96"], [data-worksheet-id="EP104"], [data-worksheet-id="EP107"],
+    [data-worksheet-id="EP109"], [data-worksheet-id="EP110"], [data-worksheet-id="EP113"],
+    [data-worksheet-id="EP114"], [data-worksheet-id="EP117"]
+  ) p { margin: .35rem 0; }
+  .worksheet:is(
+    [data-worksheet-id="EP62"], [data-worksheet-id="EP75"], [data-worksheet-id="EP91"],
+    [data-worksheet-id="EP92"], [data-worksheet-id="EP93"], [data-worksheet-id="EP95"],
+    [data-worksheet-id="EP96"], [data-worksheet-id="EP104"], [data-worksheet-id="EP107"],
+    [data-worksheet-id="EP109"], [data-worksheet-id="EP110"], [data-worksheet-id="EP113"],
+    [data-worksheet-id="EP114"], [data-worksheet-id="EP117"]
+  ) .choices { gap: .8mm; margin: 1mm 0; }
+  .worksheet:is(
+    [data-worksheet-id="EP62"], [data-worksheet-id="EP75"], [data-worksheet-id="EP91"],
+    [data-worksheet-id="EP92"], [data-worksheet-id="EP93"], [data-worksheet-id="EP95"],
+    [data-worksheet-id="EP96"], [data-worksheet-id="EP104"], [data-worksheet-id="EP107"],
+    [data-worksheet-id="EP109"], [data-worksheet-id="EP110"], [data-worksheet-id="EP113"],
+    [data-worksheet-id="EP114"], [data-worksheet-id="EP117"]
+  ) .choice { min-height: 4.5mm; padding: .4mm 1mm; }
   [data-calculator-layout] .page { display: flex; flex-direction: column; overflow: visible; }
   [data-calculator-layout] .page > * { flex-shrink: 0; }
   [data-calculator-layout] .page-footer { position: static; margin-top: auto; }
@@ -67,6 +116,55 @@
   .calculator-fields .example-note { margin: .5mm 0 1mm; }
   [data-worksheet-id="EP94"] .calculator-fields .example-note { margin: 0; font-size: 8pt; }
   [data-worksheet-id="EP94"] .worksheet-page:nth-of-type(4) { padding-top: 4mm; padding-bottom: 5mm; font-size: .96em; }
+  [data-worksheet-id="EP75"] .worksheet-page:nth-of-type(4),
+  [data-worksheet-id="EP104"] .worksheet-page:nth-of-type(3),
+  [data-worksheet-id="EP62"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP107"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP109"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP110"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP113"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP114"] .worksheet-page:nth-of-type(2),
+  [data-worksheet-id="EP117"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP91"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP92"] .worksheet-page:nth-of-type(2),
+  [data-worksheet-id="EP93"] .worksheet-page:nth-of-type(1),
+  [data-worksheet-id="EP95"] .worksheet-page:nth-of-type(2),
+  [data-worksheet-id="EP96"] .worksheet-page:nth-of-type(2) {
+    padding: 4mm 10mm 6mm;
+  }
+  [data-worksheet-id="EP75"] .worksheet-page:nth-of-type(4) .section-heading,
+  [data-worksheet-id="EP104"] .worksheet-page:nth-of-type(3) .section-heading,
+  [data-worksheet-id="EP62"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP107"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP109"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP110"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP113"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP114"] .worksheet-page:nth-of-type(2) .section-heading,
+  [data-worksheet-id="EP117"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP91"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP92"] .worksheet-page:nth-of-type(2) .section-heading,
+  [data-worksheet-id="EP93"] .worksheet-page:nth-of-type(1) .section-heading,
+  [data-worksheet-id="EP95"] .worksheet-page:nth-of-type(2) .section-heading,
+  [data-worksheet-id="EP96"] .worksheet-page:nth-of-type(2) .section-heading {
+    margin: 1.5mm 0 1mm;
+    padding: .8mm 0;
+  }
+  [data-worksheet-id="EP75"] .worksheet-page:nth-of-type(4) .answer-field,
+  [data-worksheet-id="EP104"] .worksheet-page:nth-of-type(3) .answer-field,
+  [data-worksheet-id="EP62"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP107"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP109"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP110"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP113"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP114"] .worksheet-page:nth-of-type(2) .answer-field,
+  [data-worksheet-id="EP117"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP91"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP92"] .worksheet-page:nth-of-type(2) .answer-field,
+  [data-worksheet-id="EP93"] .worksheet-page:nth-of-type(1) .answer-field,
+  [data-worksheet-id="EP95"] .worksheet-page:nth-of-type(2) .answer-field,
+  [data-worksheet-id="EP96"] .worksheet-page:nth-of-type(2) .answer-field {
+    margin-top: 1.5mm;
+  }
   .ranking-actions,
   .ranking-confirm { display: none; }
   .ranking-paper-hint { display: block; }

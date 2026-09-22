@@ -125,6 +125,13 @@
       ["[name=ep76-decision]"],
       ["#ep76-next"]
     ],
+    EP77: [
+      ["[name=ep77-s1]", "#ep77-s1-reason"],
+      ["[name=ep77-s2]", "#ep77-s2-reason"],
+      ["[name=ep77-s3]", "#ep77-s3-reason"],
+      ["#ep77-action", "#ep77-goal", "#ep77-alternative", "#ep77-time", "[id^=ep77-change-]"],
+      ["[id^=ep77-fear-]", "#ep77-fear-other-text", "#ep77-first", "#ep77-small-step"]
+    ],
     EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
     EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
     EP87: [["[name=ep87-a]", "[name=ep87-b]", "[name=ep87-c]"], ["[name=ep87-focus]", "#ep87-focus-other"], ["[name=ep87-action]", "#ep87-action-custom", "#ep87-reminder"]],
@@ -143,7 +150,7 @@
     EP96: [["#ep96-example", "[id^=ep96-place-]"], ["#ep96-friend-words"], ["[id^=ep96-response-feel-]"], ["[id^=ep96-care-]"], ["#ep96-frequency-time", "#ep96-frequency-count", "#ep96-topic-limit"], ["#ep96-worry"], ["#ep96-next-action"]],
     EP99: [["#ep99-ranking"], ["#ep99-job-current", "#ep99-job-a", "#ep99-job-b", "#ep99-job-c"]],
     EP81: [["[id^=ep81-emotion-]", "#ep81-intensity"], ["#ep81-time", "#ep81-place", "#ep81-doing", "#ep81-people", "#ep81-before", "#ep81-trigger", "#ep81-process"], ["#ep81-action", "#ep81-result"], ["[id^=ep81-others-]", "[id^=ep81-self-]", "[id^=ep81-body-]", "[name=ep81-result]"], ["[name=ep81-source]"], ["#ep81-reminder-event", "#ep81-reminder-feeling", "#ep81-reminder-meaning", "#ep81-next"]],
-    EP78: [["[id^=ep78-stuck-]", "#ep78-stuck-other-text"], ["#ep78-thought", "#ep78-observation"], ["[id^=ep78-indulgent-]", "#ep78-indulgent-benefit", "[id^=ep78-indulgent-impact-]", "#ep78-indulgent-other-text"], ["[id^=ep78-critical-]", "#ep78-critical-feeling", "[id^=ep78-critical-impact-]", "#ep78-critical-other-text"], ["[id^=ep78-compassion-]", "#ep78-compassion-next"], ["[id^=ep78-grounding-]", "#ep78-grounding-need"], ["#ep78-friend-situation", "#ep78-friend-words", "#ep78-self-words", "#ep78-next-step"]],
+    EP78: [["[id^=ep78-stuck-]", "#ep78-stuck-other-text"], ["#ep78-thought"], ["#ep78-critical-feeling", "[id^=ep78-critical-impact-]"], ["#ep78-self-words"], ["#ep78-next-step"]],
     EP79: [["[id^=ep79-situation-]", "#ep79-situation-other-text"], ["[id^=ep79-feeling-]", "#ep79-feeling-other-text"], ["[name^=ep79-fair-]", "[id^=ep79-reason-]", "#ep79-other-reason"], ["#ep79-goal", "[name=ep79-real-want]", "#ep79-real-want-reason", "[name=ep79-happy]", "#ep79-happy-reason"], ["#ep79-action"]],
     EP101: [["#task-name"], ["#task-result"], ["#task-deadline", "#task-unknown"], ["#task-role"], ["#stuck"], ["#tried"]],
     EP74: [["#ep74-person"], ["#ep74-request"], ["#ep74-burden"], ["#ep74-sentence"]],
