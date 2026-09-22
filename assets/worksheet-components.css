@@ -66,7 +66,7 @@
   .calculator-results .short-answer { min-height: 6mm; padding: .5mm; font-size: 10pt; }
   .calculator-fields .example-note { margin: .5mm 0 1mm; }
   [data-worksheet-id="EP94"] .calculator-fields .example-note { margin: 0; font-size: 8pt; }
-  [data-worksheet-id="EP94"] .worksheet-page:nth-of-type(3) { padding-top: 4mm; padding-bottom: 5mm; font-size: .96em; }
+  [data-worksheet-id="EP94"] .worksheet-page:nth-of-type(4) { padding-top: 4mm; padding-bottom: 5mm; font-size: .96em; }
   .ranking-actions,
   .ranking-confirm { display: none; }
   .ranking-paper-hint { display: block; }
