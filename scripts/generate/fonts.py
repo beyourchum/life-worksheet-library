@@ -5,6 +5,7 @@ for the same source files and tool versions. Original font files stay intact.
 """
 import hashlib
 import json
+import sys
 import time
 from html.parser import HTMLParser
 from pathlib import Path
@@ -67,8 +68,28 @@ generator_hash = text_hash(Path(__file__))
 source_hash = hashlib.sha256(b''.join(file.read_bytes() for *_, sources in families for file in sources)).hexdigest()
 old_file = OUTPUT / 'manifest.json'
 old = json.loads(old_file.read_text(encoding='utf-8')) if old_file.exists() else {}
-manifest = {'generatorHash': generator_hash, 'sourceHash': source_hash, 'inputs': {}, 'scopes': {}}
-scopes = [('home', ROOT / 'index.html'), *[(p.parent.name, p) for p in sorted((ROOT / 'worksheets').glob('*/index.html'))]]
+requested_scope = None
+if len(sys.argv) > 1:
+    if len(sys.argv) != 3 or sys.argv[1] != '--scope':
+        raise SystemExit('用法：python scripts/generate/fonts.py [--scope EP編號]')
+    requested_scope = sys.argv[2].upper()
+    if not requested_scope.startswith('EP') or not requested_scope[2:].isdigit():
+        raise SystemExit('單集字型範圍必須使用 EP編號，例如 EP71。')
+
+all_scopes = [('home', ROOT / 'index.html'), *[(p.parent.name, p) for p in sorted((ROOT / 'worksheets').glob('*/index.html'))]]
+if requested_scope:
+    target_file = ROOT / 'worksheets' / requested_scope / 'index.html'
+    if not target_file.exists():
+        raise SystemExit(f'{requested_scope}: 缺少 worksheets/{requested_scope}/index.html')
+    worksheet_script = ROOT / 'assets/worksheet.js'
+    if (old.get('generatorHash') != generator_hash or old.get('sourceHash') != source_hash
+            or old.get('inputs', {}).get('assets/worksheet.js') != text_hash(worksheet_script)):
+        raise SystemExit('字型產生器、原始字型或共用 worksheet.js 已改變；請先執行 pnpm run fonts 完成一次全站重建。')
+    manifest = old
+    scopes = [(requested_scope, target_file)]
+else:
+    manifest = {'generatorHash': generator_hash, 'sourceHash': source_hash, 'inputs': {}, 'scopes': {}}
+    scopes = all_scopes
 for scope, file in scopes:
     parser = TextCollector()
     parser.feed(file.read_text(encoding='utf-8'))

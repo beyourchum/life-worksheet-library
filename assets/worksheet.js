@@ -77,6 +77,19 @@
     input?.setAttribute("data-choice-label", original);
     input?.setAttribute("data-content-label", original);
   });
+  worksheet.querySelectorAll('.choice > span').forEach((copy) => {
+    if (!copy.textContent.includes('例如：') || copy.querySelector('.choice-inline-example')) return;
+    const marker = '例如：';
+    const html = copy.innerHTML;
+    const markerIndex = html.indexOf(marker);
+    if (markerIndex < 0) return;
+    const example = copy.textContent.slice(copy.textContent.indexOf(marker) + marker.length).trim();
+    copy.innerHTML = html.slice(0, markerIndex).replace(/<br>\s*$/, '').trim();
+    copy.append(Object.assign(document.createElement('small'), {
+      className: 'choice-inline-example',
+      textContent: `例如：${example}`
+    }));
+  });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
     EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
@@ -92,7 +105,26 @@
       ["#ep82-watch"]
     ],
     EP84: [["#ep84-point"], ["#ep84-action"]],
+    EP75: [["#ep75-person", "[name=ep75-relationship]"], ["#ep75-event"], ["#ep75-actions"], ["[name=ep75-focus]"], ["[name=ep75-goal]"], ["[name=ep75-willing]"], ["[name=ep75-stop]", "#ep75-stop-action"]],
+    EP72: [["[name=ep72-report-stuck]"], ["[name=ep72-report-step]"], ["#ep72-report-task", "#ep72-report-deliverable", "#ep72-report-time"], ["[name=ep72-conflict-state]"], ["[name=ep72-conflict-step]"], ["#ep72-conflict-message", "#ep72-conflict-deadline"], ["[name=ep72-help-kind]"], ["#ep72-help-fact"], ["#ep72-help-tried"], ["#ep72-help-request"], ["#ep72-next"]],
+    EP73: [["[name=ep73-situation]", "#ep73-situation-other-text"], ["#ep73-protect"], ["#ep73-first-step"], ["#ep73-boundary-sentence"], ["#ep73-help"], ["#ep73-not-do"]],
+    EP71: [["[id^=ep71-change-]", "#ep71-known"], ["[id^=ep71-feeling-]", "#ep71-feeling-sentence"], ["#ep71-unknown", "#ep71-remind"], ["[name=ep71-action]", "#ep71-action-person", "#ep71-action-pause-time", "#ep71-action-resource", "#ep71-action-other-text", "#ep71-next"]],
     EP80: [["[id^=ep80-tired-]", "#ep80-tired-other-text"], ["[id^=ep80-regret-]", "#ep80-regret-other-text"], ["[id^=ep80-shopping-]", "#ep80-shopping-other-text"], ["[id^=ep80-invite-]", "#ep80-invite-other-text"], ["[id^=ep80-late-]", "#ep80-late-other-text"], ["[id^=ep80-eat-]", "#ep80-eat-other-text"], ["[id^=ep80-queue-]", "#ep80-queue-other-text"], ["#ep80-reminder-time", "#ep80-reminder-decision", "#ep80-reminder-action"]],
+    EP76: [
+      ["#ep76-topic"],
+      ["[name=ep76-person]", "#ep76-person-other-text"],
+      ["#ep76-relationship"],
+      ["#ep76-fact-people", "#ep76-fact-event", "#ep76-fact-time", "#ep76-fact-place", "#ep76-fact-evidence"],
+      ["#ep76-subjective-emotion"],
+      ["#ep76-subjective-guess"],
+      ["#ep76-subjective-evaluation"],
+      ["#ep76-subjective-expectation"],
+      ["#ep76-quote"],
+      ["#ep76-argument"],
+      ["[name=ep76-disagree]"],
+      ["[name=ep76-decision]"],
+      ["#ep76-next"]
+    ],
     EP85: [["#ep85-need"], ["#ep85-budget"], ["#ep85-basic"]],
     EP86: [["#ep86-focus", "#ep86-area"], ["[name=ep86-impact]"], ["#ep86-minutes"], ["[name=ep86-keep]", "#ep86-keep-note", "#ep86-prep"]],
     EP87: [["[name=ep87-a]", "[name=ep87-b]", "[name=ep87-c]"], ["[name=ep87-focus]", "#ep87-focus-other"], ["[name=ep87-action]", "#ep87-action-custom", "#ep87-reminder"]],
@@ -111,7 +143,10 @@
     EP96: [["#ep96-example", "[id^=ep96-place-]"], ["#ep96-friend-words"], ["[id^=ep96-response-feel-]"], ["[id^=ep96-care-]"], ["#ep96-frequency-time", "#ep96-frequency-count", "#ep96-topic-limit"], ["#ep96-worry"], ["#ep96-next-action"]],
     EP99: [["#ep99-ranking"], ["#ep99-job-current", "#ep99-job-a", "#ep99-job-b", "#ep99-job-c"]],
     EP81: [["[id^=ep81-emotion-]", "#ep81-intensity"], ["#ep81-time", "#ep81-place", "#ep81-doing", "#ep81-people", "#ep81-before", "#ep81-trigger", "#ep81-process"], ["#ep81-action", "#ep81-result"], ["[id^=ep81-others-]", "[id^=ep81-self-]", "[id^=ep81-body-]", "[name=ep81-result]"], ["[name=ep81-source]"], ["#ep81-reminder-event", "#ep81-reminder-feeling", "#ep81-reminder-meaning", "#ep81-next"]],
+    EP78: [["[id^=ep78-stuck-]", "#ep78-stuck-other-text"], ["#ep78-thought", "#ep78-observation"], ["[id^=ep78-indulgent-]", "#ep78-indulgent-benefit", "[id^=ep78-indulgent-impact-]", "#ep78-indulgent-other-text"], ["[id^=ep78-critical-]", "#ep78-critical-feeling", "[id^=ep78-critical-impact-]", "#ep78-critical-other-text"], ["[id^=ep78-compassion-]", "#ep78-compassion-next"], ["[id^=ep78-grounding-]", "#ep78-grounding-need"], ["#ep78-friend-situation", "#ep78-friend-words", "#ep78-self-words", "#ep78-next-step"]],
+    EP79: [["[id^=ep79-situation-]", "#ep79-situation-other-text"], ["[id^=ep79-feeling-]", "#ep79-feeling-other-text"], ["[name^=ep79-fair-]", "[id^=ep79-reason-]", "#ep79-other-reason"], ["#ep79-goal", "[name=ep79-real-want]", "#ep79-real-want-reason", "[name=ep79-happy]", "#ep79-happy-reason"], ["#ep79-action"]],
     EP101: [["#task-name"], ["#task-result"], ["#task-deadline", "#task-unknown"], ["#task-role"], ["#stuck"], ["#tried"]],
+    EP74: [["#ep74-person"], ["#ep74-request"], ["#ep74-burden"], ["#ep74-sentence"]],
     EP102: [["#statement"], ["#context"], ["#problem"], ["#action"], ["#result"]],
     EP103: [["#choice-item"], ["#choice-needs", "#scenario-needs"], ["[name=signals]", "#signal-other-text", "#signal-reason", "#fact-check", "#personal-feeling"]],
     EP104: [["#spending-item", "#spending-amount"], ["[name=spending-needs]", "#need-other-text"], ["#life-style-summary"], ["#spend-style-summary"], ["#people-style-summary"], ["[name=strengths]"], ["[name=pressures]"]],
@@ -159,6 +194,20 @@
     return Array.isArray(binding)
       && binding.length > 0
       && binding.some((selector) => worksheet.querySelector(selector));
+  };
+  const updateAutoSummaries = () => {
+    worksheet.querySelectorAll("[data-auto-summary]").forEach((summary) => {
+      const entries = (summary.dataset.sources || "").split(",").map((source) => {
+        const separator = source.indexOf("|");
+        if (separator < 1) return "";
+        const selector = source.slice(0, separator);
+        const label = source.slice(separator + 1);
+        const control = worksheet.querySelector(selector);
+        const value = answerFor(control);
+        return value ? `${label}：${value}` : "";
+      }).filter(Boolean);
+      summary.textContent = entries.length ? entries.join("；") : "請先填寫上方的客觀資料。";
+    });
   };
   const promptTemplates = new WeakMap();
   const templateFor = (root) => {
@@ -288,8 +337,8 @@
     updateScore();
   };
   controls.forEach((control) => {
-    control.addEventListener("change", () => { updateScore(); save(); updatePrompt(); });
-    control.addEventListener("input", () => { save(); updatePrompt(); });
+    control.addEventListener("change", () => { updateScore(); save(); updatePrompt(); updateAutoSummaries(); });
+    control.addEventListener("input", () => { save(); updatePrompt(); updateAutoSummaries(); });
   });
   document.querySelector("[data-print]").addEventListener("click", () => window.print());
   document.querySelectorAll("[data-prompt-copy]").forEach((button) => {
@@ -300,6 +349,7 @@
     clearDraft();
     updateClearButton();
     updatePrompt();
+    updateAutoSummaries();
     saveStatus.textContent = "作答已清除";
   });
   const videoLink = document.querySelector('[data-video-link]');
@@ -318,4 +368,5 @@
   updateClearButton();
   updateScore();
   updatePrompt();
+  updateAutoSummaries();
 })();

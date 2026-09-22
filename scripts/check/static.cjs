@@ -14,6 +14,8 @@ const qualityExceptions = JSON.parse(read('config/quality-exceptions.json'));
 const categoryAliases = JSON.parse(read('config/category-aliases.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
+check(Number.isInteger(policy.choices?.maxCompactCharacters) && policy.choices.maxCompactCharacters > 0,
+  'quality-policy.json: choices.maxCompactCharacters 必須是正整數');
 for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
   check(fs.existsSync(file) && read(file).replace(/\r\n/g, '\n') === expected, `${file}: 衍生資料過期，請執行 pnpm run data`);
 }
@@ -104,7 +106,8 @@ for (const issue of categoryAliasIssues(categories, items, categoryAliases)) err
 check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
 const videos = new Map();
 require('./tests/video-policy.test.cjs');
-const { videoRequirement } = require('./rules/video-policy.cjs');
+require('./tests/worksheet-content-check.test.cjs');
+const { videoRequirement, videoEmbedIssues } = require('./rules/video-policy.cjs');
 check(Array.isArray(qualityExceptions.videoExceptions), 'videoExceptions 必須是陣列');
 const videoExceptions = Array.isArray(qualityExceptions.videoExceptions) ? qualityExceptions.videoExceptions : [];
 check(new Set(videoExceptions.map((entry) => entry.ep)).size === videoExceptions.length, '無影片例外集數重複');
@@ -128,6 +131,7 @@ for (const item of items) {
   if (item.worksheetUrl && !fs.existsSync(file)) { errors.push(`${item.ep}: 缺少頁面`); continue; }
   if (item.worksheetUrl) {
   const html = read(file);
+  for (const issue of videoEmbedIssues(html, item)) errors.push(issue);
   const requiredParts = [
     /<strong>學習目標：<\/strong>\s*[^<\s]/,
     /<strong>使用說明：<\/strong>\s*[^<\s]/,

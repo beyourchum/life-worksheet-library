@@ -2,6 +2,9 @@
   "pageSize": 12,
   "searchDebounceMs": 180,
   "capacityTestEntries": 150,
+  "choices": {
+    "maxCompactCharacters": 16
+  },
   "budgets": {
     "homeFontBytes": 100000,
     "worksheetFontBytes": 360000,

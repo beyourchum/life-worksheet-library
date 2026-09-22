@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues } = require('../rules/worksheet-style-check.cjs');
+const maximumCompactChoiceLength = require('../../../config/quality-policy.json').choices.maxCompactCharacters;
 const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('../rules/worksheet-heading-check.cjs');
 
 async function testWorksheetStyles(page) {
@@ -105,13 +106,19 @@ async function testWorksheetStyles(page) {
   await page.locator('#reason').evaluate((input) => { input.style.flex = '0 0 auto'; input.style.minWidth = '0'; });
   assert((await inlineInputLayoutIssues(page)).some(x => x.includes('伸展長度')));
   await page.setViewportSize({ width: 1280, height: 900 });
+  await page.setContent(`<style>.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:816px}.choice{display:flex}</style><main><div class="choices"><label class="choice"><input id="limit" type="checkbox"><span>1234567890123456</span></label></div></main>`);
+  assert.deepEqual(await choiceLayoutIssues(page, maximumCompactChoiceLength), []);
+  await page.locator('#limit').evaluate(input => { input.nextElementSibling.textContent = '12345678901234567'; });
+  assert((await choiceLayoutIssues(page, maximumCompactChoiceLength)).some(x => x.includes(`超過 ${maximumCompactChoiceLength} 個字元`)));
+  await page.locator('.choices').evaluate(group => group.classList.add('choices-stacked'));
+  assert.deepEqual(await choiceLayoutIssues(page, maximumCompactChoiceLength), []);
   await page.setContent(`<style>
     .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:816px}
     .choices-stacked{grid-template-columns:1fr}
     .choice{display:flex}.choice>span{font-size:16px;line-height:24px}
   </style><main>${heading}<div class="choices"><label class="choice"><input type="checkbox"><span>這是一個會在桌面三欄版面換行的很長選項文字</span></label><label class="choice"><input type="checkbox"><span>第二個同樣會在桌面三欄版面換行的很長選項</span></label><label class="choice"><input type="checkbox"><span>第三個同樣會在桌面三欄版面換行的很長選項</span></label><label class="choice"><input type="checkbox"><span>短選項</span></label></div></main>`);
-  assert((await choiceLayoutIssues(page)).some(x => x.includes('choices-stacked')));
+  assert((await choiceLayoutIssues(page, maximumCompactChoiceLength)).some(x => x.includes('choices-stacked')));
   await page.locator('.choices').evaluate((group) => group.classList.add('choices-stacked'));
-  assert.deepEqual(await choiceLayoutIssues(page), []);
+  assert.deepEqual(await choiceLayoutIssues(page, maximumCompactChoiceLength), []);
 }
 module.exports = { testWorksheetStyles };

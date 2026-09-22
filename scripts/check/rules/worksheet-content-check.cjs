@@ -5,6 +5,37 @@ function normalize(text) {
     .replace(/例如[：:]?/g, '').replace(/[^\p{L}\p{N}]/gu, '');
 }
 
+function markdownTextUnits(md) {
+  const withoutMetadata = md
+    .replace(/^---\s*[\s\S]*?\r?\n---\s*/m, '')
+    .replace(/<!--([\s\S]*?)-->/g, '')
+    .replace(/```[\s\S]*?```/g, '');
+  const units = [];
+  for (const rawLine of withoutMetadata.split(/\r?\n/)) {
+    let line = rawLine.trim();
+    if (!line || /^\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?$/.test(line)) continue;
+    line = line.replace(/^#{1,6}\s+/, '').replace(/^>\s*/, '').replace(/^[-*+]\s+(?:\[[ xX]\]\s*)?/, '');
+    if (/^(?:結尾|AI 幫幫忙)$/.test(line)) continue;
+    const cells = (line.startsWith('|') && line.endsWith('|') ? line.slice(1, -1).split('|') : [line])
+      .flatMap((cell) => cell.split('／'));
+    for (let cell of cells) {
+      cell = cell.replace(/^EP\d+｜/, '')
+        .replace(/^(?:例如[：:]?)?(?:可確認的事|還不知道的事)[：:]?/, '例如：')
+        .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+        .replace(/[*_`~]/g, '')
+        .trim();
+      if (normalize(cell)) units.push(cell);
+    }
+  }
+  return units;
+}
+
+function missingMarkdownText(md, pageText) {
+  const normalizedPage = normalize(pageText);
+  return markdownTextUnits(md).filter((text) => !normalizedPage.includes(normalize(text)));
+}
+
 async function worksheetContentIssues(page, ep) {
   const file = `content/${ep}/${ep}_corrected.md`;
   if (!fs.existsSync(file)) return process.env.GITHUB_ACTIONS === 'true' ? [] : [`${file}: 缺少修訂稿，請查來源後完成同步`];
@@ -13,8 +44,11 @@ async function worksheetContentIssues(page, ep) {
     elements.map((element) => element.matches('label')
       ? element.querySelector('input[data-content-label]')?.dataset.contentLabel || element.textContent
       : element.textContent));
-  return missingText(md, blocks)
-    .map(text => `${file}: HTML 文字未出現在修訂稿，請逐段核對：${text.trim()}`);
+  const pageText = await page.locator('main').innerText();
+  return [
+    ...missingText(md, blocks).map(text => `${file}: HTML 文字未出現在修訂稿，請逐段核對：${text.trim()}`),
+    ...missingMarkdownText(md, pageText).map(text => `${file}: 修訂稿文字未出現在 HTML，請逐段核對：${text.trim()}`),
+  ];
 }
 function missingText(md, blocks) {
   const normalized = normalize(md);
@@ -46,4 +80,4 @@ async function worksheetStructureIssues(page, title, ep) {
     return issues;
   }, { title, ep });
 }
-module.exports = { worksheetContentIssues, missingText, worksheetStructureIssues };
+module.exports = { worksheetContentIssues, missingText, missingMarkdownText, markdownTextUnits, worksheetStructureIssues };

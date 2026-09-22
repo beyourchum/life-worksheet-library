@@ -110,12 +110,21 @@ async function inlineInputLayoutIssues(page) {
       return issues;
     }));
 }
-async function choiceLayoutIssues(page) {
-  return page.evaluate(() => {
+async function choiceLayoutIssues(page, maximumCompactChoiceLength) {
+  return page.evaluate((maximumCompactChoiceLength) => {
     if (window.innerWidth < 700) return [];
     const issues = [];
     for (const group of document.querySelectorAll('.choices:not(.choices-stacked)')) {
       const choices = [...group.querySelectorAll(':scope > .choice:not(.other-choice)')];
+      const long = choices.filter(choice => {
+        const copy = choice.cloneNode(true);
+        copy.querySelectorAll('input,textarea,.choice-inline-example').forEach(node => node.remove());
+        return Array.from(copy.textContent.replace(/\s+/g, '').trim()).length > maximumCompactChoiceLength;
+      });
+      if (long.length) {
+        issues.push(`選項文字超過 ${maximumCompactChoiceLength} 個字元時須使用 choices-stacked：${long.map(choice => choice.querySelector('input')?.id || choice.textContent.trim()).join('、')}`);
+        continue;
+      }
       const wrapped = [];
       for (const choice of choices) {
         const copy = choice.querySelector(':scope > span:not(.choice-toggle), :scope > .choice-toggle > span');
@@ -130,6 +139,6 @@ async function choiceLayoutIssues(page) {
         issues.push(`桌面版有三個以上選項會換行時須使用 choices-stacked：${wrapped.join('、')}`);
     }
     return issues;
-  });
+  }, maximumCompactChoiceLength);
 }
 module.exports = { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues };

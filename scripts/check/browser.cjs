@@ -336,11 +336,12 @@ async function withinFontBudget(page, home) {
         await page.goto(base + '/' + item.worksheetUrl);
         await page.locator('[data-video-link]').waitFor({ state: item.videoUrl ? 'visible' : 'hidden' });
         if (item.videoUrl) assert.equal(await page.locator('[data-video-link]').getAttribute('href'), item.videoUrl);
+        if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在桌面版不可見`);
         await page.evaluate(() => document.fonts.ready);
         const worksheetStyleRules = require('./rules/worksheet-style-check.cjs');
         assert.deepEqual(await worksheetStyleRules.worksheetStyleIssues(page), []);
         assert.deepEqual(await worksheetStyleRules.inlineInputLayoutIssues(page), []);
-        assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page), []);
+        assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page, policy.choices.maxCompactCharacters), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
         const prefixedChoices = await page.locator('.choice > span').evaluateAll((copies) => copies
@@ -374,6 +375,7 @@ async function withinFontBudget(page, home) {
         await page.screenshot({ path: path.join(output, item.ep + '-desktop.png'), fullPage: true });
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在手機版不可見`);
         await page.screenshot({ path: path.join(output, item.ep + '-mobile.png'), fullPage: true });
         await page.emulateMedia({ media: 'print' });
         const metrics = await printMetrics(page);
