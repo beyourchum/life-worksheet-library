@@ -14,6 +14,13 @@ const qualityExceptions = JSON.parse(read('config/quality-exceptions.json'));
 const categoryAliases = JSON.parse(read('config/category-aliases.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
+const worksheetCss = read('assets/worksheet.css');
+check(/\.video-embed\s*\{[^}]*width:\s*100%;[^}]*aspect-ratio:\s*16\s*\/\s*9;/s.test(worksheetCss),
+  'worksheet.css: 所有學習單共用的影片容器必須維持 100% 寬與 16:9 比例');
+check(/\.video-embed iframe\s*\{[^}]*width:\s*100%;[^}]*height:\s*100%;/s.test(worksheetCss),
+  'worksheet.css: 影片 iframe 必須填滿共用容器');
+check(worksheetCss.includes('.video-embed + p,') && worksheetCss.includes('.video-embed + p + p'),
+  'worksheet.css: 學習目標與使用說明必須依影片後方位置套用共用呈現');
 check(Number.isInteger(policy.choices?.maxCompactCharacters) && policy.choices.maxCompactCharacters > 0,
   'quality-policy.json: choices.maxCompactCharacters 必須是正整數');
 for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
