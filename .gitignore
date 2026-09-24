@@ -4,6 +4,3 @@ output/
 node_modules/
 /.pnpm-store/
 /content/
-/docs/
-/AGENTS.md
-/README.md

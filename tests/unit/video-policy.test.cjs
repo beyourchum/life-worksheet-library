@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { videoRequirement, videoEmbedIssues } = require('../rules/video-policy.cjs');
+const { videoRequirement, videoEmbedIssues } = require('../../scripts/check/rules/video-policy.cjs');
 const item = { ep: 'EP106', worksheetUrl: 'worksheets/EP106/' };
 assert(videoRequirement(item));
 assert(videoRequirement({ ...item, videoUrl: ' ' }));

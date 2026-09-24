@@ -96,13 +96,29 @@ async function withinFontBudget(page, home) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await record('題型、填寫欄與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
-      try { await require('./tests/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
+      try { await require('../../tests/browser/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
       finally { await fixture.close(); }
+    });
+    await record('EP71 分段欄位與 AI 代入回歸', async () => {
+      const fixture = await browser.newPage();
+      try {
+        await fixture.goto(`${base}/worksheets/EP71/`);
+        for (const id of ['ep71-feeling-sentence', 'ep71-feeling-reason', 'ep71-next-when', 'ep71-next-action'])
+          assert.equal(await fixture.locator(`#${id}`).count(), 1, `${id} 應為獨立填答欄`);
+        assert.equal(await fixture.locator('#ep71-next').count(), 0, 'EP71 下一步不得退回單一大框');
+        await fixture.locator('#ep71-feeling-sentence').fill('困惑又受傷');
+        await fixture.locator('#ep71-feeling-reason').fill('對方突然停止回覆');
+        await fixture.locator('#ep71-next-when').fill('今晚睡前');
+        await fixture.locator('#ep71-next-action').fill('聯絡室友一起散步');
+        const prompt = await fixture.locator('[data-prompt-text]').innerText();
+        for (const value of ['困惑又受傷', '對方突然停止回覆', '今晚睡前', '聯絡室友一起散步'])
+          assert(prompt.includes(value), `EP71 AI 提示詞應帶入分段欄位：${value}`);
+      } finally { await fixture.close(); }
     });
     page.on('pageerror', (e) => errors.push(e.message));
     await record('EP90 兩項上限、其他、暫存與清除', async () => {
       const fixture = await browser.newPage();
-      try { await require('./tests/ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
+      try { await require('../../tests/browser/ep90-interactions.test.cjs').testEp90Interactions(fixture, base); }
       finally { await fixture.close(); }
     });
     await record('冒號選項分層排版與句尾冒號保留', async () => {
@@ -190,12 +206,12 @@ async function withinFontBudget(page, home) {
     });
     await record('EP103 與 EP106 共用複選上限、暫存與清除', async () => {
       const fixture = await browser.newPage();
-      try { await require('./tests/shared-choice-limits.test.cjs').testSharedChoiceLimits(fixture, base); }
+      try { await require('../../tests/browser/shared-choice-limits.test.cjs').testSharedChoiceLimits(fixture, base); }
       finally { await fixture.close(); }
     });
     await record('EP99 跨頁十項上限、工作比較與暫存', async () => {
       const fixture = await browser.newPage();
-      try { await require('./tests/ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
+      try { await require('../../tests/browser/ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
       finally { await fixture.close(); }
     });
     await record('首頁延遲搜尋、字型預算與手機版', async () => {
@@ -401,19 +417,19 @@ async function withinFontBudget(page, home) {
 
     await record('EP94 備案計算、跨日、選項、搜尋與舊作答保存', async () => {
       const backup = await browser.newPage();
-      try { await require('./tests/ep94-backup.test.cjs').testEp94Backup(backup, base); }
+      try { await require('../../tests/browser/ep94-backup.test.cjs').testEp94Backup(backup, base); }
       finally { await backup.close(); }
     });
     await record('EP95 心率自動計算、輸入驗證與舊作答保存', async () => {
       const calculator = await browser.newPage();
       try {
         await calculator.goto(base + '/worksheets/EP95/');
-        await require('./tests/ep95-calculator.test.cjs').testEp95Calculator(calculator);
+        await require('../../tests/browser/ep95-calculator.test.cjs').testEp95Calculator(calculator);
       } finally { await calculator.close(); }
     });
     await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
       const prompt = await browser.newPage();
-      try { await require('./tests/prompt-autofill.test.cjs').testPromptAutofill(prompt, base); }
+      try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base); }
       finally { await prompt.close(); }
     });
 

@@ -12,6 +12,7 @@ const config = JSON.parse(read('config/search.json'));
 const policy = JSON.parse(read('config/quality-policy.json'));
 const qualityExceptions = JSON.parse(read('config/quality-exceptions.json'));
 const categoryAliases = JSON.parse(read('config/category-aliases.json'));
+const worksheetLayouts = JSON.parse(read('config/worksheet-layouts.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
 const worksheetCss = read('assets/worksheet.css');
@@ -23,6 +24,10 @@ check(worksheetCss.includes('.video-embed + p,') && worksheetCss.includes('.vide
   'worksheet.css: 學習目標與使用說明必須依影片後方位置套用共用呈現');
 check(Number.isInteger(policy.choices?.maxCompactCharacters) && policy.choices.maxCompactCharacters > 0,
   'quality-policy.json: choices.maxCompactCharacters 必須是正整數');
+check(Array.isArray(worksheetLayouts.variants) && new Set(worksheetLayouts.variants).size === worksheetLayouts.variants.length,
+  'worksheet-layouts.json: variants 必須是無重複陣列');
+require('../../tests/unit/worksheet-html-generator.test.cjs');
+try { require('../generate/worksheet-html.cjs').generate({ check: true }); } catch (error) { errors.push(error.message); }
 for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
   check(fs.existsSync(file) && read(file).replace(/\r\n/g, '\n') === expected, `${file}: 衍生資料過期，請執行 pnpm run data`);
 }
@@ -81,6 +86,11 @@ for (const file of files) {
   if (file.endsWith('.js')) { try { new vm.Script(read(file), { filename: file }); } catch (e) { errors.push(e.message); } }
   if (!/\.(html|css)$/.test(file)) continue;
   const source = read(file);
+  if (file.startsWith('worksheets') && file.endsWith('.html')) {
+    check(!/<style\b/i.test(source) && !/\sstyle\s*=/i.test(source), `${file}: 不得使用頁面內嵌樣式；請改用共用元件或已登錄的版式變體`);
+    const variants = /<main\b[^>]*data-layout-variant="([^"]+)"/i.exec(source)?.[1].split(/\s+/).filter(Boolean) || [];
+    for (const variant of variants) check(worksheetLayouts.variants.includes(variant), `${file}: 未登錄的版式變體 ${variant}`);
+  }
   for (const match of source.matchAll(/(?:href|src)=["']([^"']+)["']|url\(['"]?([^)'"\s]+)['"]?\)/g)) {
     const ref = match[1] || match[2];
     if (/^(https?:|data:|#)/.test(ref)) continue;
@@ -107,13 +117,13 @@ for (const file of files) {
 }
 check(Array.isArray(items) && items.length > 0, 'catalog/worksheets.json 必須有內容');
 check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'catalog/categories.json 必須是無重複的分類名稱');
-require('./tests/category-alias-policy.test.cjs');
+require('../../tests/unit/category-alias-policy.test.cjs');
 const { categoryAliasIssues } = require('./rules/category-alias-policy.cjs');
 for (const issue of categoryAliasIssues(categories, items, categoryAliases)) errors.push(issue);
 check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
 const videos = new Map();
-require('./tests/video-policy.test.cjs');
-require('./tests/worksheet-content-check.test.cjs');
+require('../../tests/unit/video-policy.test.cjs');
+require('../../tests/unit/worksheet-content-check.test.cjs');
 const { videoRequirement, videoEmbedIssues } = require('./rules/video-policy.cjs');
 check(Array.isArray(qualityExceptions.videoExceptions), 'videoExceptions 必須是陣列');
 const videoExceptions = Array.isArray(qualityExceptions.videoExceptions) ? qualityExceptions.videoExceptions : [];

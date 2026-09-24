@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { missingMarkdownText, markdownTextUnits } = require('../rules/worksheet-content-check.cjs');
+const { missingMarkdownText, markdownTextUnits } = require('../../scripts/check/rules/worksheet-content-check.cjs');
 
 const md = `---
 ep: 1

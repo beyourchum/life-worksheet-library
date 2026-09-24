@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "ep": "EP編號",
+  "videoTitle": "已核對的影片標題",
+  "hero": {
+    "kicker": "頁首引言",
+    "titleHtml": "主標題可用<em>重點</em>",
+    "question": "學習單要協助處理的具體問題？"
+  },
+  "layoutVariants": [],
+  "useComponents": false,
+  "pages": [
+    {
+      "bodyHtml": "<p><strong>學習目標：</strong>依有效稿填寫。</p><p><strong>使用說明：</strong>依有效稿填寫。</p><div class=\"section-heading\"><span class=\"section-number\">01</span><h2>活動標題</h2></div><p>依有效稿與題型契約放入內容及作答元件。</p>",
+      "footer": "本頁帶走提醒"
+    }
+  ]
+}

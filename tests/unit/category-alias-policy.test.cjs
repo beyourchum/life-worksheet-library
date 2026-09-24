@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { categoryAliasIssues } = require('../rules/category-alias-policy.cjs');
+const { categoryAliasIssues } = require('../../scripts/check/rules/category-alias-policy.cjs');
 
 const aliases = {
   '社會規則解碼': '看懂社會為什麼這樣運作',

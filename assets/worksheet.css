@@ -254,6 +254,12 @@ p { margin: .6rem 0; }
 }
 .inline-input.compact-input { width: 5rem; padding: .3rem .2rem; }
 .choice:has(.other-input) { flex-wrap: wrap; }
+.worksheet[data-layout-variant~="wide-other-input"] .choice .other-input {
+  flex: 1 1 12rem;
+  width: auto;
+  min-width: 12rem;
+  height: auto;
+}
 .worksheet[data-worksheet-id="EP85"] .ep85-situation-card {
   align-items: flex-start;
   padding: .55rem .75rem .65rem;
@@ -454,6 +460,7 @@ p { margin: .6rem 0; }
   .page { min-height: 0; margin: 0; padding: 1.4rem 1rem 4rem; box-shadow: none; }
   .page-meta { grid-template-columns: auto 1fr auto; gap: .45rem; font-size: .68rem; }
   .worksheet-hero h1 { font-size: clamp(2.2rem, 13vw, 4.5rem); }
+  .worksheet[data-layout-variant~="stacked-mobile-accent"] .worksheet-hero h1 em { display: block; }
   .section-heading { flex-wrap: wrap; }
   .choices { grid-template-columns: 1fr; }
   .matrix-row { grid-template-columns: 1fr; gap: .25rem; }

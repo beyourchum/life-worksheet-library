@@ -1,10 +1,10 @@
 const assert = require('node:assert/strict');
-const { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues } = require('../rules/worksheet-style-check.cjs');
-const maximumCompactChoiceLength = require('../../../config/quality-policy.json').choices.maxCompactCharacters;
-const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('../rules/worksheet-heading-check.cjs');
+const { worksheetStyleIssues, inlineInputLayoutIssues, choiceLayoutIssues } = require('../../scripts/check/rules/worksheet-style-check.cjs');
+const maximumCompactChoiceLength = require('../../config/quality-policy.json').choices.maxCompactCharacters;
+const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('../../scripts/check/rules/worksheet-heading-check.cjs');
 
 async function testWorksheetStyles(page) {
-  const { worksheetStructureIssues } = require('../rules/worksheet-content-check.cjs');
+  const { worksheetStructureIssues } = require('../../scripts/check/rules/worksheet-content-check.cjs');
   const answer = '<textarea id="answer"></textarea>';
   const ending = '<aside class="final-reminder">結尾</aside>';
   const ai = '<aside class="prompt-intro">AI 幫幫忙</aside><div data-prompt-text>提示詞</div>';
@@ -27,7 +27,7 @@ async function testWorksheetStyles(page) {
   assert((await structure(answer + ending + ending + ai)).some(x => x.includes('結尾語須唯一')));
   assert((await structure(answer + ai + ending)).some(x => x.includes('AI 引導之前')));
   assert((await structure(answer + ai)).some(x => x.includes('結尾語須唯一')));
-  const { missingText } = require('../rules/worksheet-content-check.cjs');
+  const { missingText } = require('../../scripts/check/rules/worksheet-content-check.cjs');
   assert.deepEqual(missingText('請寫一項。<!-- example -->整理房間<!-- end-example -->', ['請寫一項。', '例如：整理房間']), []);
   assert.deepEqual(missingText('請寫一項。', ['請寫三項。']), ['請寫三項。']);
   assert.deepEqual(missingText('我承認自己……', ['我希望之後能……']), ['我希望之後能……']);
@@ -39,6 +39,10 @@ async function testWorksheetStyles(page) {
     labels.filter(label => /[＿_]{2,}/.test(label.textContent)).map(label => label.htmlFor));
   await page.setContent('<div class="answer-field"><label for="mixed">我想請教＿＿，能力是＿＿，問題是＿＿：</label><textarea id="mixed"></textarea></div>');
   assert.deepEqual(await unmatchedBlanks(), ['mixed']);
+  assert((await worksheetStyleIssues(page)).some(x => x.includes('填答欄標籤不得用底線')));
+  assert((await check('<div class="answer-field"><label for="combined">請分別寫下行動時間，以及要做的事。</label><textarea id="combined"></textarea></div>'))
+    .some(x => x.includes('多個作答向度不得共用一個填答欄')));
+  assert.deepEqual(await check('<div class="answer-field"><label for="when">行動時間或情況</label><input id="when" type="text"></div><div class="answer-field"><label for="action">我要做的事</label><input id="action" type="text"></div>'), []);
   await page.setContent(require('node:fs').readFileSync('worksheets/EP93/index.html', 'utf8'));
   assert.deepEqual(await unmatchedBlanks(), []);
   for (const id of ['ep93-ask-name', 'ep93-ask-skill', 'ep93-help-skill'])

@@ -28,6 +28,17 @@ async function worksheetStyleIssues(page) {
       if (/[＿_]{2,}/.test(copy.textContent))
         issues.push('選項文字不得用底線模擬填答欄；需要填寫時請使用 inline-input：' + copy.textContent.trim());
     }
+    for (const field of document.querySelectorAll('.answer-field')) {
+      const label = field.querySelector(':scope > label');
+      if (!label) continue;
+      const text = label.textContent.trim();
+      const id = label.htmlFor || field.querySelector('input,textarea,select')?.id || text;
+      if (/[＿_]{2,}/.test(text))
+        issues.push(`填答欄標籤不得用底線模擬作答位置；請改成有標籤的獨立欄位：${id}`);
+      const controls = field.querySelectorAll(':scope > input:not([type=hidden]),:scope > textarea,:scope > select');
+      if (/(?:分別|各自)(?:寫下|填寫|回答|說明)/.test(text) && controls.length <= 1)
+        issues.push(`多個作答向度不得共用一個填答欄；請把各項拆成有標籤的獨立欄位：${id}`);
+    }
     for (const example of document.querySelectorAll('.example-note,.choice-example,.choice-inline-example')) {
       const text = example.textContent.trim();
       if (!/^例如：/.test(text))

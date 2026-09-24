@@ -28,7 +28,11 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - name: Install Traditional Chinese fallback fonts
         run: sudo apt-get install -y fonts-noto-cjk
-      - name: Generate, build, and verify site
+      - name: Generate site data and fonts
+        run: pnpm run generate
+      - name: Build site
+        run: pnpm run build
+      - name: Verify site
         run: pnpm run verify
       - name: Upload check report
         if: always()

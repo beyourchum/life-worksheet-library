@@ -108,7 +108,7 @@
     EP75: [["#ep75-person", "[name=ep75-relationship]"], ["#ep75-event"], ["#ep75-actions"], ["[name=ep75-focus]"], ["[name=ep75-goal]"], ["[name=ep75-willing]"], ["[name=ep75-stop]", "#ep75-stop-action"]],
     EP72: [["[name=ep72-report-stuck]"], ["[name=ep72-report-step]"], ["#ep72-report-task", "#ep72-report-deliverable", "#ep72-report-time"], ["[name=ep72-conflict-state]"], ["[name=ep72-conflict-step]"], ["#ep72-conflict-message", "#ep72-conflict-deadline"], ["[name=ep72-help-kind]"], ["#ep72-help-fact"], ["#ep72-help-tried"], ["#ep72-help-request"], ["#ep72-next"]],
     EP73: [["[name=ep73-situation]", "#ep73-situation-other-text"], ["#ep73-protect"], ["#ep73-first-step"], ["#ep73-boundary-sentence"], ["#ep73-help"], ["#ep73-not-do"]],
-    EP71: [["[id^=ep71-change-]", "#ep71-known"], ["[id^=ep71-feeling-]", "#ep71-feeling-sentence"], ["#ep71-unknown", "#ep71-remind"], ["[name=ep71-action]", "#ep71-action-person", "#ep71-action-pause-time", "#ep71-action-resource", "#ep71-action-other-text", "#ep71-next"]],
+    EP71: [["[id^=ep71-change-]", "#ep71-known"], ["[id^=ep71-feeling-]"], ["#ep71-unknown", "#ep71-remind"], ["[name=ep71-action]", "#ep71-action-person", "#ep71-action-pause-time", "#ep71-action-resource", "#ep71-action-other-text", "#ep71-next-when", "#ep71-next-action"]],
     EP80: [["[id^=ep80-tired-]", "#ep80-tired-other-text"], ["[id^=ep80-regret-]", "#ep80-regret-other-text"], ["[id^=ep80-shopping-]", "#ep80-shopping-other-text"], ["[id^=ep80-invite-]", "#ep80-invite-other-text"], ["[id^=ep80-late-]", "#ep80-late-other-text"], ["[id^=ep80-eat-]", "#ep80-eat-other-text"], ["[id^=ep80-queue-]", "#ep80-queue-other-text"], ["#ep80-reminder-time", "#ep80-reminder-decision", "#ep80-reminder-action"]],
     EP76: [
       ["#ep76-topic"],
@@ -171,7 +171,37 @@
     ],
     EP114: [["#short-23"]],
     EP115: [["#short-16"], ["[name=group-3]", "#other-12", "#short-17"]],
-    EP117: [["#long-1"]]
+    EP117: [["#long-1"]],
+    EP118: [
+      ["#ep118-original-plan"],
+      ["#ep118-unexpected-change"],
+      ["#ep118-adjust"],
+      ["#ep118-restart-time"],
+      ["#ep118-first-action"],
+      ["#ep118-reflect-start"],
+      ["#ep118-reflect-end"],
+      ["#ep118-next-adjustment"],
+      ["#ep118-joint-task"],
+      ["#ep118-waiting-person"],
+      ["#ep118-waiting-action"],
+      ["#ep118-check-time"],
+      ["#ep118-delivery-standard"],
+      ["#ep118-if-done"],
+      ["#ep118-if-not-done"],
+      ["#ep118-affected-person"],
+      ["#ep118-possible-impact"],
+      ["#ep118-own-boundary"],
+      ["#ep118-unknown-premise"],
+      ["#ep118-affected-plans"],
+      ["#ep118-outcome-one"],
+      ["#ep118-plan-one"],
+      ["#ep118-outcome-two"],
+      ["#ep118-plan-two"],
+      ["#ep118-common"],
+      ["#ep118-review-time"],
+      ["#ep118-update-basis"],
+      ["#ep118-alternative"]
+    ]
   };
   const scoreTotal = worksheet.querySelector("[data-score-total]");
   const saveStatus = document.querySelector("[data-save-status]");
