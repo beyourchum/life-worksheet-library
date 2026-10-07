@@ -34,6 +34,25 @@ async function testWorksheetStyles(page) {
   const heading = '<div class="question-heading"><h3>選一個</h3><span class="answer-mode">單選</span></div>';
   const group = '<div class="choices"><label class="choice"><input id="a" type="radio" name="q">甲</label></div>';
   const check = async (html) => { await page.setContent(`<main>${html}</main>`); return worksheetStyleIssues(page); };
+  // EP64: question prose must not repeat the blank supplied by an answer control.
+  for (const html of [
+    '<p>我只要先抓到的關鍵字是：＿＿＿＿</p><div class="answer-field"><label for="keywords">關鍵字</label><input id="keywords" type="text"></div>',
+    '<h3>寫下我的下一步：____</h3>',
+    '<p>我要做的事：＿ <strong>＿</strong> ＿</p>',
+    '<p>我要做的事：&#95;<span>&#95;</span></p>',
+    '<ul><li>下一步：_ _</li></ul>',
+    '<table><tr><th>時間：＿＿</th><td>行動：____</td></tr></table>',
+    '<fieldset><legend>我選擇：＿＿</legend><label>我的理由：____<input type="text"></label></fieldset>',
+    '<div class="matrix-label">觀察到的事：＿＿</div>',
+    heading + '<div class="choices"><label class="choice"><input type="radio" name="q">_ _</label></div>',
+  ]) {
+    assert((await check(html)).some(issue => issue.includes('不得用底線')), `未攔截題目底線：${html}`);
+  }
+  assert.deepEqual(await check('<table><tr><th>Top 1<span data-top-need="1">＿＿＿＿</span></th></tr></table>'), []);
+  assert.deepEqual(await check('<p>請寫下關鍵字。</p><div class="answer-field"><label for="keywords">關鍵字</label><input id="keywords" type="text" value="讀者的＿＿答案" style="border-bottom:1px solid"></div><textarea>讀者的____答案</textarea><p>欄位識別碼 ep64_w3_keywords；<code>file__name</code></p>'), []);
+  assert.deepEqual(await check('<p>主管說：「你抹布沒洗乾淨，桌子還是油的！」我只要先抓到的關鍵字是：</p><div class="answer-field"><label for="ep64-w3-keywords">我只要先抓到的關鍵字是</label><input class="short-answer" id="ep64-w3-keywords" type="text"></div><p class="example-note">例如：桌子、還有油、要再擦一次。</p>'), []);
+  assert.equal(await page.locator('#ep64-w3-keywords').count(), 1);
+  assert.equal(await page.locator('p').filter({ hasText: '主管說：「你抹布沒洗乾淨' }).evaluateAll(elements => elements.some(element => /[＿_](?:\s*[＿_])+/.test(element.textContent))), false);
   // EP93: sentence blanks must have their own controls, not one shared answer box.
   const unmatchedBlanks = () => page.locator('.answer-field > label').evaluateAll(labels =>
     labels.filter(label => /[＿_]{2,}/.test(label.textContent)).map(label => label.htmlFor));

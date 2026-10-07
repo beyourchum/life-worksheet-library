@@ -270,6 +270,8 @@ p { margin: .6rem 0; }
 .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) .section-heading:last-of-type { break-before: page; page-break-before: always; }
 @media print {
   .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) { font-size: .86em; }
+  .worksheet[data-worksheet-id="EP61"] > article:nth-of-type(4) { font-size: .86em; }
+  .worksheet[data-worksheet-id="EP61"] > article:nth-of-type(4) .answer-field textarea { min-height: 12mm; }
 }
 .worksheet[data-worksheet-id="EP103"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP103"] h3 { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
@@ -645,6 +647,7 @@ p { margin: .6rem 0; }
 @media print {
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .section-heading { margin-top: 1mm; }
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .closing { margin-top: 2mm; }
+  .worksheet[data-worksheet-id="EP62"] { font-size: .98em; }
 }
 
 /* EP117: keep each sentence stem beside its writable blank. */

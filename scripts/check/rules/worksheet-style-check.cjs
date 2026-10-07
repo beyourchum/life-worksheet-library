@@ -2,6 +2,20 @@ async function worksheetStyleIssues(page) {
   return page.evaluate(() => {
     const issues = [];
     const controls = 'input[type=radio],input[type=checkbox]';
+    const questionTextSelector = 'main h1,main h2,main h3,main h4,main h5,main h6,main p,main li,main label,main legend,main th,main td,main dt,main dd,main blockquote,main .section-instruction,main .matrix-label,.answer-field > label';
+    const questionTexts = [...document.querySelectorAll(questionTextSelector)].map(element => {
+      const copy = element.cloneNode(true);
+      copy.querySelectorAll('input,textarea,select,button,script,style,pre,code,[data-top-need]').forEach(node => node.replaceWith(' '));
+      return { element, text: copy.textContent.trim() };
+    });
+    const hasAnswerBlanks = text => /[＿_](?:\s*[＿_])+/.test(text);
+    for (const { element, text } of questionTexts) {
+      if (element.closest('pre,code,script,style,textarea,select') || !hasAnswerBlanks(text)) continue;
+      if (questionTexts.some(child => child.element !== element && element.contains(child.element) && hasAnswerBlanks(child.text))) continue;
+      const location = element.id || element.getAttribute('for') || text;
+      const kind = element.matches('.answer-field > label') ? '填答欄標籤' : element.closest('.choice') ? '選項文字' : '題目文字';
+      issues.push(`${kind}不得用底線模擬作答位置；請移除文字底線並保留或建立正式填答欄：${location}`);
+    }
     for (const input of document.querySelectorAll(`main ${controls.split(',').join(',main ')}`)) {
       if (!input.closest('.choices,.matrix-options')) issues.push('選項缺少群組容器：' + input.id);
     }
@@ -23,18 +37,12 @@ async function worksheetStyleIssues(page) {
       if (/其他/.test(choice.textContent) && choice.querySelector('input[type=text]') &&
           (!choice.matches('.other-choice') || !choice.querySelector('.choice-toggle input[type=radio],.choice-toggle input[type=checkbox]')))
         issues.push('其他選項與填寫欄未正確配對：' + choice.textContent.trim());
-      const copy = choice.cloneNode(true);
-      copy.querySelectorAll('input,textarea,.choice-inline-example').forEach((node) => node.remove());
-      if (/[＿_]{2,}/.test(copy.textContent))
-        issues.push('選項文字不得用底線模擬填答欄；需要填寫時請使用 inline-input：' + copy.textContent.trim());
     }
     for (const field of document.querySelectorAll('.answer-field')) {
       const label = field.querySelector(':scope > label');
       if (!label) continue;
       const text = label.textContent.trim();
       const id = label.htmlFor || field.querySelector('input,textarea,select')?.id || text;
-      if (/[＿_]{2,}/.test(text))
-        issues.push(`填答欄標籤不得用底線模擬作答位置；請改成有標籤的獨立欄位：${id}`);
       const controls = field.querySelectorAll(':scope > input:not([type=hidden]),:scope > textarea,:scope > select');
       if (/(?:分別|各自)(?:寫下|填寫|回答|說明)/.test(text) && controls.length <= 1)
         issues.push(`多個作答向度不得共用一個填答欄；請把各項拆成有標籤的獨立欄位：${id}`);

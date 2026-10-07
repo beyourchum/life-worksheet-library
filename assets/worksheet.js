@@ -93,6 +93,8 @@
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
     EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
+    EP63: [["[name=ep63-w1-living]"], ["[name=ep63-w1-savings]"], ["[name=ep63-w1-investment]"], ["[name=ep63-w2-risk]", "#ep63-w2-risk-other-text", "[name=ep63-w2-consequence]", "#ep63-w2-consequence-other-text"], ["[name=ep63-w2-tolerate]", "[name=ep63-w2-worth]"], ["[name=ep63-w3-tangible]", "#ep63-w3-tangible-other-text", "#ep63-w3-tangible-action"], ["[name=ep63-w3-intangible]", "#ep63-w3-intangible-other-text", "#ep63-w3-intangible-action"], ["#ep63-w4-reminder"]],
+    EP61: [["#ep61-w1-total"], ["#ep61-w2-context"], ["#ep61-w2-joke"], ["#ep61-w2-response"], ["#ep61-w3-care"]],
     EP83: [["[id^=ep83-feel-]"], ["#ep83-expectation"], ["[id^=ep83-understand-]"], ["[id^=ep83-prepare-]", "#ep83-question"]],
     EP82: [
       ["[name=ep82-recipient]", "[name=ep82-limit]", "#ep82-recipient-other-text", "#ep82-limit-budget-text", "#ep82-limit-other-text"],
@@ -107,6 +109,12 @@
     EP84: [["#ep84-point"], ["#ep84-action"]],
     EP75: [["#ep75-person", "[name=ep75-relationship]"], ["#ep75-event"], ["#ep75-actions"], ["[name=ep75-focus]"], ["[name=ep75-goal]"], ["[name=ep75-willing]"], ["[name=ep75-stop]", "#ep75-stop-action"]],
     EP72: [["[name=ep72-report-stuck]"], ["[name=ep72-report-step]"], ["#ep72-report-task", "#ep72-report-deliverable", "#ep72-report-time"], ["[name=ep72-conflict-state]"], ["[name=ep72-conflict-step]"], ["#ep72-conflict-message", "#ep72-conflict-deadline"], ["[name=ep72-help-kind]"], ["#ep72-help-fact"], ["#ep72-help-tried"], ["#ep72-help-request"], ["#ep72-next"]],
+    EP68: [["#ep68-w1-need"], ["#ep68-w2-fact"], ["#ep68-w2-guess"], ["#ep68-w2-reason"], ["#ep68-w3-script"]],
+    EP69: [["#ep69-w1-place"], ["#ep69-w1-action"], ["#ep69-w2-fact"], ["#ep69-w2-guess"], ["#ep69-w2-other-reason"], ["#ep69-w3-person"], ["#ep69-w3-difficulty"]],
+    EP67: [["[name=ep67-w1-emotional]"], ["[name=ep67-w1-interest]"], ["[name=ep67-w1-relax]"], ["#ep67-w2-interest-person"], ["#ep67-w2-helper"], ["#ep67-w2-emotional-person"], ["[name=ep67-w2-boundary]", "#ep67-w2-boundary-other-text"], ["#ep67-w2-place"], ["[name=ep67-w3-reminder]", "#ep67-w3-reminder-other-text"], ["#ep67-w3-step"]],
+    EP66: [["[name=ep66-w1-digital]", "#ep66-w1-digital-other-text"], ["#ep66-w1-purpose"], ["[name=ep66-w1-checks]", "#ep66-w1-check-other-text"], ["[name=ep66-w2-support]", "#ep66-w2-support-other-text"], ["#ep66-w2-purpose"], ["#ep66-w2-check"], ["[name=ep66-w3-resource]", "#ep66-w3-resource-other-text"], ["[name=ep66-w3-benefit]", "#ep66-w3-benefit-other-text"], ["#ep66-w3-check"], ["#ep66-w4-first-step"], ["#ep66-w4-time"], ["#ep66-w4-place"], ["#ep66-w4-ask"], ["#ep66-w4-alternative"]],
+    EP64: [["[name=ep64-w1-value]", "[name=ep64-w1-meaning]"], ["#ep64-w1-identity-1", "#ep64-w1-identity-2"], ["[name=ep64-w2-translation]", "#ep64-w3-keywords"], ["[name^=ep64-w3-check-]", "#ep64-w3-observe"], ["[name=ep64-w3-response]", "[name=ep64-w4-next]", "#ep64-w4-first"], ["#ep64-w4-reminder"]],
+    EP65: [["[name=ep65-w1-trigger]", "#ep65-w1-trigger-other-text"], ["[name=ep65-w2-boundary]", "#ep65-w2-boundary-other-text", "#ep65-w2-red-line"], ["[name=ep65-w3-protect]", "#ep65-w3-protect-other-text", "#ep65-w3-first"], ["[name=ep65-w4-action]", "#ep65-w4-action-other-text", "#ep65-w4-first"], ["#ep65-w4-reminder"]],
     EP73: [["[name=ep73-situation]", "#ep73-situation-other-text"], ["#ep73-protect"], ["#ep73-first-step"], ["#ep73-boundary-sentence"], ["#ep73-help"], ["#ep73-not-do"]],
     EP71: [["[id^=ep71-change-]", "#ep71-known"], ["[id^=ep71-feeling-]"], ["#ep71-unknown", "#ep71-remind"], ["[name=ep71-action]", "#ep71-action-person", "#ep71-action-pause-time", "#ep71-action-resource", "#ep71-action-other-text", "#ep71-next-when", "#ep71-next-action"]],
     EP80: [["[id^=ep80-tired-]", "#ep80-tired-other-text"], ["[id^=ep80-regret-]", "#ep80-regret-other-text"], ["[id^=ep80-shopping-]", "#ep80-shopping-other-text"], ["[id^=ep80-invite-]", "#ep80-invite-other-text"], ["[id^=ep80-late-]", "#ep80-late-other-text"], ["[id^=ep80-eat-]", "#ep80-eat-other-text"], ["[id^=ep80-queue-]", "#ep80-queue-other-text"], ["#ep80-reminder-time", "#ep80-reminder-decision", "#ep80-reminder-action"]],
@@ -211,6 +219,29 @@
       control.type === "checkbox" || control.type === "radio" ? control.checked : control.value !== ""
     );
   };
+  const initExclusiveChoices = () => {
+    worksheet.querySelectorAll("[data-exclusive-choice-group]").forEach((group) => {
+      const name = group.dataset.exclusiveChoiceGroup;
+      const exclusive = group.querySelector(`[data-exclusive-choice="${CSS.escape(name)}"]`);
+      const choices = [...group.querySelectorAll('input[type="checkbox"]')];
+      if (!exclusive || !choices.includes(exclusive)) return;
+      const update = () => {
+        if (!exclusive.checked) return;
+        choices.filter((choice) => choice !== exclusive).forEach((choice) => { choice.checked = false; });
+      };
+      worksheet.addEventListener("change", (event) => {
+        if (!choices.includes(event.target)) return;
+        if (event.target === exclusive && exclusive.checked) {
+          choices.filter((choice) => choice !== exclusive).forEach((choice) => { choice.checked = false; });
+        } else if (event.target !== exclusive && event.target.checked) {
+          exclusive.checked = false;
+        }
+      }, true);
+      document.querySelector('[data-clear]')?.addEventListener('click', () => window.setTimeout(update, 0));
+      update();
+    });
+  };
+  initExclusiveChoices();
   const normalize = (value) => value.replace(/\s+/g, " ").trim();
   const answerFor = (control) => {
     if (!control || control.disabled) return "";
