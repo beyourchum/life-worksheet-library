@@ -43,6 +43,12 @@ async function finalReminderIssues(page, policy) {
     if (answers.some((answer) => !before(answer, ending))) fail('結尾須放在所有作答欄位之後');
     const ai = document.querySelector('main .prompt-intro');
     if (!ai || !before(ending, ai)) fail('結尾須放在 AI 引導之前');
+    const prompt = document.querySelector('main .prompt-quote');
+    if (!prompt || !ai || !before(ai, prompt)) fail('AI 引導之後須有提示詞');
+    const endingPage = ending.closest('.page');
+    if (endingPage && ai && prompt &&
+        (ai.closest('.page') !== endingPage || prompt.closest('.page') !== endingPage))
+      fail('結尾、AI 引導與提示詞須在同一頁，不得將標題或說明獨立分頁');
 
     const worksheet = ending.closest('.worksheet');
     if (!worksheet) return [...issues, '結尾缺少 worksheet 容器'];

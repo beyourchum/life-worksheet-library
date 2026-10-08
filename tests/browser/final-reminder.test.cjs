@@ -8,9 +8,10 @@ async function testFinalReminder(page, base) {
     assert.throws(() => validateEndingPolicy(invalid), /quality-policy.json/);
   const ending = '<aside class="closing final-reminder no-arrow"><p>先選一個做得到的行動，再依結果調整。</p></aside>';
   const ai = '<aside class="closing prompt-intro"><span class="closing-mark">→</span><p>整理前面的作答。</p></aside>';
+  const prompt = '<aside class="prompt-quote"><p>請依我的作答整理一個行動。</p></aside>';
   const setFixture = async (content = ending, extraCss = '') => {
     await page.goto(base);
-    await page.setContent(`<link rel="stylesheet" href="${base}/assets/worksheet.css"><style>${extraCss}</style><main class="worksheet"><article class="page"><textarea id="answer"></textarea>${content}${ai}</article></main>`);
+    await page.setContent(`<link rel="stylesheet" href="${base}/assets/worksheet.css"><style>${extraCss}</style><main class="worksheet"><article class="page"><textarea id="answer"></textarea>${content}${ai}${prompt}</article></main>`);
     await page.evaluate(() => document.fonts.ready);
   };
   const cases = [
@@ -36,6 +37,18 @@ async function testFinalReminder(page, base) {
     await page.setViewportSize({width,height:900}); await page.emulateMedia({media});
     await setFixture();
     assert.deepEqual(await finalReminderIssues(page,policy), [], `${media}: 正常結尾`);
+    for (const selector of ['.prompt-intro', '.prompt-quote']) {
+      await setFixture();
+      await page.evaluate((selector) => {
+        const nextPage = document.createElement('article');
+        nextPage.className = 'page';
+        document.querySelector('main').append(nextPage);
+        if (selector === '.prompt-intro') nextPage.append(document.querySelector(selector));
+        nextPage.append(document.querySelector('.prompt-quote'));
+      }, selector);
+      assert((await finalReminderIssues(page, policy)).some(issue => issue.includes('須在同一頁')),
+        `${media}: 未攔住 ${selector} 跨頁（EP45／EP46 回歸）`);
+    }
     for (const [name,html,css,message] of cases) {
       if (name==='列印段落間距' && media!=='print') continue;
       await setFixture(html,css);
