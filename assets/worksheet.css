@@ -416,6 +416,8 @@ p { margin: .6rem 0; }
 .closing.final-reminder { border-top-width: .35rem; }
 .closing-mark { color: var(--green); font-family: var(--font-heading); font-size: 2.2rem; line-height: 1; }
 .closing.prompt-intro { border-bottom: 0; }
+.closing.prompt-intro > h2 { margin: 0; }
+.closing.prompt-intro > h2 ~ p { grid-column: 2; }
 /* 相鄰提示框共用一條細分隔線；最後提醒仍保留粗上框線。 */
 .closing + .closing:not(.final-reminder) { border-top: 0; }
 .closing p {
@@ -678,7 +680,7 @@ p { margin: .6rem 0; }
     min-height: 4.8mm;
     padding: .5mm 1.2mm;
   }
-  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .closing {
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .closing:not(.final-reminder) {
     margin-top: 2mm;
     padding: 1mm 0;
   }
@@ -723,12 +725,11 @@ p { margin: .6rem 0; }
     [data-worksheet-id="EP109"], [data-worksheet-id="EP110"], [data-worksheet-id="EP113"],
     [data-worksheet-id="EP114"], [data-worksheet-id="EP117"]
   ) .page {
-    width: 233.333mm;
-    height: 330mm;
-    min-height: 330mm;
-    max-height: 330mm;
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    max-height: 297mm;
     padding: 4mm 10mm 6mm;
-    zoom: .9;
   }
 
   .worksheet:is(
@@ -737,7 +738,7 @@ p { margin: .6rem 0; }
     [data-worksheet-id="EP96"], [data-worksheet-id="EP104"], [data-worksheet-id="EP107"],
     [data-worksheet-id="EP109"], [data-worksheet-id="EP110"], [data-worksheet-id="EP113"],
     [data-worksheet-id="EP114"], [data-worksheet-id="EP117"]
-  ) p { margin: .35rem 0; }
+  ) p:not(.closing p) { margin: .35rem 0; }
 
   .worksheet:is(
     [data-worksheet-id="EP62"], [data-worksheet-id="EP75"], [data-worksheet-id="EP91"],

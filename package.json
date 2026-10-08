@@ -10,6 +10,7 @@
     "fonts:worksheet": "node scripts/generate/fonts.cjs --scope",
     "generate": "node scripts/generate/run.cjs",
     "check:static": "node scripts/check/static.cjs",
+    "check:endings": "node scripts/check/endings.cjs --source",
     "check:worksheet": "node scripts/check/worksheet.cjs",
     "check:worksheet:browser": "node scripts/check/worksheet-browser.cjs",
     "build": "node scripts/build/site.cjs",

@@ -28,7 +28,7 @@
     },
     {
       "footer": "把觀點整理成提醒、問題或下一步",
-      "bodyHtml": "<div class='answer-field'><label for='ep51-w4-takeaway'>我想帶走的是：</label><textarea id='ep51-w4-takeaway' rows='2'></textarea></div><p class='example-note'>例如：先記下我真正想問的問題，再決定要不要把答案變成行動。</p><div class='answer-field'><label for='ep51-w4-next'>我準備這樣做，或我想繼續確認：</label><textarea id='ep51-w4-next' rows='2'></textarea></div><p class='example-note'>例如：這週找 15 分鐘，把我想做的主題列成三個可開始的小題目。</p><h2>結尾</h2><aside class='closing final-reminder no-arrow'><p>一支 Q&amp;A 不一定要回答完所有問題，才算有收穫。你可以從一個真正想知道的問題開始，分清楚「我聽到的內容」和「我自己的推測」，再決定要帶走一句提醒、一個問題，或一個做得到的小行動。保留待確認的地方，也是在讓自己的判斷更可靠。</p></aside>"
+      "bodyHtml": "<div class='answer-field'><label for='ep51-w4-takeaway'>我想帶走的是：</label><textarea id='ep51-w4-takeaway' rows='2'></textarea></div><p class='example-note'>例如：先記下我真正想問的問題，再決定要不要把答案變成行動。</p><div class='answer-field'><label for='ep51-w4-next'>我準備這樣做，或我想繼續確認：</label><textarea id='ep51-w4-next' rows='2'></textarea></div><p class='example-note'>例如：這週找 15 分鐘，把我想做的主題列成三個可開始的小題目。</p><aside class='closing final-reminder no-arrow'><p>一支 Q&amp;A 不一定要回答完所有問題，才算有收穫。你可以從一個真正想知道的問題開始，分清楚「我聽到的內容」和「我自己的推測」，再決定要帶走一句提醒、一個問題，或一個做得到的小行動。保留待確認的地方，也是在讓自己的判斷更可靠。</p></aside>"
     },
     {
       "footer": "把影片線索整理成一張觀點卡",

@@ -7,9 +7,21 @@
     "titleHtml": "讀書提不起勁時，怎麼找到適合自己的啟動儀式？",
     "question": "當我一直提不起勁讀書時，怎麼先辨認自己容易注意到的線索，再選一個今天做得到的開始方法？"
   },
-  "layoutVariants": ["hero-subheading"],
+  "layoutVariants": [
+    "hero-subheading"
+  ],
   "useComponents": false,
-  "fallbackGlyphs": ["勁", "浮", "睛", "勻", "滾", "咕", "嚕", "鬧", "躁"],
+  "fallbackGlyphs": [
+    "勁",
+    "浮",
+    "睛",
+    "勻",
+    "滾",
+    "咕",
+    "嚕",
+    "鬧",
+    "躁"
+  ],
   "pages": [
     {
       "footer": "先觀察自己最先注意到的線索",
@@ -29,7 +41,7 @@
     },
     {
       "footer": "把啟動儀式接到第一個小任務",
-      "bodyHtml": "<div class='answer-field'><label for='ep46-w3-task'>做完啟動儀式後，我要立刻開始的第一個小任務是什麼？</label><textarea id='ep46-w3-task' rows='2'></textarea></div><p>請把任務寫到小到可以直接開始的程度。</p><p class='example-note'>例如：打開統計學講義，先讀完第一個小標題並圈出一個不懂的詞。</p><div class='section-heading'><span class='section-number'>04</span><h2>如果第一次不適合，怎麼調整？</h2></div><div class='question-heading'><h3>試做後，我最想觀察哪一件事？</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep46-w4-observe-start' name='ep46-w4-observe' type='radio' value='我有比較容易坐下並開始第一步'><span>我有比較容易坐下並開始第一步</span></label><label class='choice'><input id='ep46-w4-observe-time' name='ep46-w4-observe' type='radio' value='我知道要做什麼，但啟動儀式太花時間'><span>我知道要做什麼，但啟動儀式太花時間</span></label><label class='choice'><input id='ep46-w4-observe-context' name='ep46-w4-observe' type='radio' value='這個感官線索不太貼近我現在的情境'><span>這個感官線索不太貼近我現在的情境</span></label><label class='choice'><input id='ep46-w4-observe-adjust' name='ep46-w4-observe' type='radio' value='我需要換一個地點、時間或任務難度'><span>我需要換一個地點、時間或任務難度</span></label><label class='choice'><input id='ep46-w4-observe-unsure' name='ep46-w4-observe' type='radio' value='我還不確定，先試一次再記錄'><span>我還不確定，先試一次再記錄</span></label></div><div class='answer-field'><label for='ep46-w4-adjustment'>如果沒有順利開始，我下一次會怎麼調整？</label><textarea id='ep46-w4-adjustment' rows='2'></textarea></div><p class='example-note'>例如：如果播放清單讓我一直想聽歌，我下次改成只播放一首歌，結束後立刻打開講義。</p><aside class='closing final-reminder no-arrow'><h2>帶走一個適合今天的版本</h2><p>啟動儀式的目的不是證明自己是哪一型，而是找到一個讓今天比較容易開始的入口。方法不合適時，可以改變時間、地點、刺激強度或第一個任務的大小。</p><p>先找到一個做得到的開始，再觀察它有沒有幫助；你可以保留有效的部分，也可以隨時換一個更貼近當下的做法。</p></aside>"
+      "bodyHtml": "<div class='answer-field'><label for='ep46-w3-task'>做完啟動儀式後，我要立刻開始的第一個小任務是什麼？</label><textarea id='ep46-w3-task' rows='2'></textarea></div><p>請把任務寫到小到可以直接開始的程度。</p><p class='example-note'>例如：打開統計學講義，先讀完第一個小標題並圈出一個不懂的詞。</p><div class='section-heading'><span class='section-number'>04</span><h2>如果第一次不適合，怎麼調整？</h2></div><div class='question-heading'><h3>試做後，我最想觀察哪一件事？</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep46-w4-observe-start' name='ep46-w4-observe' type='radio' value='我有比較容易坐下並開始第一步'><span>我有比較容易坐下並開始第一步</span></label><label class='choice'><input id='ep46-w4-observe-time' name='ep46-w4-observe' type='radio' value='我知道要做什麼，但啟動儀式太花時間'><span>我知道要做什麼，但啟動儀式太花時間</span></label><label class='choice'><input id='ep46-w4-observe-context' name='ep46-w4-observe' type='radio' value='這個感官線索不太貼近我現在的情境'><span>這個感官線索不太貼近我現在的情境</span></label><label class='choice'><input id='ep46-w4-observe-adjust' name='ep46-w4-observe' type='radio' value='我需要換一個地點、時間或任務難度'><span>我需要換一個地點、時間或任務難度</span></label><label class='choice'><input id='ep46-w4-observe-unsure' name='ep46-w4-observe' type='radio' value='我還不確定，先試一次再記錄'><span>我還不確定，先試一次再記錄</span></label></div><div class='answer-field'><label for='ep46-w4-adjustment'>如果沒有順利開始，我下一次會怎麼調整？</label><textarea id='ep46-w4-adjustment' rows='2'></textarea></div><p class='example-note'>例如：如果播放清單讓我一直想聽歌，我下次改成只播放一首歌，結束後立刻打開講義。</p><aside class='closing final-reminder no-arrow'><p>帶走一個適合今天的版本。</p><p>啟動儀式的目的不是證明自己是哪一型，而是找到一個讓今天比較容易開始的入口。方法不合適時，可以改變時間、地點、刺激強度或第一個任務的大小。</p><p>先找到一個做得到的開始，再觀察它有沒有幫助；你可以保留有效的部分，也可以隨時換一個更貼近當下的做法。</p></aside>"
     },
     {
       "footer": "AI 協助把觀察變成可執行的方法",

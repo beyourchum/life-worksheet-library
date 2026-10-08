@@ -7,7 +7,9 @@
     "titleHtml": "情緒不只喜怒哀樂｜是人類跨越<em>文化差異</em>的共通語言",
     "question": "我感受到的情緒，正在提醒我什麼？"
   },
-  "layoutVariants": ["stable-hero-title"],
+  "layoutVariants": [
+    "stable-hero-title"
+  ],
   "useComponents": true,
   "pages": [
     {
@@ -28,7 +30,7 @@
     },
     {
       "footer": "把情緒線索整理成一個安全小步",
-      "bodyHtml": "<p>解讀情<span class='glyph-system-fallback'>緒</span>不是要讓事情自動<span class='glyph-system-fallback'>消</span>失。等心情比較<span class='glyph-system-fallback'>穩</span>定後，我願意做的一個小步<span class='glyph-system-fallback'>驟</span>是：</p><div class='answer-field'><label for='ep49-w4-next'>平復之後，我要面對的一個小步<span class='glyph-system-fallback'>驟</span>：</label><textarea id='ep49-w4-next' rows='2'></textarea></div><p class='example-note'>例如：我會再和組員確認分工，說明我需要哪些資訊才能完成新增的部分。</p><h2>結尾</h2><aside class='closing final-reminder no-arrow'><p>解讀情<span class='glyph-system-fallback'>緒</span>是為了幫助自己脫離當下的負面狀態，也讓自己更認識多元的感受。情<span class='glyph-system-fallback'>緒</span>被理解之後，仍然可以在安全、做得到的範圍內，回頭面對與處理原本發生的事件；若牽涉到安全、威脅或持續傷害，請找可信任的人或專業資源一起處理，不必只靠自己。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>下方提示詞可以協助你把已經寫下的內容整理成一段較清楚的訊息。送出前請刪除姓名、聯絡方式、地點及其他不想分享的私人資料。AI 只能依你提供的文字協助整理，不替你診斷、不猜測他人的想法，也不替你決定要不要面對或處理這件事；如果你有立即的安全疑慮，請先找真人陪伴與專業協助，不要把 AI 當成緊急支援。</p></aside><p>我想請 AI 協助整理這件事：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>因為發生了【發生的事情】，我做了／對方做了【事件互動與我的反應】，我感受到【我補充的情<span class='glyph-system-fallback'>緒</span>詞】，我覺得這可能在提醒我【我覺得情<span class='glyph-system-fallback'>緒</span>可能和什麼有關】，我在平復後想做的下一步是【平復後的一個小步<span class='glyph-system-fallback'>驟</span>】。請只根據我提供的內容，幫我整理成「發生了什麼」「我可能正在感受什麼」「我可以先做的安全小步」三段，每段不超過兩句；如果資料不足，請標示「待確認」，不要替我補故事、下診斷、猜測他人的內心或鼓勵我傷害自己／他人。若文字顯示我可能正處於立即危險，請先提醒我找可信任的人、專業資源或當地緊急服務，而不是繼續分析。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
+      "bodyHtml": "<p>解讀情<span class='glyph-system-fallback'>緒</span>不是要讓事情自動<span class='glyph-system-fallback'>消</span>失。等心情比較<span class='glyph-system-fallback'>穩</span>定後，我願意做的一個小步<span class='glyph-system-fallback'>驟</span>是：</p><div class='answer-field'><label for='ep49-w4-next'>平復之後，我要面對的一個小步<span class='glyph-system-fallback'>驟</span>：</label><textarea id='ep49-w4-next' rows='2'></textarea></div><p class='example-note'>例如：我會再和組員確認分工，說明我需要哪些資訊才能完成新增的部分。</p><aside class='closing final-reminder no-arrow'><p>解讀情<span class='glyph-system-fallback'>緒</span>是為了幫助自己脫離當下的負面狀態，也讓自己更認識多元的感受。情<span class='glyph-system-fallback'>緒</span>被理解之後，仍然可以在安全、做得到的範圍內，回頭面對與處理原本發生的事件；若牽涉到安全、威脅或持續傷害，請找可信任的人或專業資源一起處理，不必只靠自己。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>下方提示詞可以協助你把已經寫下的內容整理成一段較清楚的訊息。送出前請刪除姓名、聯絡方式、地點及其他不想分享的私人資料。AI 只能依你提供的文字協助整理，不替你診斷、不猜測他人的想法，也不替你決定要不要面對或處理這件事；如果你有立即的安全疑慮，請先找真人陪伴與專業協助，不要把 AI 當成緊急支援。</p></aside><p>我想請 AI 協助整理這件事：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>因為發生了【發生的事情】，我做了／對方做了【事件互動與我的反應】，我感受到【我補充的情<span class='glyph-system-fallback'>緒</span>詞】，我覺得這可能在提醒我【我覺得情<span class='glyph-system-fallback'>緒</span>可能和什麼有關】，我在平復後想做的下一步是【平復後的一個小步<span class='glyph-system-fallback'>驟</span>】。請只根據我提供的內容，幫我整理成「發生了什麼」「我可能正在感受什麼」「我可以先做的安全小步」三段，每段不超過兩句；如果資料不足，請標示「待確認」，不要替我補故事、下診斷、猜測他人的內心或鼓勵我傷害自己／他人。若文字顯示我可能正處於立即危險，請先提醒我找可信任的人、專業資源或當地緊急服務，而不是繼續分析。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
     }
   ]
 }

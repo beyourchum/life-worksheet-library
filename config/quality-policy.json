@@ -5,6 +5,27 @@
   "choices": {
     "maxCompactCharacters": 16
   },
+  "ending": {
+    "heading": "none",
+    "geometryTolerancePx": 0.25,
+    "scaleTolerance": 0.001,
+    "fontWeight": 400,
+    "paragraphMarginPx": 0,
+    "borderTopRem": 0.35,
+    "borderBottomPx": 1,
+    "screen": {
+      "fontSizeRem": 1.05,
+      "lineHeightRatio": 1.65,
+      "paddingRem": [1.15, 1, 1.15, 1],
+      "gapRem": 1
+    },
+    "print": {
+      "fontSizePt": 9,
+      "lineHeightRatio": 1.35,
+      "paddingMm": [2, 0, 2, 0],
+      "gapMm": 2
+    }
+  },
   "budgets": {
     "homeFontBytes": 100000,
     "worksheetFontBytes": 360000,

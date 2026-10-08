@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 const { start } = require('./server.cjs');
 const { runReported } = require('./report.cjs');
+const { validateEndingPolicy, worksheetEndingResults } = require('./rules/final-reminder-check.cjs');
 const root = path.resolve(__dirname, '../..');
 process.chdir(root);
 
@@ -86,6 +87,7 @@ async function withinFontBudget(page, home, scope = home ? 'home' : undefined) {
 runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source', scope: ep || 'all' }, async (recordCheck) => {
   if (!fs.existsSync(browserTarget)) throw new Error('_site 不存在；請先執行 pnpm run build，再執行 pnpm run check:browser。');
   policy = read('config/quality-policy.json');
+  validateEndingPolicy(policy.ending);
   qualityExceptions = read('config/quality-exceptions.json');
   manifest = read('assets/fonts/worksheet/compact/manifest.json');
   items = read('catalog/worksheets.json');
@@ -110,6 +112,16 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
     await record('AI 綁定缺欄、空白理由與無效 selector 負向測試', async () => {
       const fixture = await browser.newPage();
       try { await require('../../tests/browser/prompt-configuration.test.cjs').testPromptConfiguration(fixture, base); }
+      finally { await fixture.close(); }
+    }, ['*']);
+    await record('AI 標題桌面、手機、列印排版與擠壓負向測試', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/prompt-intro-layout.test.cjs').testPromptIntroLayout(fixture, base); }
+      finally { await fixture.close(); }
+    }, ['*']);
+    await record('結尾無標題、共用樣式與縮放負向測試', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/final-reminder.test.cjs').testFinalReminder(fixture, base); }
       finally { await fixture.close(); }
     }, ['*']);
     await record('核准無影片例外的頁首、工具列、手機與列印', async () => {
@@ -331,6 +343,12 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
     });
 
     for (const item of items.filter((item) => item.worksheetUrl && (!ep || item.ep === ep))) {
+      await record(`${item.ep} 結尾結構、桌面、手機與正常／備援列印`, async () => {
+        const results = await worksheetEndingResults(browser, base, item.worksheetUrl, policy.ending);
+        const issues = results.flatMap(({view, issues}) => issues.map(issue => `${view}: ${issue}`));
+        assert.deepEqual(issues, [], `${item.ep}: 修正結尾結構或覆寫樣式後重新驗收`);
+        return results;
+      });
       await record(`${item.ep} 缺字、字型預算、暫存與列印`, async () => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.emulateMedia({ media: 'screen' });
@@ -342,6 +360,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         const worksheetStyleRules = require('./rules/worksheet-style-check.cjs');
         assert.deepEqual(await worksheetStyleRules.worksheetStyleIssues(page), []);
         assert.deepEqual(await worksheetStyleRules.inlineInputLayoutIssues(page), []);
+        assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 桌面 AI 標題排版`);
         assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page, policy.choices.maxCompactCharacters), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetContentIssues(page, item.ep), []);
@@ -375,8 +394,10 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
         if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在手機版不可見`);
+        assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 手機 AI 標題排版`);
         await page.screenshot({ path: path.join(output, item.ep + '-mobile.png'), fullPage: true });
         await page.emulateMedia({ media: 'print' });
+        assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 列印 AI 標題排版`);
         const metrics = await printMetrics(page);
         checkPrint(metrics, item.ep);
         assert.equal(await page.locator('.toolbar').isVisible(), false);
@@ -391,6 +412,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
           await fallback.route('**/*.woff2', (route) => route.abort());
           await fallback.goto(base + '/' + item.worksheetUrl);
           await fallback.emulateMedia({ media: 'print' });
+          assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(fallback), [], `${item.ep}: 備援字型 AI 標題排版`);
           const metrics = await printMetrics(fallback);
           checkPrint(metrics, `${item.ep} 系統字型`);
           assert.equal(await fallback.locator('.toolbar').isVisible(), false);

@@ -20,6 +20,8 @@ const categoryAliases = JSON.parse(read('config/category-aliases.json'));
 const worksheetLayouts = JSON.parse(read('config/worksheet-layouts.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
+try { require('./rules/final-reminder-check.cjs').validateEndingPolicy(policy.ending); }
+catch (error) { errors.push(error.message); }
 if (ep) check(items.length === 1, `${ep}: 索引中沒有可檢查的學習單`);
 const worksheetCss = read('assets/worksheet.css');
 check(/\.video-embed\s*\{[^}]*width:\s*100%;[^}]*aspect-ratio:\s*16\s*\/\s*9;/s.test(worksheetCss),
