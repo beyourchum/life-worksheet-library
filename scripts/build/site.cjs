@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { publicPath } = require('./publish-files.cjs');
 const root = path.resolve(__dirname, '../..');
 const output = path.join(root, '_site');
 // Only this generated directory may be replaced; reject redirected targets.
@@ -8,7 +9,16 @@ if (fs.existsSync(output)) {
   fs.rmSync(output, { recursive: true });
 }
 fs.mkdirSync(output);
-const copy = (name) => { fs.mkdirSync(path.dirname(path.join(output, name)), { recursive: true }); fs.cpSync(path.join(root, name), path.join(output, name), { recursive: true }); };
+const copy = (name) => {
+  fs.mkdirSync(path.dirname(path.join(output, name)), { recursive: true });
+  fs.cpSync(path.join(root, name), path.join(output, name), {
+    recursive: true,
+    filter: (source) => {
+      const stat = fs.lstatSync(source);
+      return !stat.isSymbolicLink() && publicPath(path.relative(root, source), stat.isDirectory());
+    },
+  });
+};
 for (const name of ['index.html', '.nojekyll', 'data', 'worksheets']) copy(name);
 if (fs.existsSync(path.join(root, 'articles'))) copy('articles');
 for (const name of fs.readdirSync(path.join(root, 'assets'))) if (/\.(css|js)$/.test(name)) copy('assets/' + name);

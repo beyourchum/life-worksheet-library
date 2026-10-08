@@ -1,6 +1,9 @@
 {
   "variants": [
     "wide-other-input",
-    "stacked-mobile-accent"
+    "stacked-mobile-accent",
+    "stable-hero-title",
+    "hero-subheading",
+    "ep59-print-compact"
   ]
 }

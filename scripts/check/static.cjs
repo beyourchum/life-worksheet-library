@@ -5,8 +5,13 @@ const vm = require('node:vm');
 const { createHash } = require('node:crypto');
 const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
 process.chdir(path.join(__dirname, '../..'));
+const args = process.argv.slice(2).filter((arg) => arg !== '--');
+if (args.length > 1 || (args.length === 1 && !/^EP\d+$/i.test(args[0])))
+  throw new Error('用法：node scripts/check/static.cjs [EP編號]');
+const ep = args[0]?.toUpperCase();
 const read = (file) => fs.readFileSync(file, 'utf8');
-const items = JSON.parse(read('catalog/worksheets.json'));
+const allItems = JSON.parse(read('catalog/worksheets.json'));
+const items = ep ? allItems.filter((item) => item.ep === ep && item.worksheetUrl) : allItems;
 const categories = JSON.parse(read('catalog/categories.json'));
 const config = JSON.parse(read('config/search.json'));
 const policy = JSON.parse(read('config/quality-policy.json'));
@@ -15,6 +20,7 @@ const categoryAliases = JSON.parse(read('config/category-aliases.json'));
 const worksheetLayouts = JSON.parse(read('config/worksheet-layouts.json'));
 const errors = [];
 const check = (condition, message) => { if (!condition) errors.push(message); };
+if (ep) check(items.length === 1, `${ep}: 索引中沒有可檢查的學習單`);
 const worksheetCss = read('assets/worksheet.css');
 check(/\.video-embed\s*\{[^}]*width:\s*100%;[^}]*aspect-ratio:\s*16\s*\/\s*9;/s.test(worksheetCss),
   'worksheet.css: 所有學習單共用的影片容器必須維持 100% 寬與 16:9 比例');
@@ -24,11 +30,20 @@ check(worksheetCss.includes('.video-embed + p,') && worksheetCss.includes('.vide
   'worksheet.css: 學習目標與使用說明必須依影片後方位置套用共用呈現');
 check(Number.isInteger(policy.choices?.maxCompactCharacters) && policy.choices.maxCompactCharacters > 0,
   'quality-policy.json: choices.maxCompactCharacters 必須是正整數');
+for (const key of ['pageSize', 'capacityTestEntries'])
+  check(Number.isInteger(policy[key]) && policy[key] > 0, `quality-policy.json: ${key} 必須是正整數`);
 check(Array.isArray(worksheetLayouts.variants) && new Set(worksheetLayouts.variants).size === worksheetLayouts.variants.length,
   'worksheet-layouts.json: variants 必須是無重複陣列');
 require('../../tests/unit/worksheet-html-generator.test.cjs');
-try { require('../generate/worksheet-html.cjs').generate({ check: true }); } catch (error) { errors.push(error.message); }
+require('../../tests/unit/publish-files.test.cjs');
+require('../../tests/unit/scoped-static.test.cjs');
+const reportTests = require('node:child_process').spawnSync(process.execPath, ['tests/unit/report.test.cjs'], { stdio: 'inherit', shell: false });
+check(!reportTests.error && reportTests.status === 0, '驗收報告負向測試失敗');
+if (!ep || fs.existsSync(`worksheet-sources/${ep}.json`)) {
+  try { require('../generate/worksheet-html.cjs').generate({ ep, check: true }); } catch (error) { errors.push(error.message); }
+}
 for (const [file, expected] of Object.entries(require('../generate/catalog.cjs').outputs())) {
+  if (ep && file.startsWith('worksheets/') && file !== `worksheets/${ep}/metadata.json`) continue;
   check(fs.existsSync(file) && read(file).replace(/\r\n/g, '\n') === expected, `${file}: 衍生資料過期，請執行 pnpm run data`);
 }
 for (const [file, budget] of [['data/catalog.json', policy.budgets.catalogBytes], ['data/search-index.json', policy.budgets.searchIndexBytes]]) {
@@ -47,13 +62,16 @@ check(sourceHash.digest('hex') === fontManifest.sourceHash, '原始字型已改�
 check(createHash('sha256').update(read('scripts/generate/fonts.py').replace(/\r\n/g, '\n')).digest('hex') === fontManifest.generatorHash,
   '字型產生程式已改變，請重新執行 pnpm run fonts');
 for (const [file, hash] of Object.entries(fontManifest.inputs)) {
+  if (ep && file !== `worksheets/${ep}/index.html` && file !== 'assets/worksheet.js') continue;
   check(fs.existsSync(file) && createHash('sha256').update(read(file).replace(/\r\n/g, '\n')).digest('hex') === hash,
     `${file}: 內容已改變，請執行 pnpm run fonts 更新精簡字型`);
 }
-for (const ep of fs.readdirSync('worksheets')) {
-  check(`worksheets/${ep}/index.html` in fontManifest.inputs, `${ep}: 新頁面尚未收錄精簡字型，請執行 pnpm run fonts`);
+for (const scope of ep ? [ep] : fs.readdirSync('worksheets')) {
+  check(`worksheets/${scope}/index.html` in fontManifest.inputs, `${scope}: 新頁面尚未收錄精簡字型，請執行 pnpm run fonts`);
+  check(Boolean(fontManifest.scopes[scope]), `${scope}: 缺少精簡字型範圍，請執行 pnpm run fonts`);
 }
 for (const [scope, data] of Object.entries(fontManifest.scopes)) {
+  if (ep && scope !== ep) continue;
   const home = scope === 'home';
   const prefix = `assets/fonts/worksheet/compact/${scope}/`;
   const fontCss = read(prefix + 'fonts.css');
@@ -77,8 +95,11 @@ const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entr
   const file = path.join(dir, entry.name);
   return entry.isDirectory() ? walk(file) : [file];
 });
-const files = ['index.html', ...walk('assets'), ...walk('worksheets'), ...(fs.existsSync('articles') ? walk('articles') : [])];
-for (const file of walk('worksheets')) {
+const worksheetFiles = ep ? (fs.existsSync(`worksheets/${ep}`) ? walk(`worksheets/${ep}`) : []) : walk('worksheets');
+const files = ep ? [...worksheetFiles, ...walk('assets').filter((file) => !file.includes(`${path.sep}fonts${path.sep}`)),
+  ...(fs.existsSync(`assets/fonts/worksheet/compact/${ep}/fonts.css`) ? [`assets/fonts/worksheet/compact/${ep}/fonts.css`] : [])]
+  : ['index.html', ...walk('assets'), ...worksheetFiles, ...(fs.existsSync('articles') ? walk('articles') : [])];
+for (const file of worksheetFiles) {
   check(!/\.(?:css|js)$/.test(file), `${file}: 單元互動與樣式須改用 assets/worksheet-components 共用元件`);
 }
 const voidTags = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
@@ -115,12 +136,12 @@ for (const file of files) {
     if (m[0].startsWith('for=') || m[0].startsWith('href="#')) check(ids.includes(m[1]), `${file}: 找不到目標 ${m[1]}`);
   }
 }
-check(Array.isArray(items) && items.length > 0, 'catalog/worksheets.json 必須有內容');
+check(Array.isArray(allItems) && allItems.length > 0, 'catalog/worksheets.json 必須有內容');
 check(new Set(categories).size === categories.length && categories.every((x) => typeof x === 'string' && x.trim()), 'catalog/categories.json 必須是無重複的分類名稱');
 require('../../tests/unit/category-alias-policy.test.cjs');
 const { categoryAliasIssues } = require('./rules/category-alias-policy.cjs');
-for (const issue of categoryAliasIssues(categories, items, categoryAliases)) errors.push(issue);
-check(new Set(items.map((x) => x.ep)).size === items.length, 'EP 編號重複');
+for (const issue of categoryAliasIssues(categories, allItems, categoryAliases)) errors.push(issue);
+check(new Set(allItems.map((x) => x.ep)).size === allItems.length, 'EP 編號重複');
 const videos = new Map();
 require('../../tests/unit/video-policy.test.cjs');
 require('../../tests/unit/worksheet-content-check.test.cjs');
@@ -128,7 +149,7 @@ const { videoRequirement, videoEmbedIssues } = require('./rules/video-policy.cjs
 check(Array.isArray(qualityExceptions.videoExceptions), 'videoExceptions 必須是陣列');
 const videoExceptions = Array.isArray(qualityExceptions.videoExceptions) ? qualityExceptions.videoExceptions : [];
 check(new Set(videoExceptions.map((entry) => entry.ep)).size === videoExceptions.length, '無影片例外集數重複');
-for (const entry of videoExceptions) check(items.some((item) => item.ep === entry.ep && item.worksheetUrl), '無影片例外必須對應既有學習單');
+for (const entry of videoExceptions) check(allItems.some((item) => item.ep === entry.ep && item.worksheetUrl), '無影片例外必須對應既有學習單');
 for (const item of items) {
   const videoError = videoRequirement(item, videoExceptions);
   check(!videoError, `${item.ep}: ${videoError}`);
@@ -227,8 +248,9 @@ for (const item of items) {
     } catch { errors.push(`${item.ep}: 影片網址格式錯誤`); }
   }
 }
-for (const dir of fs.readdirSync('worksheets')) check(items.some((x) => x.ep === dir), `${dir}: 未登錄索引`);
+if (!ep) for (const dir of fs.readdirSync('worksheets')) check(items.some((x) => x.ep === dir), `${dir}: 未登錄索引`);
 const { searchWorksheets } = require('../../assets/search-core.js');
+if (!ep) {
 try {
   assert.equal(searchWorksheets(items, '', '', config).matches.length, items.length);
   for (const [query, ep] of [['規則', 'EP117'], ['換工作', 'EP62'], ['拖延', 'EP111'], ['EP117', 'EP117']]) assert(searchWorksheets(items, query, '', config).matches.some((m) => m.item.ep === ep), `${query}: 找不到 ${ep}`);
@@ -244,5 +266,7 @@ const started = performance.now();
 searchWorksheets(synthetic, '工作 焦慮', '', config);
 const searchMs = performance.now() - started;
 check(searchMs < policy.budgets.search150Ms, `${synthetic.length} 筆搜尋耗時 ${searchMs.toFixed(1)} ms，超出預算`);
+}
 if (errors.length) { console.error(errors.join('\n')); process.exitCode = 1; }
-else console.log(`靜態檢查通過：${items.length} 份學習單、索引、分類、資源、HTML 標籤與搜尋案例。仍須完成瀏覽器測試及逐篇人工驗收。${process.env.GITHUB_ACTIONS === 'true' ? ' CI 不含本機 MD，未驗證稿件同步。' : ''}`);
+else console.log(ep ? `${ep} 單集靜態檢查通過；與全站共用規則，檢查範圍限於此集及共用依賴。仍須完成瀏覽器及人工驗收。`
+  : `靜態檢查通過：${items.length} 份學習單、索引、分類、資源、HTML 標籤與搜尋案例。仍須完成瀏覽器測試及逐篇人工驗收。${process.env.GITHUB_ACTIONS === 'true' ? ' CI 不含本機 MD，未驗證稿件同步。' : ''}`);

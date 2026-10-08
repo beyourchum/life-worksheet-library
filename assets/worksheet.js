@@ -28,6 +28,7 @@
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   worksheet.querySelectorAll(".choice > span").forEach((copy) => {
     if (copy.querySelector("input")) return;
+    if (copy.querySelector(".glyph-system-fallback")) return;
     const original = copy.textContent.trim();
     const separator = original.indexOf("：");
     if (separator <= 0 || separator === original.length - 1) return;
@@ -62,6 +63,7 @@
     input?.setAttribute("data-choice-label", original);
   });
   worksheet.querySelectorAll('.choice > span:not(.choice-copy)').forEach((copy) => {
+    if (copy.querySelector(".glyph-system-fallback")) return;
     const original = copy.textContent.trim();
     const match = original.match(/^(.*?)（((?:例如|如)：[^()（）]+)）(.*)$/);
     if (!match) return;
@@ -92,8 +94,43 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP45: [["[name=ep45-w2-target]"], ["#ep45-w2-reason"], ["#ep45-w2-when"], ["#ep45-w2-action"], ["#ep45-w2-measure"]],
+    EP46: [["[name=ep46-w1-type]"], ["#ep46-w3-context"], ["#ep46-w3-ritual"], ["#ep46-w3-task"]],
+    EP47: [["#ep47-w1-event"], ["#ep47-w1-goal"], ["#ep47-w2-other-point", "#ep47-w2-unclear"], ["[name=ep47-w1-worry]", "#ep47-w1-worry-other-text"], ["[name=ep47-w2-method]", "#ep47-w2-method-other-text"]],
+    EP48: [["#ep48-w2-task"], { manual: "原稿只有固定練習案例，未要求另填一個抽象任務；請在提示詞中自行補上。" }],
+    EP49: [
+      ["#ep49-w2-event"],
+      ["#ep49-w2-other-action", "#ep49-w2-my-reaction", "#ep49-w2-my-action", "#ep49-w2-their-response"],
+      ["#ep49-w3-emotion-note"],
+      ["#ep49-w3-cause-note", "[name=ep49-w3-cause]"],
+      ["#ep49-w4-next"]
+    ],
     EP62: [["#choice-46", "#choice-47", "#choice-48", "#choice-49", "#choice-50", "#choice-51", "#other-52"], ["#short-53"]],
     EP63: [["[name=ep63-w1-living]"], ["[name=ep63-w1-savings]"], ["[name=ep63-w1-investment]"], ["[name=ep63-w2-risk]", "#ep63-w2-risk-other-text", "[name=ep63-w2-consequence]", "#ep63-w2-consequence-other-text"], ["[name=ep63-w2-tolerate]", "[name=ep63-w2-worth]"], ["[name=ep63-w3-tangible]", "#ep63-w3-tangible-other-text", "#ep63-w3-tangible-action"], ["[name=ep63-w3-intangible]", "#ep63-w3-intangible-other-text", "#ep63-w3-intangible-action"], ["#ep63-w4-reminder"]],
+    EP54: [["#ep54-w1-background"], ["#ep54-w1-question"], ["#ep54-w1-emotion"]],
+    // EP55 prompt fields follow the worksheet's four action checkpoints.
+    EP55: [["[name=ep55-w4-signal]"], ["[name=ep55-w2-green-action]", "[name=ep55-w2-yellow-next]", "[name=ep55-w2-red-action]"], ["#ep55-w3-message", "#ep55-w3-message-custom", "#ep55-w3-stop-sentence"], ["#ep55-w4-green", "#ep55-w4-yellow", "#ep55-w4-red", "#ep55-w4-reminder"]],
+    EP56: [["[name=ep56-w1-barrier]", "#ep56-w1-priority"], ["[name=ep56-w4-experiment]", "#ep56-w4-plan"], ["#ep56-w4-signal"]],
+    EP58: [
+      ["[name=ep58-w1-trigger]", "[name=ep58-w1-thought]", "#ep58-w1-focus", "#ep58-w1-observation"],
+      ["[name=ep58-w2-assets]", "#ep58-w2-asset-main", "#ep58-w2-asset-evidence"],
+      ["#ep58-w3-target", "[name=ep58-w3-feelings]", "[name=ep58-w3-body]", "#ep58-w3-fair", "#ep58-w3-whisper", "[name=ep58-w3-care]"],
+      ["[name=ep58-w4-actions]", "#ep58-w4-action-social-count", "#ep58-w4-action-view-count", "#ep58-w4-action-record-activity", "#ep58-w4-action-value-days", "#ep58-w4-action-photo-minutes", "#ep58-w4-action-support-person", "#ep58-w4-action-support-resource", "#ep58-w4-action-other-text", "#ep58-w4-selected", "#ep58-w4-when", "#ep58-w4-signal"]
+    ],
+    EP59: [
+      ["[name=ep59-w1-body]", "[name=ep59-w1-mind]", "[name=ep59-w1-space]", "[name=ep59-w1-support]", "[name=ep59-w1-result]"],
+      ["[name=ep59-w2-scenario]", "[name=ep59-w2-signals]", "#ep59-w2-signal-other-text", "#ep59-w2-check-sentence"],
+      ["[name=ep59-w3-dialogue]", "#ep59-w3-dialogue-reason", "[name=ep59-w3-image]", "#ep59-w3-image-other-text"],
+      ["[name=ep59-w4-brake]", "#ep59-w4-brake-other-text"],
+      ["[name=ep59-w4-exit]", "#ep59-w4-exit-contact-text", "#ep59-w4-exit-transport-text", "#ep59-w4-exit-other-text", "#ep59-w4-boundary"]
+    ],
+    EP57: [
+      ["[name=ep57-w1-body-questions]", "#ep57-w1-body-other-text", "#ep57-w1-question", "#ep57-w1-resource"],
+      ["[name=ep57-w2-principles]", "#ep57-w2-reminder", "[name=ep57-w2-actions]", "#ep57-w2-action-other-text", "[name=ep57-w3-scenario]"],
+      ["#ep57-w3-boundary", "[name=ep57-w4-brake]", "#ep57-w4-brake-other-text", "#ep57-w4-own-sentence", "[name=ep57-w4-safety]", "#ep57-w4-safety-other-text", "#ep57-w5-neutral"],
+      ["[name=ep57-w5-action]", "#ep57-w5-action-other-text", "#ep57-w5-time", "#ep57-w5-signal"]
+    ],
+    EP60: [["#ep60-body-summary", "#ep60-body-change-note", "[name^=ep60-body-]", "#ep60-body-sleep-other-text", "#ep60-body-appetite-other-text", "#ep60-body-tension-other-text", "#ep60-body-heart-other-text"], ["#ep60-fact-time", "#ep60-fact-place", "#ep60-fact-people", "#ep60-fact-event", "#ep60-fact-why", "#ep60-fact-how"], ["#ep60-highlight-senses", "#ep60-highlight-incident"], ["#ep60-emotion-now"], ["#ep60-emotion-after"], ["#ep60-concern-unseen", "#ep60-concern-scolded", "#ep60-concern-negative", "#ep60-concern-none", "#ep60-concern-other-text"]],
     EP61: [["#ep61-w1-total"], ["#ep61-w2-context"], ["#ep61-w2-joke"], ["#ep61-w2-response"], ["#ep61-w3-care"]],
     EP83: [["[id^=ep83-feel-]"], ["#ep83-expectation"], ["[id^=ep83-understand-]"], ["[id^=ep83-prepare-]", "#ep83-question"]],
     EP82: [
@@ -149,6 +186,35 @@
       ["[id^=ep90-fear-]"],
       ["[id^=ep90-fact-]"],
       ["#ep90-breaths", "#ep90-object", "[id^=ep90-phrase-]", "[id^=ep90-after-]"]
+    ],
+    EP53: [
+      ["[name=ep53-w1-situation]", "#ep53-w1-situation-other-text"],
+      ["[name=ep53-w2-fixed]", "#ep53-w2-fixed-other-text"],
+      ["[name=ep53-w3-reminder]", "#ep53-w3-reminder-other-text"],
+      ["[name=ep53-w4-action]", "#ep53-w4-action-other-text"]
+    ],
+    EP52: [
+      ["#ep52-w1-current"],
+      ["#ep52-w2-focus"],
+      ["[name=ep52-w3-method]", "#ep52-w3-method-other-text", "#ep52-w3-keep"],
+      ["[name=ep52-w4-action]", "#ep52-w4-action-other-text"],
+      ["#ep52-w4-start"]
+    ],
+    EP50: [
+      ["#ep50-w1-context"],
+      ["#ep50-w2-reaction-note"],
+      ["#ep50-w3-name"],
+      ["#ep50-w4-first"],
+      ["#ep50-w4-support"]
+    ],
+    EP51: [
+      ["#ep51-w1-question", "[name=ep51-w1-question-category]", "#ep51-w1-question-other-text"],
+      ["#ep51-w2-focus"],
+      ["#ep51-w3-context"],
+      ["#ep51-w3-method"],
+      ["#ep51-w3-adjust"],
+      ["[name=ep51-w4-result]", "#ep51-w4-takeaway"],
+      ["#ep51-w4-next"]
     ],
     EP91: [["#ep91-major", "[name=ep91-field]", "#ep91-field-other-text"], ["#ep91-hours", "[id^=ep91-skill-]"], ["#ep91-unique"], ["[id^=ep91-goal-]"], ["[id^=ep91-difficulty-]"]],
     EP92: [["#ep92-situation"], ["[id^=ep92-emotion-]", "[id^=ep92-result-]"], ["[id^=ep92-maintain]", "[id^=ep92-adjust]", "[id^=ep92-response-]", "#ep92-old-goal", "#ep92-new-goal", "[name=ep92-goal-relation]", "#ep92-goal-relation-other-text"], ["[id^=ep92-knowledge-]", "[id^=ep92-skill-]", "[name=ep92-frequency]", "[id^=ep92-resource-]", "#ep92-now-other"], ["[id^=ep92-short-]", "[id^=ep92-long-]"]],
@@ -254,14 +320,22 @@
   };
   const bindingValue = (binding) => {
     const selectors = Array.isArray(binding) ? binding : [];
-    const matched = selectors.flatMap((selector) => [...worksheet.querySelectorAll(selector)]);
+    const matched = selectors.flatMap((selector) => {
+      if (typeof selector !== "string" || !selector.trim()) return [];
+      try { return [...worksheet.querySelectorAll(selector)]; }
+      catch (_) { return []; }
+    });
     return [...new Set(matched.map(answerFor).filter(Boolean))].join("、");
   };
   const bindingIsConfigured = (binding) => {
-    if (binding?.manual) return true;
+    if (!Array.isArray(binding)) return typeof binding?.manual === "string" && Boolean(binding.manual.trim());
     return Array.isArray(binding)
       && binding.length > 0
-      && binding.some((selector) => worksheet.querySelector(selector));
+      && binding.every((selector) => {
+        if (typeof selector !== "string" || !selector.trim()) return false;
+        try { return Boolean(worksheet.querySelector(selector)); }
+        catch (_) { return false; }
+      });
   };
   const updateAutoSummaries = () => {
     worksheet.querySelectorAll("[data-auto-summary]").forEach((summary) => {

@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 
-async function testPromptAutofill(page, base) {
+async function testPromptAutofill(page, base, ep) {
+  if (!ep || ep === 'EP101') {
   await page.goto(base + '/worksheets/EP101/');
   await page.locator('#task-name').fill('整理分組報告');
   await page.locator('#task-result').fill('交出三頁摘要');
@@ -37,7 +38,9 @@ async function testPromptAutofill(page, base) {
   const cleared = await page.locator('[data-prompt-text]').innerText();
   assert(cleared.includes('【任務名稱】'), '清除作答後沒有恢復原括號提示');
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-status'), '已自動代入 0／6 項；未作答處保留括號提示。');
+  }
 
+  if (!ep || ep === 'EP87') {
   await page.goto(base + '/worksheets/EP87/');
   await page.locator('#ep87-a3').check();
   await page.locator('#ep87-focus-b').check();
@@ -47,11 +50,15 @@ async function testPromptAutofill(page, base) {
   assert(choices.includes('拖延與自律'), '焦點選項沒有代入提示詞');
   assert(choices.includes('做10分鐘任務'), '行動選項沒有代入提示詞');
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-status'), '已自動代入 3 項作答。');
+  }
 
+  if (!ep || ep === 'EP113') {
   await page.goto(base + '/worksheets/EP113/');
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-status'), '已自動代入 0／3 項；未作答處保留括號提示。');
   assert((await page.locator('[data-prompt-text]').innerText()).includes('【請自行填寫：我的選擇困難】'), '沒有對應作答時應保留提示');
+  }
 
+  if (!ep || ep === 'EP82') {
   await page.goto(base + '/worksheets/EP82/');
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-configured'), 'true');
   await page.locator('#ep82-recipient-friend').check();
@@ -66,6 +73,7 @@ async function testPromptAutofill(page, base) {
   for (const answer of ['朋友', '保溫杯', '實用：對方目前會用到', '娛樂：有明確喜好線索', '私密：親密程度合適', '可以送', '對方最近剛好需要', '還要確認容量'])
     assert(giftPrompt.includes(answer), `EP82 提示詞沒有代入：${answer}`);
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-status'), '已自動代入 8 項作答。');
+  }
 }
 
 module.exports = { testPromptAutofill };

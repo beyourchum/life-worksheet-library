@@ -1,5 +1,5 @@
 const assert = require('node:assert/strict');
-const { videoRequirement, videoEmbedIssues } = require('../../scripts/check/rules/video-policy.cjs');
+const { videoRequirement, videoEmbedIssues, youtubeId } = require('../../scripts/check/rules/video-policy.cjs');
 const item = { ep: 'EP106', worksheetUrl: 'worksheets/EP106/' };
 assert(videoRequirement(item));
 assert(videoRequirement({ ...item, videoUrl: ' ' }));
@@ -17,4 +17,7 @@ assert.deepEqual(videoEmbedIssues(completeEmbed, { ...item, ep: 'EP1', worksheet
 assert(videoEmbedIssues(completeEmbed.replace('abcdefghijk', 'zzzzzzzzzzz'), { ...item, ep: 'EP1', worksheetUrl: 'worksheets/EP1/', videoUrl: 'https://youtu.be/abcdefghijk' }).some((issue) => issue.includes('影片 ID')));
 assert(videoEmbedIssues(completeEmbed.replace(' loading="lazy"', ''), { ...item, ep: 'EP1', worksheetUrl: 'worksheets/EP1/', videoUrl: 'https://youtu.be/abcdefghijk' }).some((issue) => issue.includes('loading')));
 assert(videoEmbedIssues('<p>沒有播放器</p>', { ...item, ep: 'EP1', worksheetUrl: 'worksheets/EP1/', videoUrl: 'https://youtu.be/abcdefghijk' }).some((issue) => issue.includes('video-embed')));
+assert.equal(youtubeId('https://example.invalid/watch?v=abcdefghijk'), null);
+assert.equal(youtubeId('http://youtu.be/abcdefghijk'), null);
+assert(videoEmbedIssues(completeEmbed, { ...item, videoUrl: '' }).some((issue) => issue.includes('不得保留')));
 console.log('影片門檻測試通過：缺漏、空白、未核准及錯集例外均被攔截。');

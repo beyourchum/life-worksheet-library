@@ -3,33 +3,33 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 const { start } = require('./server.cjs');
+const { runReported } = require('./report.cjs');
 const root = path.resolve(__dirname, '../..');
 process.chdir(root);
 
-const args = process.argv.slice(2);
+const args = process.argv.slice(2).filter((arg) => arg !== '--');
 if (args.includes('--help')) {
-  console.log('用法：node scripts/check/browser.cjs (--built | --source)');
+  console.log('用法：node scripts/check/browser.cjs (--built | --source) [--ep EP編號]');
   console.log('  --built   檢查既有 _site 發布產物');
   console.log('  --source  直接檢查專案來源；不代表發布產物已通過');
+  console.log('  --ep      使用相同規則，只檢查指定集數及適用回歸');
   process.exit(0);
 }
-const unknownArgs = args.filter((arg) => !['--built', '--source'].includes(arg));
-if (unknownArgs.length || Number(args.includes('--built')) + Number(args.includes('--source')) !== 1) {
+const epIndex = args.indexOf('--ep');
+const ep = epIndex >= 0 ? args[epIndex + 1]?.toUpperCase() : undefined;
+if (epIndex >= 0 && (!/^EP\d+$/.test(ep || '') || args.filter((arg) => arg === '--ep').length !== 1))
+  throw new Error('--ep 必須且只能指定一個 EP編號，例如 --ep EP71');
+const targetArgs = epIndex >= 0 ? args.filter((_, index) => index !== epIndex && index !== epIndex + 1) : args;
+const unknownArgs = targetArgs.filter((arg) => !['--built', '--source'].includes(arg));
+if (unknownArgs.length || targetArgs.filter((arg) => ['--built', '--source'].includes(arg)).length !== 1) {
   const detail = unknownArgs.length ? `未知參數：${unknownArgs.join(', ')}。` : '必須且只能指定一個檢查目標。';
   throw new Error(`${detail} 使用 --built 檢查 _site，或使用 --source 檢查專案來源。`);
 }
 const browserTarget = args.includes('--built') ? path.join(root, '_site') : root;
-if (args.includes('--built') && !fs.existsSync(browserTarget)) {
-  throw new Error('_site 不存在；請先執行 pnpm run build，再執行 pnpm run check:browser。');
-}
 const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
-const policy = read('config/quality-policy.json');
-const qualityExceptions = read('config/quality-exceptions.json');
-const manifest = read('assets/fonts/worksheet/compact/manifest.json');
-const items = read('catalog/worksheets.json');
-const report = { checks: [], failures: [] };
+let policy, qualityExceptions, manifest, items;
 const output = path.join(root, '.qa/reports');
-fs.mkdirSync(output, { recursive: true });
+const reportFile = path.join(output, ep ? `${ep}-quality-report.json` : 'quality-report.json');
 
 async function fontIssues(page, scope) {
   const exceptions = qualityExceptions.fontFallbackExceptions;
@@ -74,31 +74,53 @@ function checkPrint(metrics, name) {
     assert(metric.footerGap >= policy.print.footerGapPx, `${name} 第 ${metric.page} 頁壓到頁尾（間距 ${metric.footerGap.toFixed(1)} px）`);
   }
 }
-async function withinFontBudget(page, home) {
+async function withinFontBudget(page, home, scope = home ? 'home' : undefined) {
   const resources = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => r.name.endsWith('.woff2')).map((r) => ({ name: r.name, bytes: r.encodedBodySize })));
   assert(resources.length <= policy.budgets[home ? 'homeFontRequests' : 'worksheetFontRequests'], '字型請求數超標');
   assert(resources.reduce((sum, r) => sum + r.bytes, 0) <= policy.budgets[home ? 'homeFontBytes' : 'worksheetFontBytes'], '字型流量超標');
   assert(resources.every((r) => r.name.includes('/compact/')), '載入了原始大型字型');
+  if (scope) assert(resources.every((r) => new URL(r.name).pathname.includes(`/compact/${scope}/`)), '載入了其他頁面的精簡字型');
   return resources;
 }
 
-(async () => {
-  const { server, base } = await start(browserTarget);
+runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source', scope: ep || 'all' }, async (recordCheck) => {
+  if (!fs.existsSync(browserTarget)) throw new Error('_site 不存在；請先執行 pnpm run build，再執行 pnpm run check:browser。');
+  policy = read('config/quality-policy.json');
+  qualityExceptions = read('config/quality-exceptions.json');
+  manifest = read('assets/fonts/worksheet/compact/manifest.json');
+  items = read('catalog/worksheets.json');
+  if (ep && !items.some((item) => item.ep === ep && item.worksheetUrl)) throw new Error(`${ep}: 索引中沒有可檢查的學習單`);
+  let server, base;
   let browser;
-  try { browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) }); }
-  catch (error) { server.close(); throw error; }
   const errors = [];
-  const record = async (name, fn) => {
-    try { const detail = await fn(); report.checks.push({ name, detail }); console.log(`PASS ${name}`); }
-    catch (error) { report.failures.push({ name, message: error.message }); console.error(`FAIL ${name}: ${error.message}`); }
+  const record = async (name, fn, scopes = []) => {
+    const namedEps = name.match(/\bEP\d+\b/g) || [];
+    if (ep && !namedEps.includes(ep) && !scopes.includes(ep) && !scopes.includes('*')) return;
+    await recordCheck(name, fn);
   };
   try {
+    ({ server, base } = await start(browserTarget));
+    browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await record('題型、填寫欄與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
       try { await require('../../tests/browser/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
       finally { await fixture.close(); }
-    });
+    }, ['*']);
+    await record('AI 綁定缺欄、空白理由與無效 selector 負向測試', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/prompt-configuration.test.cjs').testPromptConfiguration(fixture, base); }
+      finally { await fixture.close(); }
+    }, ['*']);
+    await record('核准無影片例外的頁首、工具列、手機與列印', async () => {
+      const fixture = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+      try {
+        await require('../../tests/browser/no-video-exception.test.cjs').testNoVideoException(fixture, base);
+        await fixture.emulateMedia({ media: 'print' });
+        checkPrint(await printMetrics(fixture), '無影片例外');
+        assert.equal(await fixture.locator('.toolbar').isVisible(), false);
+      } finally { await fixture.close(); }
+    }, ['*']);
     await record('EP71 分段欄位與 AI 代入回歸', async () => {
       const fixture = await browser.newPage();
       try {
@@ -140,7 +162,7 @@ async function withinFontBudget(page, home) {
         await fixture.goto(`${base}/worksheets/EP107/`);
         assert.equal(await fixture.locator('label[for="choice-12"] .choice-title').count(), 0, '句尾冒號不應拆成兩層');
       } finally { await fixture.close(); }
-    });
+    }, ['EP90', 'EP107']);
     await record('選項括號舉例的共用換行灰字規則', async () => {
       const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
       try {
@@ -160,7 +182,7 @@ async function withinFontBudget(page, home) {
           '選項舉例應另起一行，並使用較小的灰字'
         );
       } finally { await fixture.close(); }
-    });
+    }, ['EP89']);
     await record('EP86 其他選項的勾選與填寫欄保留', async () => {
       const fixture = await browser.newPage({ viewport: { width: 390, height: 844 } });
       try {
@@ -273,50 +295,13 @@ async function withinFontBudget(page, home) {
       return resources;
     });
 
-    await record('150 筆分頁、跨頁搜尋、分類、排序與輸入法', async () => {
-      const synthetic = Array.from({ length: policy.capacityTestEntries }, (_, i) => {
-        const item = items[i % items.length];
-        return { ...item, ep: `EP${i + 1}`, title: `${item.title}（${i + 1}）`, summary: item.summary + i,
-          searchTerms: Object.fromEntries(Object.entries(item.searchTerms).map(([key, terms]) => [key, terms.map((term) => term + i)])) };
-      });
-      synthetic[0] = { ...synthetic[0], articleUrl: 'articles/example/', worksheetUrl: undefined };
-      synthetic[149].searchTerms = { ...synthetic[149].searchTerms, phrases: ['容量測試唯一詞'] };
-      const catalog = { ...read('data/catalog.json'), items: synthetic.map(({ searchTerms, ...item }) => item) };
-      const index = { ...read('data/search-index.json'), terms: Object.fromEntries(synthetic.map((item) => [item.ep, item.searchTerms])) };
-      assert(Buffer.byteLength(JSON.stringify(catalog)) <= policy.budgets.catalogBytes);
-      assert(Buffer.byteLength(JSON.stringify(index)) <= policy.budgets.searchIndexBytes);
-      await page.route('**/data/catalog.json', (route) => route.fulfill({ json: catalog }));
-      await page.route('**/data/search-index.json', (route) => route.fulfill({ json: index }));
-      await page.goto(base);
-      await page.waitForFunction(() => document.querySelectorAll('.result-row').length === 12);
-      assert.equal(await page.locator('.result-ep').first().innerText(), '150');
-      assert.equal(await page.locator('#page-select option').count(), Math.ceil(synthetic.length / policy.pageSize));
-      await page.locator('#next-page').click();
-      assert.equal(await page.locator('.result-ep').first().innerText(), '138');
-      await page.locator('#page-select').selectOption('13');
-      assert.equal(await page.locator('.result-row').count(), 6);
-      assert.equal(await page.locator('#next-page').isDisabled(), true);
-      await page.locator('#sort').selectOption('oldest');
-      assert.equal(await page.locator('.result-ep').first().innerText(), '1');
-      assert.equal(await page.locator('.result-row').first().locator('.result-title a').getAttribute('href'), 'articles/example/');
-      assert.equal(await page.locator('.result-row').first().getByText('學習單', { exact: true }).count(), 0);
-      await page.locator('#search-folder > summary').click();
-      await page.locator('#search').dispatchEvent('compositionstart');
-      await page.locator('#search').fill('容量測試唯一詞');
-      await page.waitForTimeout(policy.searchDebounceMs + 80);
-      assert.equal(await page.locator('.result-row').count(), 12, '組字中不應搜尋');
-      await page.locator('#search').dispatchEvent('compositionend');
-      await page.waitForFunction(() => document.querySelectorAll('.result-row').length === 1);
-      assert.equal(await page.locator('.result-ep').innerText(), '150');
-      await page.locator('#search').fill('zzzznone');
-      await page.locator('#reset-button').waitFor({ state: 'visible' });
-      await page.locator('#reset-button').click();
-      await page.locator('#categories .category-button').first().click();
-      assert.equal(await page.locator('#page-select').inputValue(), '1');
-      const shown = await page.locator('.result-ep').allTextContents();
-      assert(shown.every((ep) => synthetic.find((x) => x.ep === `EP${ep}`).category === catalog.categories[0]), `分類結果不一致：${shown.join(', ')}`);
-      await page.unroute('**/data/catalog.json');
-      await page.unroute('**/data/search-index.json');
+    await record(`${policy.capacityTestEntries} 筆分頁、跨頁搜尋、分類、排序與輸入法`, async () => {
+      const { testCatalogCapacity } = require('../../tests/browser/catalog-capacity.test.cjs');
+      const inputs = { items, policy, catalog: read('data/catalog.json'), index: read('data/search-index.json') };
+      const results = [await testCatalogCapacity(page, base, inputs)];
+      for (const [capacityTestEntries, pageSize] of [[25, 7], [21, 7], [3, 5]])
+        results.push(await testCatalogCapacity(page, base, { ...inputs, policy: { ...policy, capacityTestEntries, pageSize } }));
+      return results;
     });
 
     await record('搜尋下載失敗可重試，清空搜尋不被舊結果覆寫', async () => {
@@ -345,7 +330,7 @@ async function withinFontBudget(page, home) {
       await page.unroute('**/data/search-index.json');
     });
 
-    for (const item of items.filter((item) => item.worksheetUrl)) {
+    for (const item of items.filter((item) => item.worksheetUrl && (!ep || item.ep === ep))) {
       await record(`${item.ep} 缺字、字型預算、暫存與列印`, async () => {
         await page.setViewportSize({ width: 1280, height: 900 });
         await page.emulateMedia({ media: 'screen' });
@@ -364,16 +349,14 @@ async function withinFontBudget(page, home) {
           .map((copy) => copy.innerText.trim())
           .filter((text) => /^[A-ZＡ-Ｚ][.．、]\s*/.test(text)));
         assert.deepEqual(prefixedChoices, [], `${item.ep}: 選項文字不得使用 A／B／C 等人工標號`);
-        const promptConfiguration = page.locator('.prompt-quote[data-prompt-status]');
-        if (await promptConfiguration.count()) {
-          assert.equal(
-            await promptConfiguration.getAttribute('data-prompt-configured'),
-            'true',
-            `${item.ep}: AI 提示詞缺少完整的作答欄位對應；請更新 assets/worksheet.js 的 promptBindings`
-          );
-        }
+        const promptConfiguration = page.locator('.prompt-quote');
+        assert.equal(
+          await promptConfiguration.getAttribute('data-prompt-configured'),
+          'true',
+          `${item.ep}: AI 提示詞缺少完整的作答欄位對應；請更新 assets/worksheet.js 的 promptBindings`
+        );
         assert.deepEqual(await fontIssues(page, item.ep), []);
-        const fonts = await withinFontBudget(page, false);
+        const fonts = await withinFontBudget(page, false, item.ep);
         const field = page.locator('textarea:not([readonly]),input[type=text]:not([readonly])').first();
         assert.equal(await page.locator('#clear-draft').isDisabled(), true);
         await field.fill('保留我的原文：龘');
@@ -410,6 +393,10 @@ async function withinFontBudget(page, home) {
           await fallback.emulateMedia({ media: 'print' });
           const metrics = await printMetrics(fallback);
           checkPrint(metrics, `${item.ep} 系統字型`);
+          assert.equal(await fallback.locator('.toolbar').isVisible(), false);
+          const pdf = await fallback.pdf({ preferCSSPageSize: true, printBackground: true });
+          assert.equal((pdf.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length, metrics.length, `${item.ep}: 備援字型 PDF 實際頁數錯誤`);
+          fs.writeFileSync(path.join(output, item.ep + '-fallback.pdf'), pdf);
           return metrics;
         } finally { await fallback.close(); }
       });
@@ -429,11 +416,12 @@ async function withinFontBudget(page, home) {
     });
     await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
       const prompt = await browser.newPage();
-      try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base); }
+      try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base, ep); }
       finally { await prompt.close(); }
-    });
+    }, ['EP101', 'EP87', 'EP113', 'EP82']);
 
     await record('首次慢速載入自動套用字型並維持版面穩定', async () => {
+      const scope = ep || 'EP109';
       const slow = await browser.newPage();
       try {
         await slow.addInitScript(() => {
@@ -441,18 +429,18 @@ async function withinFontBudget(page, home) {
           new PerformanceObserver((list) => { for (const entry of list.getEntries()) if (!entry.hadRecentInput) window.shifts.push(entry.value); }).observe({ type: 'layout-shift', buffered: true });
         });
         await slow.route('**/*.woff2', async (route) => { await new Promise((resolve) => setTimeout(resolve, 1800)); await route.continue(); });
-        await slow.goto(base + '/worksheets/EP109/', { waitUntil: 'domcontentloaded' });
+        await slow.goto(`${base}/worksheets/${scope}/`, { waitUntil: 'domcontentloaded' });
         await slow.waitForTimeout(400);
         await slow.evaluate(() => document.fonts.ready);
-        assert(await slow.evaluate(() => document.fonts.check('800 32px "Glow Sans TC"', '面對失敗')));
+        assert(await slow.evaluate(() => document.fonts.check('800 32px "Glow Sans TC"', document.querySelector('h1').textContent)));
         const cls = await slow.evaluate(() => window.shifts.reduce((a, b) => a + b, 0));
         assert(cls <= policy.budgets.layoutShift, `字型 CLS ${cls} 超出預算`);
         return { cls };
       } finally { await slow.close(); }
-    });
+    }, ['*']);
 
     await record('首次載入超過等待期限仍自動顯示指定字型', async () => {
-      for (const url of ['/', '/worksheets/EP109/']) {
+      for (const url of ep ? [`/worksheets/${ep}/`] : ['/', '/worksheets/EP109/']) {
         const cold = await browser.newPage();
         try {
           await cold.route('**/*.woff2', async (route) => {
@@ -470,23 +458,23 @@ async function withinFontBudget(page, home) {
           assert(fonts.some((font) => font.isCustomFont && font.glyphCount > 0), `${url}: 首次載入未實際使用自訂字型`);
         } finally { await cold.close(); }
       }
-    });
+    }, ['*']);
 
     await record('檢查器確實能抓到缺字與列印溢出', async () => {
+      const scope = ep || 'EP109';
       await page.emulateMedia({ media: 'screen' });
-      await page.goto(base + '/worksheets/EP109/');
+      await page.goto(`${base}/worksheets/${scope}/`);
       await page.locator('h1').evaluate((el) => { el.textContent = '龘'; });
-      assert((await fontIssues(page, 'EP109')).some((issue) => issue.character === '龘'));
+      assert((await fontIssues(page, scope)).some((issue) => issue.character === '龘'));
       await page.emulateMedia({ media: 'print' });
       await page.locator('.page').first().evaluate((el) => { const block = document.createElement('div'); block.style.height = '2000px'; el.append(block); });
       const metrics = await printMetrics(page);
       assert.throws(() => checkPrint(metrics, 'self-test'), /溢出|頁尾/);
-    });
+    }, ['*']);
     assert.deepEqual(errors, [], 'JavaScript 執行錯誤');
   } finally {
-    await browser.close();
-    server.close();
-    fs.writeFileSync(path.join(output, 'quality-report.json'), JSON.stringify(report, null, 2) + '\n');
+    try { if (browser) await browser.close(); }
+    finally { if (server) await new Promise((resolve) => server.close(resolve)); }
   }
-  if (report.failures.length) process.exitCode = 1;
-})().catch((error) => { console.error(error); process.exitCode = 1; });
+}).then((report) => { if (report.status !== 'passed') process.exitCode = 1; })
+  .catch((error) => { console.error(error); process.exitCode = 1; });

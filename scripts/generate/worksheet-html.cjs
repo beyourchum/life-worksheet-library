@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { videoRequirement, youtubeId } = require('../check/rules/video-policy.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const readJson = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
@@ -7,15 +8,18 @@ const normalize = (text) => text.replace(/\r\n/g, '\n');
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
 })[character]);
+const normalizeBodyHtml = (html) => String(html).replace(/\bclass='([^']*)'/g, 'class="$1"');
+const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const applyFallbackGlyphs = (html, glyphs = []) => {
+  const characters = [...new Set(glyphs.map(String).filter(Boolean))];
+  if (!characters.length) return String(html);
+  const pattern = new RegExp(`(${characters.map(escapeRegExp).join('|')})`, 'g');
+  return String(html).split(/(<[^>]*>)/g).map((part, index) => (
+    index % 2 ? part : part.replace(pattern, '<span class="glyph-system-fallback">$1</span>')
+  )).join('');
+};
 
-function youtubeId(url) {
-  const parsed = new URL(url);
-  const id = parsed.hostname === 'youtu.be' ? parsed.pathname.slice(1) : parsed.searchParams.get('v');
-  if (!/^[\w-]{11}$/.test(id || '')) throw new Error(`無法取得 YouTube 影片 ID：${url}`);
-  return id;
-}
-
-function validateSource(source, catalogItem, variants) {
+function validateSource(source, catalogItem, variants, videoExceptions = []) {
   const errors = [];
   if (source.version !== 1) errors.push('version 必須是 1');
   if (source.ep !== catalogItem.ep) errors.push('ep 與 catalog/worksheets.json 不一致');
@@ -23,6 +27,8 @@ function validateSource(source, catalogItem, variants) {
   if (/<(?!\/?em\b)[^>]+>/i.test(source.hero?.titleHtml || '') || /<em\b[^>]*\s(?:style|on\w+)\s*=/i.test(source.hero?.titleHtml || ''))
     errors.push('hero.titleHtml 只允許使用無屬性的 <em> 強調標記');
   if (!Array.isArray(source.pages) || !source.pages.length) errors.push('pages 至少需要一頁');
+  if (source.fallbackGlyphs !== undefined && (!Array.isArray(source.fallbackGlyphs) || source.fallbackGlyphs.some((glyph) => String(glyph).length !== 1)))
+    errors.push('fallbackGlyphs 必須是單一字元陣列');
   for (const [index, page] of (source.pages || []).entries()) {
     if (!String(page.bodyHtml || '').trim()) errors.push(`pages[${index}].bodyHtml 不可空白`);
     if (!String(page.footer || '').trim()) errors.push(`pages[${index}].footer 不可空白`);
@@ -30,13 +36,17 @@ function validateSource(source, catalogItem, variants) {
       errors.push(`pages[${index}].bodyHtml 不得包含 style、script 或行內樣式；請使用共用元件或版式變體`);
   }
   for (const variant of source.layoutVariants || []) if (!variants.includes(variant)) errors.push(`未登錄的版式變體：${variant}`);
-  if (!catalogItem.videoUrl) errors.push('catalog 缺少 videoUrl');
-  if (!String(source.videoTitle || '').trim()) errors.push('videoTitle 不可空白');
+  const videoError = videoRequirement(catalogItem, videoExceptions);
+  if (videoError) errors.push(videoError);
+  if (catalogItem.videoUrl) {
+    if (!youtubeId(catalogItem.videoUrl)) errors.push('videoUrl 必須是有效的 YouTube HTTPS 網址');
+    if (!String(source.videoTitle || '').trim()) errors.push('videoTitle 不可空白');
+  }
   if (errors.length) throw new Error(`${source.ep || '未知集數'} 網頁來源格式錯誤：\n- ${errors.join('\n- ')}`);
 }
 
-function renderWorksheet(source, catalogItem, variants) {
-  validateSource(source, catalogItem, variants);
+function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
+  validateSource(source, catalogItem, variants, videoExceptions);
   const total = source.pages.length;
   const variantAttribute = source.layoutVariants?.length
     ? ` data-layout-variant="${source.layoutVariants.map(escapeHtml).join(' ')}"`
@@ -45,8 +55,9 @@ function renderWorksheet(source, catalogItem, variants) {
   const componentJs = source.useComponents ? '\n<script src="../../assets/worksheet-components.js" defer></script>' : '';
   const pages = source.pages.map((page, index) => {
     const number = String(index + 1).padStart(2, '0');
-    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${escapeHtml(source.hero.kicker)}</p><h1>${source.hero.titleHtml}</h1><div class="hero-copy"><p class="hero-question">${escapeHtml(source.hero.question)}</p></div></div><div class="video-embed"><iframe src="https://www.youtube.com/embed/${youtubeId(catalogItem.videoUrl)}" title="${escapeHtml(source.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : '';
-    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${page.bodyHtml}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
+    const video = catalogItem.videoUrl ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${youtubeId(catalogItem.videoUrl)}" title="${escapeHtml(source.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : '';
+    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${escapeHtml(source.hero.kicker)}</p><h1>${source.hero.titleHtml}</h1><div class="hero-copy"><p class="hero-question">${applyFallbackGlyphs(escapeHtml(source.hero.question), source.fallbackGlyphs)}</p></div></div>${video}` : '';
+    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(page.bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
   }).join('\n');
   return normalize(`<!doctype html>
 <html lang="zh-Hant">
@@ -84,6 +95,7 @@ function sourceFiles(ep) {
 function generate({ ep, check = false } = {}) {
   const catalog = readJson('catalog/worksheets.json');
   const variants = readJson('config/worksheet-layouts.json').variants;
+  const { videoExceptions } = readJson('config/quality-exceptions.json');
   const files = sourceFiles(ep);
   if (ep && !files.length) throw new Error(`${ep}: 缺少 worksheet-sources/${ep}.json`);
   for (const file of files) {
@@ -91,7 +103,7 @@ function generate({ ep, check = false } = {}) {
     const item = catalog.find((entry) => entry.ep === source.ep && entry.worksheetUrl);
     if (!item) throw new Error(`${source.ep}: catalog/worksheets.json 沒有學習單入口`);
     const output = `worksheets/${source.ep}/index.html`;
-    const rendered = renderWorksheet(source, item, variants);
+    const rendered = renderWorksheet(source, item, variants, videoExceptions);
     if (check) {
       if (!fs.existsSync(path.join(root, output)) || normalize(fs.readFileSync(path.join(root, output), 'utf8')) !== rendered)
         throw new Error(`${source.ep}: 產生後 HTML 已過期，請執行 pnpm run html:worksheet -- ${source.ep}`);

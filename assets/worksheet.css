@@ -121,6 +121,8 @@ button:hover { background: #28755b66; }
 .hero-kicker { margin: 0 0 .5rem; color: var(--muted); font-size: .78rem; letter-spacing: .08em; }
 .hero-copy { padding: .85rem 0 0; border-top: .35rem solid var(--green); }
 .hero-question { margin: 0; font-size: clamp(1.05rem, 2.4vw, 1.38rem); }
+.glyph-fallback { font-family: var(--font-subheading); }
+.glyph-system-fallback { font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif !important; }
 .worksheet-hero h1 {
   max-width: 52rem;
   margin: 0;
@@ -133,6 +135,9 @@ button:hover { background: #28755b66; }
 }
 .worksheet-hero h1 em { color: var(--green); font-style: normal; }
 .worksheet[data-worksheet-id="EP102"] .worksheet-hero h1 { font-size: clamp(2.1rem, 7vw, 3.8rem); }
+.worksheet[data-worksheet-id="EP54"] .worksheet-hero h1 { font-family: var(--font-subheading); }
+.worksheet[data-layout-variant~="hero-subheading"] .worksheet-hero h1 { font-family: var(--font-subheading); }
+.worksheet[data-layout-variant~="stable-hero-title"] .worksheet-hero h1 { min-height: 2em; font-size: clamp(2.1rem, 7vw, 3.5rem); }
 .worksheet[data-worksheet-id="EP74"] .worksheet-hero { padding-top: clamp(1.5rem, 3vw, 2.5rem); }
 .video-embed {
   width: 100%;
@@ -147,12 +152,15 @@ button:hover { background: #28755b66; }
   border: 0;
 }
 .video-embed + p,
-.video-embed + p + p {
+.video-embed + p + p,
+.worksheet-hero + p,
+.worksheet-hero + p + p {
   margin: 0;
   padding: .8rem 1rem;
   color: var(--muted);
 }
-.video-embed + p { margin-top: 1.4rem; }
+.video-embed + p,
+.worksheet-hero + p { margin-top: 1.4rem; }
 
 .section-heading {
   display: flex;
@@ -267,6 +275,14 @@ p { margin: .6rem 0; }
 }
 .worksheet[data-worksheet-id="EP85"] { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
 .worksheet[data-worksheet-id="EP90"] .choice-copy { font-family: "Microsoft JhengHei", "PingFang TC", sans-serif; }
+.worksheet[data-worksheet-id="EP55"] > article:nth-of-type(1) > p,
+.worksheet[data-worksheet-id="EP55"] > article:nth-of-type(2) > p {
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+.worksheet[data-worksheet-id="EP55"] > article:nth-of-type(2) #ep55-w1-fear-unknown + span,
+.worksheet[data-worksheet-id="EP55"] > article:nth-of-type(3) > p {
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
 .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) .section-heading:last-of-type { break-before: page; page-break-before: always; }
 @media print {
   .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) { font-size: .86em; }
@@ -479,7 +495,9 @@ p { margin: .6rem 0; }
     line-height: 1.28;
   }
   .video-embed + p,
-  .video-embed + p + p {
+  .video-embed + p + p,
+  .worksheet-hero + p,
+  .worksheet-hero + p + p {
     margin: 0;
     padding: 0;
   }
@@ -648,6 +666,25 @@ p { margin: .6rem 0; }
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .section-heading { margin-top: 1mm; }
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .closing { margin-top: 2mm; }
   .worksheet[data-worksheet-id="EP62"] { font-size: .98em; }
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) {
+    font-size: .88em;
+    line-height: 1.22;
+  }
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .choices {
+    gap: .8mm;
+    margin: 1mm 0 1.3mm;
+  }
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .choice {
+    min-height: 4.8mm;
+    padding: .5mm 1.2mm;
+  }
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .closing {
+    margin-top: 2mm;
+    padding: 1mm 0;
+  }
+  .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4) .prompt-quote {
+    margin-top: 1mm;
+  }
 }
 
 /* EP117: keep each sentence stem beside its writable blank. */

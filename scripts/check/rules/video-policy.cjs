@@ -11,6 +11,7 @@ function videoRequirement(item, exceptions = []) {
 function youtubeId(videoUrl) {
   try {
     const url = new URL(videoUrl);
+    if (url.protocol !== 'https:' || !['youtu.be', 'www.youtube.com', 'youtube.com'].includes(url.hostname)) return null;
     const id = url.hostname === 'youtu.be' ? url.pathname.slice(1) : url.searchParams.get('v');
     return /^[\w-]{11}$/.test(id || '') ? id : null;
   } catch { return null; }
@@ -21,7 +22,8 @@ function attribute(markup, name) {
 }
 
 function videoEmbedIssues(html, item) {
-  if (!item?.worksheetUrl || !item.videoUrl) return [];
+  if (!item?.worksheetUrl) return [];
+  if (!item.videoUrl) return /\bvideo-embed\b/.test(html) ? [`${item.ep}: 無影片頁面不得保留影片播放器`] : [];
   const issues = [];
   const embeds = [...html.matchAll(/<div\b[^>]*class=["'][^"']*\bvideo-embed\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi)];
   if (embeds.length !== 1) return [`${item.ep}: 頁面須有且只有一個 video-embed 影片播放器`];
