@@ -28,7 +28,7 @@
   const storageKey = `worksheet:${worksheet.dataset.worksheetId}:draft-v1`;
   worksheet.querySelectorAll(".choice > span").forEach((copy) => {
     if (copy.querySelector("input")) return;
-    if (copy.querySelector(".glyph-system-fallback")) return;
+    if (copy.querySelector(".glyph-system-fallback, .glyph-fallback")) return;
     const original = copy.textContent.trim();
     const separator = original.indexOf("：");
     if (separator <= 0 || separator === original.length - 1) return;
@@ -96,8 +96,13 @@
   const promptBindings = {
     EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
     EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
+    EP39: [["#ep39-target"], ["#ep39-situation"], ["#ep39-my-action"], ["#ep39-my-intention"], ["[name=ep39-possible-need]"], ["#ep39-action-plan"], ["#ep39-check-in"]],
+    EP38: [["#ep38-habit"], ["#ep38-outcome"], ["[name=ep38-barrier]"], ["#ep38-cue-when"], ["#ep38-cue-where"], ["#ep38-cue-action"], ["#ep38-temptation"], ["#ep38-attraction-plan"], ["#ep38-easy-version"], ["#ep38-environment-change"], ["#ep38-reward"], ["#ep38-recovery"]],
+    EP37: [["#ep37-current-stressor"], ["[name=ep37-state]"], ["#ep37-self-care-action"], ["#ep37-micro-area"], ["#ep37-yesterday-progress"], ["#ep37-small-good"], ["#ep37-support-person"], ["#ep37-action"], ["#ep37-action-when"], ["#ep37-backup"]],
+    EP35: [["#ep35-task"], ["[name=ep35-trigger]", "[name=ep35-state]"], ["#ep35-task-value"], ["#ep35-small-step-1", "#ep35-small-step-2", "#ep35-small-step-3"], ["#ep35-ritual-action"], ["#ep35-stuck-self-talk"], ["#ep35-implementation-plan"], ["#ep35-break-rule", "#ep35-restart-plan", "#ep35-restart-if-fail"]],
     EP43: [["[name=ep43-w1-situation]", "#ep43-w1-situation-other-text", "#ep43-w1-context"], ["[name=ep43-w2-pull]", "#ep43-w2-pull-other-text"], ["#ep43-w2-need"], ["[name=ep43-w3-guardrail]", "#ep43-w3-guardrail-other-text", "#ep43-w3-guardrail-note"], ["#ep43-w3-obstacle"], ["[name=ep43-w4-experiment]", "#ep43-w4-experiment-other-text", "#ep43-w4-time-place", "#ep43-w4-action", "#ep43-w4-fallback"]],
     EP41: [["#ep41-w1-task"], ["#ep41-w1-context"], ["[name=ep41-w1-blocker]", "#ep41-w1-blocker-other-text"], ["#ep41-w2-reason"], ["#ep41-w5-action"], ["#ep41-w5-context"]],
+    EP36: [["#ep36-w5-direction"], ["#ep36-w5-resources"], ["#ep36-w3-short"], ["#ep36-w5-action"], ["#ep36-w4-step1-support"], ["#ep36-w5-pressure"]],
     EP44: [["#ep44-w2-context"], ["#ep44-w2-option-one"], ["#ep44-w2-option-two"], ["[name=ep44-w3-method]", "#ep44-w3-method-other-text"], ["#ep44-w3-when"]],
     EP45: [["[name=ep45-w2-target]"], ["#ep45-w2-reason"], ["#ep45-w2-when"], ["#ep45-w2-action"], ["#ep45-w2-measure"]],
     EP46: [["[name=ep46-w1-type]"], ["#ep46-w3-context"], ["#ep46-w3-ritual"], ["#ep46-w3-task"]],
@@ -283,6 +288,12 @@
     ]
   };
   const scoreTotal = worksheet.querySelector("[data-score-total]");
+  const scoreSumGroups = {
+    EP44: [
+      { total: "#ep44-w2-one-total", sources: ["#ep44-w2-one-score-1", "#ep44-w2-one-score-2", "#ep44-w2-one-score-3"] },
+      { total: "#ep44-w2-two-total", sources: ["#ep44-w2-two-score-1", "#ep44-w2-two-score-2", "#ep44-w2-two-score-3"] }
+    ]
+  }[worksheet.dataset.worksheetId] || [];
   const saveStatus = document.querySelector("[data-save-status]");
   const clearButton = document.querySelector('[data-clear]');
   const updateClearButton = () => {
@@ -445,6 +456,30 @@
       .reduce((sum, control) => sum + Number(control.dataset.score), 0);
     scoreTotal.value = total ? String(total) : "";
   };
+  const initScoreSums = () => {
+    scoreSumGroups.forEach(({ total: totalSelector, sources }) => {
+      const total = worksheet.querySelector(totalSelector);
+      if (!total) return;
+      total.readOnly = true;
+      total.setAttribute("aria-readonly", "true");
+      total.placeholder = "完成三格後自動加總";
+      total.dataset.scoreSum = sources.join(",");
+    });
+  };
+  const updateScoreSums = () => {
+    worksheet.querySelectorAll("[data-score-sum]").forEach((total) => {
+      const sources = (total.dataset.scoreSum || "").split(",").filter(Boolean);
+      const values = sources.map((selector) => {
+        const control = worksheet.querySelector(selector);
+        const value = answerFor(control);
+        return /^\d$/.test(value) && Number(value) >= 1 && Number(value) <= 5 ? Number(value) : null;
+      });
+      total.value = values.length > 0 && values.every((value) => value !== null)
+        ? String(values.reduce((sum, value) => sum + value, 0))
+        : "";
+    });
+  };
+  initScoreSums();
   const save = () => {
     updateClearButton();
     const state = Object.fromEntries(controls.map((control) => [
@@ -484,8 +519,8 @@
     updateScore();
   };
   controls.forEach((control) => {
-    control.addEventListener("change", () => { updateScore(); save(); updatePrompt(); updateAutoSummaries(); });
-    control.addEventListener("input", () => { save(); updatePrompt(); updateAutoSummaries(); });
+    control.addEventListener("change", () => { updateScore(); updateScoreSums(); save(); updatePrompt(); updateAutoSummaries(); });
+    control.addEventListener("input", () => { updateScoreSums(); save(); updatePrompt(); updateAutoSummaries(); });
   });
   document.querySelector("[data-print]").addEventListener("click", () => window.print());
   document.querySelectorAll("[data-prompt-copy]").forEach((button) => {
@@ -494,6 +529,7 @@
   document.getElementById("clear-draft").addEventListener("click", () => {
     if (!window.confirm("確定要清除這個分頁中的所有作答嗎？清除後無法復原。")) return;
     clearDraft();
+    updateScoreSums();
     updateClearButton();
     updatePrompt();
     updateAutoSummaries();
@@ -514,6 +550,7 @@
   restore();
   updateClearButton();
   updateScore();
+  updateScoreSums();
   updatePrompt();
   updateAutoSummaries();
 })();

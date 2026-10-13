@@ -449,6 +449,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         await require('../../tests/browser/ep95-calculator.test.cjs').testEp95Calculator(calculator);
       } finally { await calculator.close(); }
     });
+    await record('EP44 評分自動加總、輸入驗證與舊作答保存', async () => {
+      const calculator = await browser.newPage();
+      try { await require('../../tests/browser/ep44-score-sums.test.cjs').testEp44ScoreSums(calculator, base); }
+      finally { await calculator.close(); }
+    }, ['EP44']);
     await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
       const prompt = await browser.newPage();
       try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base, ep); }
