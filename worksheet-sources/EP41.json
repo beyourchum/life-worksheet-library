@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "ep": "EP41",
+  "videoTitle": "別把事情留給明天│意志力，才是決勝的關鍵│碩說說什麼#41│20250226",
+  "hero": {
+    "kicker": "把「明天再做」改成今天做得到的一小步",
+    "titleHtml": "想做的事一直拖延，怎麼把意志力用在今天？",
+    "question": "當我總想把事情留給明天時，怎麼看見眼前的誘惑、連回未來的目標，並選一個今天做得到的小步驟？"
+  },
+  "layoutVariants": [
+    "hero-subheading"
+  ],
+  "useComponents": true,
+  "fallbackGlyphs": [
+    "憂",
+    "鬱",
+    "誘",
+    "慮",
+    "寬",
+    "恕",
+    "暫",
+    "擾",
+    "觸",
+    "發",
+    "礙",
+    "顧",
+    "躁",
+    "惑",
+    "截",
+    "匆",
+    "場",
+    "景",
+    "綱",
+    "寄",
+    "轉",
+    "憊",
+    "懲",
+    "愧",
+    "犧",
+    "牲",
+    "著",
+    "進"
+  ],
+  "pages": [
+    {
+      "footer": "先看見自己把哪件事留給明天",
+      "bodyHtml": "<p><strong>學習目標：</strong>辨認自己把事情留給明天時的卡關方式，分開看見「我要去做」「我不去做」與「我真正想做」三種力量；從未來自我連結或情緒調適的方法中選一種，規劃一個今天能開始、之後能調整的小行動。</p><p><strong>使用說明：</strong>這份學習單可以自己完成，也可以只分享你願意分享的部分。請從最近一次拖延讀書、報告、整理、運動或其他任務的經驗出發；如果不想使用自己的經驗，可以改用「某位大學生接下來要完成一份報告」的假設情境。這裡的意志力方法是觀察與練習工具，不是人格評分、醫療診斷或成功保證；每個人的時間、身體狀況與壓力不同，請選擇安全且符合目前條件的做法。每題先留下當下看得見的答案，再把它縮小成一個今天能做的行動。</p><div class='section-heading'><span class='section-number'>01</span><h2>先看見：我把哪件事留給明天？</h2></div><div class='question-heading'><h3>我最近一直延後的是哪一件事？</h3></div><div class='answer-field'><label for='ep41-w1-task'>我一直延後的是：</label><textarea id='ep41-w1-task' rows='2'></textarea></div><p>請寫一件具體的事。如果使用假設情境，可以寫「完成一份下週要交的報告」。</p><p class='example-note'>例如：把下週要交的統計報告整理成第一版。</p><div class='question-heading'><h3>我最常在哪個時刻卡住？</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep41-w1-blocker-reward' name='ep41-w1-blocker' type='radio' value='一開始就被手機、遊戲、影片或其他即時獎勵吸走'><span>一開始就被手機、遊戲、影片或其他即時獎勵吸走</span></label><label class='choice'><input id='ep41-w1-blocker-size' name='ep41-w1-blocker' type='radio' value='任務太大或太模糊，不知道第一步要做什麼'><span>任務太大或太模糊，不知道第一步要做什麼</span></label><label class='choice'><input id='ep41-w1-blocker-mood' name='ep41-w1-blocker' type='radio' value='當下很累、焦慮、煩躁或心情低落，只想先逃開'><span>當下很累、焦慮、煩躁或心情低落，只想先逃開</span></label><label class='choice'><input id='ep41-w1-blocker-future' name='ep41-w1-blocker' type='radio' value='覺得未來的我一定會有更多時間或更強的意志力'><span>覺得未來的我一定會有更多時間或更強的意志力</span></label><label class='choice'><input id='ep41-w1-blocker-interrupt' name='ep41-w1-blocker' type='radio' value='我知道要做什麼，但遇到其他臨時事情就中斷'><span>我知道要做什麼，但遇到其他臨時事情就中斷</span></label><label class='choice other-choice'><span class='choice-toggle'><input id='ep41-w1-blocker-other' name='ep41-w1-blocker' type='radio' value='其他'><span>其他：</span></span><input class='other-input' id='ep41-w1-blocker-other-text' type='text' aria-label='其他卡關方式'></label></div><div class='answer-field'><label for='ep41-w1-context'>我通常是在什麼時間、地點或情況下開始延後？</label><textarea id='ep41-w1-context' rows='2'></textarea></div><p class='example-note'>例如：晚上回到宿舍、打開電腦準備寫報告時，我會先滑短影片。</p>"
+    },
+    {
+      "footer": "拆開看現在需要哪一種力量",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>02</span><h2>拆開看：我現在需要哪一種力量？</h2></div><p>影片把意志力分成三種可以配合使用的力量。請針對上一題那件事各寫一句；答案不必漂亮，重點是讓自己看見現在的選擇與想要的方向。</p><div class='answer-field'><label for='ep41-w2-go'>「我要去做」：我願意先採取哪個行動？</label><textarea id='ep41-w2-go' rows='2'></textarea></div><p>把任務縮小成一個可以在十分鐘內開始的動詞，不要只寫「完成報告」或「變自律」。</p><p class='example-note'>例如：打開報告檔案，先列出三個小標題。</p><div class='answer-field'><label for='ep41-w2-stop'>「我不去做」：我現在想先暫停哪個誘惑或反應？</label><p>我想先暫停：</p><textarea id='ep41-w2-stop' rows='2'></textarea></div><p>這不是要求自己永遠不能休息，而是找出開始前可以暫停一小段時間的事。</p><p class='example-note'>例如：開始的前十分鐘先不開短影片，也不回非必要訊息。</p><div class='answer-field'><label for='ep41-w2-reason'>「我真正想做」：這件事對我有什麼重要性？</label><textarea id='ep41-w2-reason' rows='2'></textarea></div><p>請寫一個和你在乎的學習、生活、關係或未來方向有關的理由，不必使用成績或他人期待。</p><p class='example-note'>例如：我想在報告截止前保留修改時間，不想最後一晚只能匆忙交出去。</p>"
+    },
+    {
+      "footer": "選一種方法讓現在的自己看見後果",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>03</span><h2>連回未來：選一種讓現在的自己看見後果的方法</h2></div><p>請選一種你願意針對上一題的任務試做的方法。三種方法都沒有唯一正解；如果現在不想想像未來，也可以選「先不做想像，直接縮小行動」。</p><div class='question-heading'><h3>我想先試哪一種？</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep41-w3-method-memory' name='ep41-w3-method' type='radio' value='創造未來的記憶'><span><strong>創造未來的記憶：</strong>想像今天完成一小步後，今晚或明天的自己會看見什麼、感覺如何</span></label><label class='choice'><input id='ep41-w3-method-letter' name='ep41-w3-method' type='radio' value='寫給未來的自己'><span><strong>寫給未來的自己：</strong>留一段短訊息，告訴未來的自己現在正在做什麼，以及希望他怎麼回頭看這個選擇</span></label><label class='choice'><input id='ep41-w3-method-image' name='ep41-w3-method' type='radio' value='想像未來的自己'><span><strong>想像未來的自己：</strong>想像一個因為持續小步驟而更接近目標的自己，或一個一直延後後需要承受更多壓力的自己</span></label><label class='choice'><input id='ep41-w3-method-direct' name='ep41-w3-method' type='radio' value='先不做想像'><span><strong>先不做想像：</strong>我想先把任務縮小，完成一次後再觀察</span></label></div><div class='section-heading'><span class='section-number'>04</span><h2>如果我選「創造未來的記憶」</h2></div><p>想像完成一小步的場景，分開寫出時間／地點、已完成的事情，以及當下的感受。</p><div class='answer-field'><label for='ep41-w3-memory-when'>我想像自己在什麼時候、哪裡？</label><textarea id='ep41-w3-memory-when' rows='2'></textarea></div><p class='example-note'>例如：今晚九點，在宿舍書桌前。</p><div class='answer-field'><label for='ep41-w3-memory-done'>我想像自己已經完成了哪一小步？</label><textarea id='ep41-w3-memory-done' rows='2'></textarea></div><p class='example-note'>例如：已經把報告的大綱和兩個資料來源整理好。</p><div class='answer-field'><label for='ep41-w3-memory-feeling'>那時候的我可能有什麼感受？</label><textarea id='ep41-w3-memory-feeling' rows='2'></textarea></div><p class='example-note'>例如：比較安心，知道明天可以直接補內容。</p>"
+    },
+    {
+      "footer": "把未來的方法變成今天能開始的選擇",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>05</span><h2>如果我選「寫給未來的自己」</h2></div><p>請寫三句短訊息，不需要真的寄出。</p><div class='answer-field'><label for='ep41-w3-letter-now'>現在的我正在：</label><textarea id='ep41-w3-letter-now' rows='2'></textarea></div><p class='example-note'>例如：先把報告拆成一個小標題，準備做十分鐘。</p><div class='answer-field'><label for='ep41-w3-letter-hope'>我這樣做，是希望未來的我：</label><textarea id='ep41-w3-letter-hope' rows='2'></textarea></div><p class='example-note'>例如：不用在截止前一晚從零開始。</p><div class='answer-field'><label for='ep41-w3-letter-remember'>我希望未來的我記得：</label><textarea id='ep41-w3-letter-remember' rows='2'></textarea></div><p class='example-note'>例如：我不需要一次做到完美，但可以先替自己留下一個開始。</p><div class='section-heading'><span class='section-number'>06</span><h2>如果我選「想像未來的自己」</h2></div><p>請各寫一句，不需要預測一定會發生什麼。</p><div class='answer-field'><label for='ep41-w3-image-gain'>如果我今天完成一小步，未來的我可能多得到：</label><textarea id='ep41-w3-image-gain' rows='2'></textarea></div><p class='example-note'>例如：一段可以修改和求助的時間。</p><div class='answer-field'><label for='ep41-w3-image-cost'>如果我一直延後，未來的我可能需要面對：</label><textarea id='ep41-w3-image-cost' rows='2'></textarea></div><p class='example-note'>例如：更大的時間壓力，或只能交出沒有檢查的版本。</p><div class='section-heading'><span class='section-number'>07</span><h2>如果我選「先不做想像」</h2></div><p>請把任務縮小到一個可以立刻開始的動作。</p><div class='answer-field'><label for='ep41-w3-direct-action'>我現在先做：</label><textarea id='ep41-w3-direct-action' rows='2'></textarea></div><p class='example-note'>例如：只打開檔案，寫下報告的第一個小標題。</p>"
+    },
+    {
+      "footer": "照顧當下狀態，再選擇能開始的大小",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>08</span><h2>先照顧狀態：我需要補充能量，還是需要重新開始？</h2></div><p>影片提醒，心情不好時，人容易尋找能立刻帶來快樂的事情，也可能因為一次失敗就出現「反正都失敗了」的放棄反應。請先判斷自己現在的狀態，再選一個不傷害自己、負擔不過大的調整方式；不需要逼自己在疲憊或不舒服時硬撐。</p><div class='question-heading'><h3>我現在最需要的是：</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep41-w4-state-lower' name='ep41-w4-state' type='radio' value='先讓身體或情緒降一點強度，再開始'><span>先讓身體或情緒降一點強度，再開始</span></label><label class='choice'><input id='ep41-w4-state-kind' name='ep41-w4-state' type='radio' value='用一句比較寬容的話，停止「我怎麼又失敗」的自我責備'><span>用一句比較寬容的話，停止「我怎麼又失敗」的自我責備</span></label><label class='choice'><input id='ep41-w4-state-small' name='ep41-w4-state' type='radio' value='把目標縮小到比原本更容易開始的一步'><span>把目標縮小到比原本更容易開始的一步</span></label><label class='choice'><input id='ep41-w4-state-rest' name='ep41-w4-state' type='radio' value='先休息，安排一個明確的重新開始時間'><span>先休息，安排一個明確的重新開始時間</span></label><label class='choice'><input id='ep41-w4-state-support' name='ep41-w4-state' type='radio' value='我目前狀態不適合做這件事，先找可信任的人或必要的支持'><span>我目前狀態不適合做這件事，先找可信任的人或必要的支持</span></label></div><div class='question-heading'><h3>我願意採取哪一個調整？</h3><span class='answer-mode'>最多選 2 項</span></div><div class='choices choices-stacked' data-exclusive-choice-group='ep41-w4-adjust'><label class='choice'><input id='ep41-w4-adjust-move' name='ep41-w4-adjust' type='checkbox' value='做五分鐘左右的散步、伸展或其他適合自己身體狀況的輕量活動' data-limited-choice='ep41-w4-adjust'><span>做五分鐘左右的散步、伸展或其他適合自己身體狀況的輕量活動</span></label><label class='choice'><input id='ep41-w4-adjust-breathe' name='ep41-w4-adjust' type='checkbox' value='做幾次慢而自然的呼吸，注意自己目前的感受，不要求立刻放鬆' data-limited-choice='ep41-w4-adjust'><span>做幾次慢而自然的呼吸，注意自己目前的感受，不要求立刻放鬆</span></label><label class='choice'><input id='ep41-w4-adjust-kind' name='ep41-w4-adjust' type='checkbox' value='對自己說一句不替失敗找藉口、也不羞辱自己的話' data-limited-choice='ep41-w4-adjust'><span>對自己說一句不替失敗找藉口、也不羞辱自己的話</span></label><label class='choice'><input id='ep41-w4-adjust-small' name='ep41-w4-adjust' type='checkbox' value='把第一步改成只做五到十分鐘，時間到再決定是否繼續' data-limited-choice='ep41-w4-adjust'><span>把第一步改成只做五到十分鐘，時間到再決定是否繼續</span></label><label class='choice'><input id='ep41-w4-adjust-rest' name='ep41-w4-adjust' type='checkbox' value='先休息，並寫下明確的時間或觸發點，提醒自己回來' data-limited-choice='ep41-w4-adjust'><span>先休息，並寫下明確的時間或觸發點，提醒自己回來</span></label><label class='choice other-choice'><span class='choice-toggle'><input id='ep41-w4-adjust-other' name='ep41-w4-adjust' type='checkbox' value='其他' data-limited-choice='ep41-w4-adjust'><span>其他：</span></span><input class='other-input' id='ep41-w4-adjust-other-text' type='text' aria-label='其他狀態調整方式'></label></div><p class='choice-limit-status' data-choice-limit-group='ep41-w4-adjust' data-choice-limit='2' hidden aria-hidden='true'><span data-choice-count></span><span data-choice-limit-message hidden></span></p><div class='answer-field'><label for='ep41-w4-adjustment'>我會使用的調整方式是：</label><textarea id='ep41-w4-adjustment' rows='3'></textarea></div><p class='example-note'>例如：先到戶外走五分鐘，回來只整理報告檔案十分鐘；如果仍然很累，就先休息並設定明晚七點重來。</p>"
+    },
+    {
+      "footer": "排出今天做得到的版本，再保留調整空間",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>09</span><h2>排一個今天做得到的版本</h2></div><p>請把前面的觀察整理成一個不需要等待「更有意志力」才做得到的版本。行動可以很小，但要能看見是否開始過。</p><div class='answer-field'><label for='ep41-w5-action'>我今天的第一個小行動是：</label><textarea id='ep41-w5-action' rows='2'></textarea></div><p>請用明確動詞開頭，寫到可以直接執行的程度。</p><p class='example-note'>例如：打開課本，讀完「研究方法」第一個小標題並記下一句重點。</p><div class='answer-field'><label for='ep41-w5-context'>我會在什麼時候、哪裡開始？</label><textarea id='ep41-w5-context' rows='2'></textarea></div><p>請接到一個具體時間、地點或生活觸發點，不要只寫「有空時」。</p><p class='example-note'>例如：明天晚餐後回到宿舍，坐到書桌前就開始。</p><div class='answer-field'><label for='ep41-w5-boundary'>開始前，我要先暫停哪個誘惑或準備什麼？</label><textarea id='ep41-w5-boundary' rows='2'></textarea></div><p class='example-note'>例如：手機先放到伸手拿不到的地方，桌上只留課本、筆和水。</p><div class='answer-field'><label for='ep41-w5-measure'>我用什麼方式知道自己完成了？</label><textarea id='ep41-w5-measure' rows='2'></textarea></div><p>請寫一個可觀察的紀錄，不必把成果設定得很大。</p><p class='example-note'>例如：在行事曆記下一個勾，並保留第一個小標題和一句重點。</p>"
+    },
+    {
+      "footer": "試過之後調整，不把一次失敗當成結論",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>10</span><h2>如果第一次沒有做到，我怎麼重新開始？</h2></div><p>沒有做到不等於意志力不足，也不必用更大的目標懲罰自己。請找出下一次要調整的地方。</p><div class='question-heading'><h3>我最可能需要調整的是：</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input id='ep41-w6-adjust-size' name='ep41-w6-adjust' type='radio' value='行動仍然太大，我要再切成更小的一步'><span>行動仍然太大，我要再切成更小的一步</span></label><label class='choice'><input id='ep41-w6-adjust-context' name='ep41-w6-adjust' type='radio' value='時間或地點不適合，我要換一個比較容易開始的情境'><span>時間或地點不適合，我要換一個比較容易開始的情境</span></label><label class='choice'><input id='ep41-w6-adjust-distraction' name='ep41-w6-adjust' type='radio' value='誘惑太近，我要先移開手機、關閉通知或準備替代休息'><span>誘惑太近，我要先移開手機、關閉通知或準備替代休息</span></label><label class='choice'><input id='ep41-w6-adjust-support' name='ep41-w6-adjust' type='radio' value='我需要別人的提醒、資訊或協助，但還沒開口'><span>我需要別人的提醒、資訊或協助，但還沒開口</span></label><label class='choice'><input id='ep41-w6-adjust-rest' name='ep41-w6-adjust' type='radio' value='我其實需要休息，應重新安排而不是硬撐'><span>我其實需要休息，應重新安排而不是硬撐</span></label><label class='choice'><input id='ep41-w6-adjust-unsure' name='ep41-w6-adjust' type='radio' value='我還不確定，先完成一次再記錄卡住的位置'><span>我還不確定，先完成一次再記錄卡住的位置</span></label><label class='choice other-choice'><span class='choice-toggle'><input id='ep41-w6-adjust-other' name='ep41-w6-adjust' type='radio' value='其他'><span>其他：</span></span><input class='other-input' id='ep41-w6-adjust-other-text' type='text' aria-label='其他重新開始的調整方式'></label></div><div class='answer-field'><label for='ep41-w6-adjustment'>我下一次要做的調整是：</label><textarea id='ep41-w6-adjustment' rows='3'></textarea></div><p class='example-note'>例如：原本想一次讀三小時，改成明天晚餐後只讀十分鐘；完成後再決定是否加做十分鐘。</p><h2>帶走一個今天能開始的版本</h2><p>請把你的答案整理成五句話：</p><div class='answer-field'><label for='ep41-w6-summary-task'>我想完成的事情是：</label><textarea id='ep41-w6-summary-task' rows='1'></textarea></div><p class='example-note'>例如：下週要交的統計報告先完成第一版。</p><div class='answer-field'><label for='ep41-w6-summary-reason'>我真正想做這件事，是因為：</label><textarea id='ep41-w6-summary-reason' rows='1'></textarea></div><p class='example-note'>例如：我想保留修改時間，不想最後一晚只能匆忙交出去。</p><div class='answer-field'><label for='ep41-w6-summary-action'>我今天先做的最小行動是：</label><textarea id='ep41-w6-summary-action' rows='1'></textarea></div><p class='example-note'>例如：打開檔案，列出三個小標題。</p><div class='answer-field'><label for='ep41-w6-summary-context'>我會在什麼時候、哪裡開始：</label><textarea id='ep41-w6-summary-context' rows='1'></textarea></div><p class='example-note'>例如：明天晚餐後，在宿舍書桌前開始。</p><div class='answer-field'><label for='ep41-w6-summary-adjust'>如果第一次不順利，我會先調整：</label><textarea id='ep41-w6-summary-adjust' rows='1'></textarea></div><p class='example-note'>例如：如果十分鐘仍然很難開始，下次先只寫出一個小標題。</p>"
+    },
+    {
+      "footer": "最後提醒，今天先開始一小步",
+      "bodyHtml": "<p>意志力不是逼自己永遠撐住，而是把重要的方向放回眼前，讓現在的自己、未來的自己和需要休息的自己一起參與選擇。先做一小步，再依實際情況調整，比把所有希望交給明天更能替自己保留選擇。</p><aside class='closing final-reminder no-arrow'><p>不必等到自己變得很有意志力才開始；先把重要的事縮小成今天做得到的一步，做不到時再調整，而不是放棄自己。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你已經寫下想完成的事情與第一個小行動，卻想不到更容易開始的版本，可以複製下方提示詞請 AI 協助拆解。送出前請刪除姓名、電話、地址、帳號或其他不想分享的個人資料；也請檢查建議是否符合你的時間、身體狀況、經濟條件與實際責任。AI 只能協助整理選項，不把拖延或情緒當成診斷，不替你做最後決定。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我是一名大專生，目前想處理的事情是【我想完成的事情】。我常在【我通常開始延後的時間、地點或情況】卡住，最常遇到的卡關是【我最常遇到的卡關方式】。我真正想做這件事，是因為【我真正想做這件事的原因】。我今天願意先做的最小行動是【我今天的第一個小行動】，預計在【我開始的時間與地點】開始。</p><p>請你扮演一名務實的行動拆解教練，根據我提供的資訊，提出 3 個比原本更容易開始、每個約 5 到 10 分鐘就能完成的版本。每個版本請包含：第一個動作、開始前要移開的阻礙、完成後可以留下的簡短紀錄，以及如果當天狀態不好時的更小替代方案。請保留我真正想做的方向，不要把目標改成只追求效率，也不要要求我靠羞愧、過度自我要求或犧牲休息來完成。</p><p>請忠實使用我提供的資訊，不要猜測我的時間、家庭、收入、健康狀況或能力；不要把拖延、情緒或意志力當成醫療診斷，也不要保證我一定會成功。如果資訊不足，請先指出需要我自行判斷的地方，最後讓我自己選擇一個版本。</p></div><button class='prompt-copy-button' data-prompt-copy type='button'>複製提示詞</button></aside>"
+    }
+  ]
+}

@@ -25,6 +25,75 @@
 .comparison-table td:nth-child(2) { white-space: nowrap; }
 .comparison-table [data-ranking-target] { display: block; }
 .comparison-table .matrix-options { justify-content: center; }
+.worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table td {
+  white-space: normal;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table .matrix-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .35rem;
+}
+.worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table .choice {
+  display: flex;
+  min-width: 0;
+  text-align: left;
+}
+.worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table .other-choice {
+  grid-column: 1 / -1;
+}
+.worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table .other-input {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  flex-basis: 100%;
+}
+.worksheet[data-layout-variant~="single-column-comparison-options"] .comparison-table .matrix-options {
+  grid-template-columns: minmax(0, 1fr);
+}
+.worksheet[data-layout-variant~="single-column-comparison-options"] .comparison-table label {
+  display: flex;
+  min-width: 0;
+  text-align: left;
+  white-space: normal;
+}
+.worksheet[data-layout-variant~="single-column-comparison-options"] .comparison-table input[type="text"] {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+}
+@media screen and (max-width: 720px) {
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    display: block;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table thead tr,
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table thead th {
+    display: none;
+  }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table tbody,
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table tr,
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table th,
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table td {
+    display: block;
+    width: auto;
+  }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table tbody tr { margin-bottom: .8rem; }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table td { padding: .7rem; border-top: 0; }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: .4rem;
+    font-weight: 700;
+  }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table .matrix-options { grid-template-columns: 1fr; }
+}
 .ranking-row { display: flex; align-items: center; gap: .7rem; margin: .45rem 0; padding: .65rem; background: var(--soft-green); }
 .ranking-number { flex: 0 0 1.7rem; text-align: center; font-family: system-ui, sans-serif; font-weight: 700; }
 .ranking-description { flex: 1; min-width: 0; }

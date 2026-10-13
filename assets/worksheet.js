@@ -94,6 +94,11 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
+    EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
+    EP43: [["[name=ep43-w1-situation]", "#ep43-w1-situation-other-text", "#ep43-w1-context"], ["[name=ep43-w2-pull]", "#ep43-w2-pull-other-text"], ["#ep43-w2-need"], ["[name=ep43-w3-guardrail]", "#ep43-w3-guardrail-other-text", "#ep43-w3-guardrail-note"], ["#ep43-w3-obstacle"], ["[name=ep43-w4-experiment]", "#ep43-w4-experiment-other-text", "#ep43-w4-time-place", "#ep43-w4-action", "#ep43-w4-fallback"]],
+    EP41: [["#ep41-w1-task"], ["#ep41-w1-context"], ["[name=ep41-w1-blocker]", "#ep41-w1-blocker-other-text"], ["#ep41-w2-reason"], ["#ep41-w5-action"], ["#ep41-w5-context"]],
+    EP44: [["#ep44-w2-context"], ["#ep44-w2-option-one"], ["#ep44-w2-option-two"], ["[name=ep44-w3-method]", "#ep44-w3-method-other-text"], ["#ep44-w3-when"]],
     EP45: [["[name=ep45-w2-target]"], ["#ep45-w2-reason"], ["#ep45-w2-when"], ["#ep45-w2-action"], ["#ep45-w2-measure"]],
     EP46: [["[name=ep46-w1-type]"], ["#ep46-w3-context"], ["#ep46-w3-ritual"], ["#ep46-w3-task"]],
     EP47: [["#ep47-w1-event"], ["#ep47-w1-goal"], ["#ep47-w2-other-point", "#ep47-w2-unclear"], ["[name=ep47-w1-worry]", "#ep47-w1-worry-other-text"], ["[name=ep47-w2-method]", "#ep47-w2-method-other-text"]],

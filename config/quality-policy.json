@@ -16,13 +16,23 @@
     "screen": {
       "fontSizeRem": 1.05,
       "lineHeightRatio": 1.65,
-      "paddingRem": [1.15, 1, 1.15, 1],
+      "paddingRem": [
+        1.15,
+        1,
+        1.15,
+        1
+      ],
       "gapRem": 1
     },
     "print": {
       "fontSizePt": 9,
       "lineHeightRatio": 1.35,
-      "paddingMm": [2, 0, 2, 0],
+      "paddingMm": [
+        2,
+        0,
+        2,
+        0
+      ],
       "gapMm": 2
     }
   },
@@ -39,6 +49,10 @@
   "print": {
     "footerGapPx": 8,
     "pageWidthPx": 794,
-    "pageHeightPx": 1123
+    "pageHeightPx": 1123,
+    "lowUsageWarningRatio": 0.65
+  },
+  "tableLayout": {
+    "geometryTolerancePx": 2
   }
 }

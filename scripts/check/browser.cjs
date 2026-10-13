@@ -64,10 +64,13 @@ async function printMetrics(page) {
     const rect = page.getBoundingClientRect();
     const footer = page.querySelector('.page-footer').getBoundingClientRect();
     const bottom = Math.max(...[...page.children].filter((el) => !el.matches('.page-footer')).map((el) => el.getBoundingClientRect().bottom));
-    return { page: index + 1, width: rect.width, height: rect.height, scrollHeight: page.scrollHeight, clientHeight: page.clientHeight, footerGap: footer.top - bottom };
+    return { page: index + 1, width: rect.width, height: rect.height, scrollHeight: page.scrollHeight, clientHeight: page.clientHeight, footerGap: footer.top - bottom, contentUsageRatio: (bottom - rect.top - parseFloat(getComputedStyle(page).paddingTop)) / (footer.top - rect.top - parseFloat(getComputedStyle(page).paddingTop)) };
   }));
 }
+const { paginationWarnings } = require('./rules/pagination-check.cjs');
 function checkPrint(metrics, name) {
+  for (const warning of paginationWarnings(metrics, policy.print)) console.warn(name + ': ' + warning.message);
+  for (const metric of metrics) metric.paginationWarnings = paginationWarnings([metric], policy.print);
   assert(metrics.length, `${name}: 缺少頁面`);
   for (const metric of metrics) {
     assert(Math.abs(metric.width - policy.print.pageWidthPx) < 2 && Math.abs(metric.height - policy.print.pageHeightPx) < 2, `${name} 第 ${metric.page} 頁不是 A4`);
@@ -88,6 +91,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
   if (!fs.existsSync(browserTarget)) throw new Error('_site 不存在；請先執行 pnpm run build，再執行 pnpm run check:browser。');
   policy = read('config/quality-policy.json');
   validateEndingPolicy(policy.ending);
+  require('../../tests/browser/pagination-check.test.cjs').testPaginationWarnings();
   qualityExceptions = read('config/quality-exceptions.json');
   manifest = read('assets/fonts/worksheet/compact/manifest.json');
   items = read('catalog/worksheets.json');
@@ -104,6 +108,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
     ({ server, base } = await start(browserTarget));
     browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await record('表格內部溢出、重疊與 EP49 填答回歸', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/table-layout-check.test.cjs').testTableLayout(fixture, base); }
+      finally { await fixture.close(); }
+    }, ['*']);
     await record('題型、填寫欄與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
       try { await require('../../tests/browser/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
@@ -390,14 +399,17 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         assert.equal(await field.inputValue(), '');
         assert.equal(await page.locator('#clear-draft').isDisabled(), true);
         await page.evaluate(() => scrollTo(0, 0));
+        assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(page), [], `${item.ep}: 表格內部排版`);
         await page.screenshot({ path: path.join(output, item.ep + '-desktop.png'), fullPage: true });
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
         if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在手機版不可見`);
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 手機 AI 標題排版`);
+        assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(page), [], `${item.ep}: 表格內部排版`);
         await page.screenshot({ path: path.join(output, item.ep + '-mobile.png'), fullPage: true });
         await page.emulateMedia({ media: 'print' });
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 列印 AI 標題排版`);
+        assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(page), [], `${item.ep}: 表格內部排版`);
         const metrics = await printMetrics(page);
         checkPrint(metrics, item.ep);
         assert.equal(await page.locator('.toolbar').isVisible(), false);
@@ -413,6 +425,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
           await fallback.goto(base + '/' + item.worksheetUrl);
           await fallback.emulateMedia({ media: 'print' });
           assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(fallback), [], `${item.ep}: 備援字型 AI 標題排版`);
+          assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(fallback), [], `${item.ep}: 備援字型表格內部排版`);
           const metrics = await printMetrics(fallback);
           checkPrint(metrics, `${item.ep} 系統字型`);
           assert.equal(await fallback.locator('.toolbar').isVisible(), false);
