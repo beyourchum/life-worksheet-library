@@ -7,7 +7,7 @@
     "titleHtml": "把「我想進步」變成一次做得到的練習",
     "question": "當我在課業、工作、興趣或生活技能上卡住時，怎麼不只重複做很多次，而是設計一回有目標、能專注、拿得到回饋，也能剛好多挑戰一點的練習？"
   },
-  "layoutVariants": ["stable-hero-title"],
+  "layoutVariants": ["stable-hero-title", "ep32-print-compact"],
   "useComponents": false,
   "pages": [
     {

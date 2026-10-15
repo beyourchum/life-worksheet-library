@@ -998,6 +998,37 @@ p { margin: .6rem 0; }
     padding-top: .5mm;
     padding-bottom: .5mm;
   }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .answer-field {
+    margin-top: .8mm;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .answer-field textarea {
+    min-height: 8.5mm;
+  }
+  .worksheet[data-layout-variant~="ep30-print-compact"] > article:nth-of-type(3),
+  .worksheet[data-layout-variant~="ep31-print-compact"] > article:nth-of-type(5) {
+    font-size: .96em;
+    line-height: 1.12;
+  }
+  .worksheet[data-layout-variant~="ep30-print-compact"] > article:nth-of-type(3) .answer-field,
+  .worksheet[data-layout-variant~="ep31-print-compact"] > article:nth-of-type(5) .answer-field {
+    margin-top: 1.5mm;
+  }
+  .worksheet[data-layout-variant~="ep32-print-compact"] > article:nth-of-type(3) {
+    font-size: .96em;
+    line-height: 1.1;
+  }
+  .worksheet[data-layout-variant~="ep32-print-compact"] > article:nth-of-type(3) .choices {
+    gap: .8mm;
+    margin-top: 1mm;
+    margin-bottom: 1.2mm;
+  }
+  .worksheet[data-layout-variant~="ep32-print-compact"] > article:nth-of-type(3) .choice {
+    min-height: 4.8mm;
+    padding: .5mm 1.2mm;
+  }
+  .worksheet[data-layout-variant~="ep32-print-compact"] > article:nth-of-type(3) .answer-field {
+    margin-top: 1.5mm;
+  }
   .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4),
   .worksheet[data-layout-variant~="ep37-print-compact"] > article:nth-of-type(4) {
     font-size: .82em;

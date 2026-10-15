@@ -7,7 +7,7 @@
     "titleHtml": "把讀書變成<em>有策略的遊戲</em>",
     "question": "期末考逼近、讀書容易卡住時，我怎麼把目標、範圍與下一步整理成一套做得到的學習計畫？"
   },
-  "layoutVariants": [],
+  "layoutVariants": ["ep30-print-compact"],
   "useComponents": false,
   "pages": [
     {
