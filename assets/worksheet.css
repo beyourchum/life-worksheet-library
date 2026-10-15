@@ -348,6 +348,75 @@ p { margin: .6rem 0; }
 .term-pair { padding: .65rem .75rem; background: var(--soft-gray); }
 .term-pair strong { display: block; margin-bottom: .2rem; color: var(--green); }
 
+/* EP28: keep the four-quadrant comparison readable with the fallback font. */
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table {
+  width: 100%;
+  margin: .75rem 0 1.1rem;
+  overflow-x: auto;
+}
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: .92em;
+}
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table th,
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table td {
+  padding: .65rem .55rem;
+  border: 1px solid var(--border);
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table th {
+  background: var(--soft-green);
+  text-align: left;
+}
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table thead th:nth-child(1) { width: 28%; }
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table thead th:nth-child(2),
+.worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table thead th:nth-child(3) { width: 36%; }
+@media screen and (max-width: 720px) {
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table table,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tr,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table th,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table td {
+    display: block;
+    width: auto;
+  }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody tr {
+    margin-bottom: .8rem;
+    border: 1px solid var(--border);
+  }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody th,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody td {
+    border: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody td::before {
+    display: block;
+    margin-bottom: .3rem;
+    color: var(--green);
+    content: attr(data-label);
+    font-weight: 700;
+  }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table tbody td:last-child { border-bottom: 0; }
+}
+@media print {
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table { overflow: visible; }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table table { font-size: 8.4pt; }
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table th,
+  .worksheet[data-layout-variant~="ep28-comparison-table"] .comparison-table td { padding: 1.2mm 1.2mm; }
+}
+
 /* EP44: keep the decision comparison readable on screen, mobile, and paper. */
 .worksheet[data-layout-variant~="ep44-decision-table"] .ep44-decision-table {
   width: 100%;
@@ -891,6 +960,44 @@ p { margin: .6rem 0; }
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .section-heading { margin-top: 1mm; }
   .worksheet[data-worksheet-id="EP114"] .page:nth-child(2) .closing { margin-top: 2mm; }
   .worksheet[data-worksheet-id="EP62"] { font-size: .98em; }
+  .worksheet[data-layout-variant~="ep31-print-compact"] > article:nth-of-type(5) {
+    font-size: .98em;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) {
+    font-size: .76em;
+    line-height: 1.08;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .choices {
+    gap: .8mm;
+    margin: 1mm 0 1.3mm;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .choice {
+    min-height: 4.8mm;
+    padding: .5mm 1.2mm;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .answer-field {
+    margin: 1mm 0;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .answer-field textarea {
+    min-height: 9mm;
+    padding: 1mm;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) > p {
+    margin: .35rem 0;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .example-note {
+    margin: .2rem 0 .35rem;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .closing.prompt-intro {
+    margin-top: 1mm;
+    padding-top: .2mm;
+    padding-bottom: .2mm;
+  }
+  .worksheet[data-layout-variant~="ep26-print-compact"] > article:nth-of-type(5) .prompt-quote {
+    margin-top: 1mm;
+    padding-top: .5mm;
+    padding-bottom: .5mm;
+  }
   .worksheet[data-layout-variant~="ep59-print-compact"] > article:nth-of-type(4),
   .worksheet[data-layout-variant~="ep37-print-compact"] > article:nth-of-type(4) {
     font-size: .82em;

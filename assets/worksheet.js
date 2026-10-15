@@ -94,18 +94,48 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP28: [["#ep28-task"], ["#ep28-standard"], ["[name=ep28-benefit]"], ["[name=ep28-cost]"], ["[name=ep28-evaluation-axis]"], ["[name=ep28-type-reflection]"], ["[data-limited-choice='ep28-good-enough-criteria']"], ["#ep28-time-boundary"], ["#ep28-next-action"], ["#ep28-restart-condition"]],
     EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
     EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
     EP39: [["#ep39-target"], ["#ep39-situation"], ["#ep39-my-action"], ["#ep39-my-intention"], ["[name=ep39-possible-need]"], ["#ep39-action-plan"], ["#ep39-check-in"]],
     EP38: [["#ep38-habit"], ["#ep38-outcome"], ["[name=ep38-barrier]"], ["#ep38-cue-when"], ["#ep38-cue-where"], ["#ep38-cue-action"], ["#ep38-temptation"], ["#ep38-attraction-plan"], ["#ep38-easy-version"], ["#ep38-environment-change"], ["#ep38-reward"], ["#ep38-recovery"]],
     EP37: [["#ep37-current-stressor"], ["[name=ep37-state]"], ["#ep37-self-care-action"], ["#ep37-micro-area"], ["#ep37-yesterday-progress"], ["#ep37-small-good"], ["#ep37-support-person"], ["#ep37-action"], ["#ep37-action-when"], ["#ep37-backup"]],
     EP35: [["#ep35-task"], ["[name=ep35-trigger]", "[name=ep35-state]"], ["#ep35-task-value"], ["#ep35-small-step-1", "#ep35-small-step-2", "#ep35-small-step-3"], ["#ep35-ritual-action"], ["#ep35-stuck-self-talk"], ["#ep35-implementation-plan"], ["#ep35-break-rule", "#ep35-restart-plan", "#ep35-restart-if-fail"]],
+    EP29: [
+      ["#ep29-w1-task"],
+      ["#ep29-w1-goal"],
+      ["#ep29-w1-method"],
+      ["#ep29-w2-fact"],
+      ["#ep29-w2-adjust"],
+      ["#ep29-w3-self-action", "#ep29-w3-self-info", "#ep29-w3-self-pressure", "#ep29-w3-self-include", "#ep29-w3-others-action", "#ep29-w3-others-info", "#ep29-w3-others-pressure", "#ep29-w3-others-include", "#ep29-w3-social-action", "#ep29-w3-social-info", "#ep29-w3-social-pressure", "#ep29-w3-social-include"],
+      ["[name=ep29-w4-signal]", "#ep29-w4-signal-1", "#ep29-w4-fact-1", "#ep29-w4-cost-1", "#ep29-w4-control-1", "#ep29-w4-signal-2", "#ep29-w4-fact-2", "#ep29-w4-cost-2", "#ep29-w4-control-2"],
+      ["[name=ep29-w4-decision]", "#ep29-w4-reason"],
+      ["#ep29-w5-release", "#ep29-w5-core", "#ep29-w5-test", "#ep29-w5-duration", "#ep29-w5-review"],
+      ["#ep29-w5-duration"]
+    ],
+    EP34: [["#ep34-topic"], ["#ep34-material-scope"], ["#ep34-keyword-1"], ["#ep34-keyword-2"], ["#ep34-keyword-3"], ["#ep34-framework-summary"], ["#ep34-unresolved"], ["#ep34-point-1-topic", "#ep34-point-1-note"], ["#ep34-point-2-topic", "#ep34-point-2-note"], ["#ep34-point-3-topic", "#ep34-point-3-note"], ["#ep34-point-4-topic", "#ep34-point-4-note"], ["#ep34-point-5-topic", "#ep34-point-5-note"], ["#ep34-one-line-diary"]],
+    EP33: [["[data-limited-choice='ep33-w1-time']"], ["#ep33-w1-keep", "#ep33-w1-rearrange"], ["#ep33-w2-content", "#ep33-w2-trigger"], ["#ep33-w2-purpose", "#ep33-w2-end", "#ep33-w2-first"], ["#ep33-w3-goal", "[data-limited-choice='ep33-w3-strategy']"], ["#ep33-w3-boundary"], ["[name=ep33-w4-style]", "#ep33-w4-setting", "#ep33-w4-opening"], ["[name=ep33-w5-focus]", "#ep33-w5-action", "#ep33-w5-time", "#ep33-w5-place", "#ep33-w5-signal"]],
+    EP32: [["#ep32-skill"], ["#ep32-context"], ["[name=ep32-stuck-point]", "#ep32-stuck-point-other-text"], ["#ep32-current-evidence"], ["#ep32-goal"], ["#ep32-focus"], ["[name=ep32-feedback-source]", "#ep32-feedback-source-other-text", "#ep32-feedback-source-note"], ["#ep32-feedback-question"], ["[name=ep32-stretch]", "#ep32-stretch-other-text"], ["#ep32-stretch-limit"]],
     EP43: [["[name=ep43-w1-situation]", "#ep43-w1-situation-other-text", "#ep43-w1-context"], ["[name=ep43-w2-pull]", "#ep43-w2-pull-other-text"], ["#ep43-w2-need"], ["[name=ep43-w3-guardrail]", "#ep43-w3-guardrail-other-text", "#ep43-w3-guardrail-note"], ["#ep43-w3-obstacle"], ["[name=ep43-w4-experiment]", "#ep43-w4-experiment-other-text", "#ep43-w4-time-place", "#ep43-w4-action", "#ep43-w4-fallback"]],
     EP41: [["#ep41-w1-task"], ["#ep41-w1-context"], ["[name=ep41-w1-blocker]", "#ep41-w1-blocker-other-text"], ["#ep41-w2-reason"], ["#ep41-w5-action"], ["#ep41-w5-context"]],
     EP36: [["#ep36-w5-direction"], ["#ep36-w5-resources"], ["#ep36-w3-short"], ["#ep36-w5-action"], ["#ep36-w4-step1-support"], ["#ep36-w5-pressure"]],
     EP44: [["#ep44-w2-context"], ["#ep44-w2-option-one"], ["#ep44-w2-option-two"], ["[name=ep44-w3-method]", "#ep44-w3-method-other-text"], ["#ep44-w3-when"]],
     EP45: [["[name=ep45-w2-target]"], ["#ep45-w2-reason"], ["#ep45-w2-when"], ["#ep45-w2-action"], ["#ep45-w2-measure"]],
     EP46: [["[name=ep46-w1-type]"], ["#ep46-w3-context"], ["#ep46-w3-ritual"], ["#ep46-w3-task"]],
+    EP30: [["#ep30-w1-task"], ["[name=ep30-w1-target]"], ["#ep30-w1-known"], ["#ep30-w1-unit-1", "#ep30-w1-unit-2", "#ep30-w1-unit-3"], ["#ep30-w2-time"], ["#ep30-w3-overview"], ["#ep30-w4-uncertain"]],
+    EP31: [["#ep31-w1-content"], ["[name=ep31-w1-encoding]", "#ep31-w1-encoding-reason", "#ep31-w1-item-1", "#ep31-w1-place-1", "#ep31-w1-item-2", "#ep31-w1-place-2", "#ep31-w1-item-3", "#ep31-w1-place-3"], ["#ep31-w2-detail"], ["#ep31-w2-keywords", "#ep31-w2-question"], ["#ep31-w3-practice"], ["#ep31-w3-when"], ["[name=ep31-w3-recovery]", "#ep31-w3-recovery-note"], ["#ep31-w4-start", "#ep31-w4-start-note"], ["#ep31-w5-change"]],
+    EP26: [["#ep26-w5-context"], ["#ep26-w5-sharing"], ["#ep26-w5-understand"], ["#ep26-w5-avoid"], ["#ep26-w5-question"], ["#ep26-w5-return"]],
+    EP27: [
+      ["[name=ep27-w1-type]", "#ep27-w1-context"],
+      ["#ep27-w1-fact", "#ep27-w1-feeling", "#ep27-w1-reason"],
+      ["[name=ep27-w2-body]", "#ep27-w2-intensity", "#ep27-w2-sentence", "#ep27-w2-after"],
+      ["#ep27-w3-name", "[name=ep27-w3-need]"],
+      ["#ep27-w3-phrase"],
+      ["#ep27-w4-event-1", "#ep27-w4-feeling-1", "#ep27-w4-action-1", "#ep27-w4-need-1", "#ep27-w4-event-2", "#ep27-w4-feeling-2", "#ep27-w4-action-2", "#ep27-w4-need-2", "#ep27-w4-insight", "#ep27-w4-uncertain"],
+      ["[name=ep27-w5-channel]", "#ep27-w5-fact", "#ep27-w5-invite", "#ep27-w5-script", "#ep27-w5-script-invite", "#ep27-w5-reminder"],
+      ["#ep27-w6-moment", "#ep27-w6-event", "#ep27-w6-evidence", "[name=ep27-w6-step]", "#ep27-w6-time", "#ep27-w6-proof"]
+    ],
+    EP25: [["#ep25-w1-task"], ["#ep25-w1-deadline"], ["#ep25-w1-stuck"], ["[name=ep25-w2-type]"], ["#ep25-w2-worry"], ["[name=ep25-w3-direction]"], ["#ep25-w4-hours"], ["#ep25-w4-goal"], ["#ep25-w5-step", "#ep25-w5-when"], ["#ep25-w5-proof", "#ep25-w5-check"]],
     EP47: [["#ep47-w1-event"], ["#ep47-w1-goal"], ["#ep47-w2-other-point", "#ep47-w2-unclear"], ["[name=ep47-w1-worry]", "#ep47-w1-worry-other-text"], ["[name=ep47-w2-method]", "#ep47-w2-method-other-text"]],
     EP48: [["#ep48-w2-task"], { manual: "原稿只有固定練習案例，未要求另填一個抽象任務；請在提示詞中自行補上。" }],
     EP49: [

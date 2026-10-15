@@ -3,6 +3,8 @@
     "wide-other-input",
     "stacked-mobile-accent",
     "stable-hero-title",
+    "ep31-print-compact",
+    "ep26-print-compact",
     "stacked-comparison-options",
     "single-column-comparison-options",
     "ep36-see-table",
@@ -10,6 +12,7 @@
     "hero-subheading",
     "ep59-print-compact",
     "ep37-print-compact",
-    "ep42-print-compact"
+    "ep42-print-compact",
+    "ep28-comparison-table"
   ]
 }

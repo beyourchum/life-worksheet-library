@@ -56,8 +56,14 @@ function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
   const pages = source.pages.map((page, index) => {
     const number = String(index + 1).padStart(2, '0');
     const video = catalogItem.videoUrl ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${youtubeId(catalogItem.videoUrl)}" title="${escapeHtml(source.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : '';
-    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${escapeHtml(source.hero.kicker)}</p><h1>${source.hero.titleHtml}</h1><div class="hero-copy"><p class="hero-question">${applyFallbackGlyphs(escapeHtml(source.hero.question), source.fallbackGlyphs)}</p></div></div>${video}` : '';
-    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(page.bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
+    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${applyFallbackGlyphs(escapeHtml(source.hero.kicker), source.fallbackGlyphs)}</p><h1>${source.hero.titleHtml}</h1><div class="hero-copy"><p class="hero-question">${applyFallbackGlyphs(escapeHtml(source.hero.question), source.fallbackGlyphs)}</p></div></div>${video}` : '';
+    let bodyHtml = String(page.bodyHtml || '');
+    for (const replacement of source.textReplacements || []) {
+      if (replacement.page !== index) continue;
+      bodyHtml = bodyHtml.replaceAll(String(replacement.from), String(replacement.to));
+    }
+    bodyHtml += source.contentSyncHtml?.[index] || '';
+    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
   }).join('\n');
   return normalize(`<!doctype html>
 <html lang="zh-Hant">

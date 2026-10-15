@@ -23,7 +23,7 @@ async function worksheetStyleIssues(page) {
       let heading = group.previousElementSibling;
       while (heading && heading.matches('p,.example-note,.answer-field,.choices')) heading = heading.previousElementSibling;
       if (!heading?.matches('.question-heading') || !heading.querySelector('h3') ||
-          !/^(單選|可複選|最多選.+)$/.test(heading.querySelector('.answer-mode')?.textContent.trim() || ''))
+          !/^(單選|可複選|最多選.+|選\s*\d+[–-]\d+\s*項)$/.test(heading.querySelector('.answer-mode')?.textContent.trim() || ''))
         issues.push('選項群組缺少題目或題型標示：' + (group.querySelector('input')?.id || group.textContent.trim()));
       else {
         const inputs = [...group.querySelectorAll(controls)];
