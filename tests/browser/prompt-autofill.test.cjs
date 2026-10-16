@@ -1,6 +1,58 @@
 const assert = require('node:assert/strict');
 
 async function testPromptAutofill(page, base, ep) {
+  await page.emulateMedia({media:'screen'});
+  await page.setViewportSize({width:1280,height:900});
+  if (!ep || ep === 'EP48') {
+    await page.goto(base + '/worksheets/EP48/');
+    const quotes = page.locator('.prompt-quote');
+    assert.equal(await quotes.count(), 2, 'EP48 的兩份提示詞須分開');
+    assert.equal(await page.locator('[data-prompt-copy]').count(), 2);
+    for (const quote of await quotes.all()) assert.equal(await quote.getAttribute('data-prompt-configured'), 'true');
+    const first = quotes.nth(0).locator('[data-prompt-text]');
+    const second = quotes.nth(1).locator('[data-prompt-text]');
+    const originalSecond = await second.innerText();
+    assert(originalSecond.includes('【請自行填寫：抽象任務】'));
+    assert((await first.innerText()).includes('【卡住的任務】'));
+    await page.locator('#ep48-w2-task').fill('準備期末報告');
+    assert((await first.innerText()).includes('準備期末報告'));
+    assert.equal(await second.innerText(), originalSecond, '第二份人工欄位不得誤用第一份的答案');
+    await page.reload();
+    assert((await first.innerText()).includes('準備期末報告'));
+    await page.locator('#ep48-w2-task').fill('整理社團活動流程');
+    const changed = await first.innerText();
+    assert(changed.includes('整理社團活動流程') && !changed.includes('準備期末報告'));
+    await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+      configurable: true, value: {writeText: async text => {window.__copiedPrompt=text;}}
+    }));
+    for (const [index, expected] of [[0,changed],[1,originalSecond]]) {
+      await quotes.nth(index).locator('[data-prompt-copy]').click();
+      assert.equal(await page.evaluate(()=>window.__copiedPrompt), expected, `第 ${index+1} 個按鈕只能複製自己的內容`);
+    }
+    page.once('dialog', dialog=>dialog.accept());
+    await page.locator('[data-clear]').click();
+    assert((await first.innerText()).includes('【卡住的任務】'));
+    assert.equal(await second.innerText(), originalSecond);
+    await quotes.nth(0).locator('[data-prompt-copy]').click();
+    assert.equal(await page.evaluate(()=>window.__copiedPrompt), await first.innerText());
+    // A later prompt with an automatic source must use its own binding slice.
+    const script = require('node:fs').readFileSync('assets/worksheet.js','utf8');
+    const manual = '{ manual: "原稿只有固定練習案例，未要求另填一個抽象任務；請在提示詞中自行補上。" }';
+    assert(script.includes(manual));
+    await page.route('**/assets/worksheet.js',route=>route.fulfill({contentType:'text/javascript',body:script.replace(manual,'["#ep48-end-task"]')}));
+    try {
+      await page.reload();
+      await page.locator('#ep48-w2-task').fill('第一份任務');
+      await page.locator('#ep48-end-task').fill('第二份任務');
+      assert((await first.innerText()).includes('第一份任務'));
+      assert(!(await first.innerText()).includes('第二份任務'));
+      assert((await second.innerText()).includes('第二份任務'));
+      assert(!(await second.innerText()).includes('第一份任務'));
+      await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {configurable:true,value:{writeText:async text=>{window.__copiedPrompt=text;}}}));
+      await quotes.nth(1).locator('[data-prompt-copy]').click();
+      assert.equal(await page.evaluate(()=>window.__copiedPrompt), await second.innerText());
+    } finally { await page.unroute('**/assets/worksheet.js'); }
+  }
   if (!ep || ep === 'EP101') {
   await page.goto(base + '/worksheets/EP101/');
   await page.locator('#task-name').fill('整理分組報告');

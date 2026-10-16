@@ -7,9 +7,15 @@
     "titleHtml": "把關心送到對方<em>收得到的地方</em>",
     "question": "明明很努力付出，對方卻還是覺得「你不在乎我」？我可以怎麼辨認彼此接收關心的方式，並在下一次互動時換一種更適合的做法？"
   },
-  "layoutVariants": ["stable-hero-title", "stacked-comparison-options"],
+  "layoutVariants": [
+    "stable-hero-title",
+    "stacked-comparison-options"
+  ],
   "useComponents": true,
-  "fallbackGlyphs": ["膀", "昂"],
+  "fallbackGlyphs": [
+    "膀",
+    "昂"
+  ],
   "pages": [
     {
       "footer": "先找到「我有付出，對方卻沒收到」的時刻。",
@@ -29,7 +35,7 @@
     },
     {
       "footer": "小行動的重點不是表現完美，而是讓彼此有機會校準。",
-      "bodyHtml": "<div class='answer-field'><label for='ep39-action-plan'>我的小行動是：</label><textarea id='ep39-action-plan' rows='4' placeholder='寫下一個小而可行的行動'></textarea></div><p class='example-note'>例如：這週找一個不趕時間的晚上，先問朋友要不要我陪他聊 15 分鐘；如果他只想休息，我就尊重他的選擇。</p><div class='answer-field'><label for='ep39-action-time'>我打算在什麼時候做：</label><textarea id='ep39-action-time' rows='2' placeholder='例如：下次他主動提到報告壓力時。'></textarea></div><p class='example-note'>例如：下次他主動提到報告壓力時。</p><div class='answer-field'><label for='ep39-check-in'>我會怎麼確認這個方式對他有沒有幫助：</label><textarea id='ep39-check-in' rows='3' placeholder='例如：做完後問「剛剛這樣的陪伴有接近你想要的嗎？」'></textarea></div><p class='example-note'>例如：做完後問「剛剛這樣的陪伴有接近你想要的嗎？」並接受他說不需要或想換一種方式。</p><aside class='closing final-reminder no-arrow'><p>表達關心沒有唯一的正確頻道；重要的是先暫停自己的習慣，觀察或詢問對方，再試著微調一次。對方可以拒絕、改變想法，或還不知道自己需要什麼；我也不必靠一次成功來證明自己夠不夠愛。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你想把剛剛的練習整理成更自然的一句話或一個小行動，可以複製下方提示詞。送出前請刪除姓名、地點、關係細節與其他不想分享的私人資料；AI 只能協助整理你已提供的內容，不替你判定對方的真正需求，也不替你決定是否要付出或接觸。</p></aside><p>我想請 AI 協助我把關心表達得更清楚：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想請 AI 協助我把關心表達得更清楚：我的練習對象是<span data-prompt-field='ep39-target'>【練習的關係】</span>；當時的情境是<span data-prompt-field='ep39-situation'>【當時發生了什麼】</span>；我原本做的是<span data-prompt-field='ep39-my-action'>【我原本做了什麼】</span>；我原本想傳達的是<span data-prompt-field='ep39-my-intention'>【我原本想傳達的是】</span>；我目前推測對方可能需要<span data-prompt-field='ep39-possible-need'>【對方可能需要的方式】</span>；我想嘗試的行動是<span data-prompt-field='ep39-action-plan'>【我的小行動】</span>；我想保留的界線是<span data-prompt-field='ep39-check-in'>【我想怎麼確認或尊重對方拒絕】</span>。請只根據這些內容，幫我整理成一句自然、尊重對方選擇的說法，以及一個小而可行的行動；如果資料不足，請標示「待確認」，不要替我補故事、把推測說成事實，或建議未經同意的身體接觸。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
+      "bodyHtml": "<div class='answer-field'><label for='ep39-action-plan'>我的小行動是：</label><textarea id='ep39-action-plan' rows='4' placeholder='寫下一個小而可行的行動'></textarea></div><p class='example-note'>例如：這週找一個不趕時間的晚上，先問朋友要不要我陪他聊 15 分鐘；如果他只想休息，我就尊重他的選擇。</p><div class='answer-field'><label for='ep39-action-time'>我打算在什麼時候做：</label><textarea id='ep39-action-time' rows='2' placeholder='例如：下次他主動提到報告壓力時。'></textarea></div><p class='example-note'>例如：下次他主動提到報告壓力時。</p><div class='answer-field'><label for='ep39-check-in'>我會怎麼確認這個方式對他有沒有幫助：</label><textarea id='ep39-check-in' rows='3' placeholder='例如：做完後問「剛剛這樣的陪伴有接近你想要的嗎？」'></textarea></div><p class='example-note'>例如：做完後問「剛剛這樣的陪伴有接近你想要的嗎？」並接受他說不需要或想換一種方式。</p><aside class='closing final-reminder no-arrow'><p>表達關心沒有唯一的正確頻道；重要的是先暫停自己的習慣，觀察或詢問對方，再試著微調一次。對方可以拒絕、改變想法，或還不知道自己需要什麼；我也不必靠一次成功來證明自己夠不夠愛。</p></aside><aside class=\"closing prompt-intro\"><span class=\"closing-mark\">→</span><h2>AI 幫幫忙</h2><p>如果你想把剛剛的練習整理成更自然的一句話或一個小行動，可以複製下方提示詞。送出前請刪除姓名、地點、關係細節與其他不想分享的私人資料；AI 只能協助整理你已提供的內容，不替你判定對方的真正需求，也不替你決定是否要付出或接觸。</p></aside><p>我想請 AI 協助我把關心表達得更清楚：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想請 AI 協助我把關心表達得更清楚：我的練習對象是<span data-prompt-field='ep39-target'>【練習的關係】</span>；當時的情境是<span data-prompt-field='ep39-situation'>【當時發生了什麼】</span>；我原本做的是<span data-prompt-field='ep39-my-action'>【我原本做了什麼】</span>；我原本想傳達的是<span data-prompt-field='ep39-my-intention'>【我原本想傳達的是】</span>；我目前推測對方可能需要<span data-prompt-field='ep39-possible-need'>【對方可能需要的方式】</span>；我想嘗試的行動是<span data-prompt-field='ep39-action-plan'>【我的小行動】</span>；我想保留的界線是<span data-prompt-field='ep39-check-in'>【我想怎麼確認或尊重對方拒絕】</span>。請只根據這些內容，幫我整理成一句自然、尊重對方選擇的說法，以及一個小而可行的行動；如果資料不足，請標示「待確認」，不要替我補故事、把推測說成事實，或建議未經同意的身體接觸。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
     }
   ]
 }

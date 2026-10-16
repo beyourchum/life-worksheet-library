@@ -402,9 +402,15 @@
     if (!promptTemplates.has(root)) promptTemplates.set(root, { html: root.innerHTML, text: root.innerText.trim() });
     return promptTemplates.get(root);
   };
+  const promptRoots = [...worksheet.querySelectorAll('[data-prompt-text]')];
+  const placeholderCount = (root) => (templateFor(root).text.match(/【[^】]+】/g) || []).length;
+  const bindingsForPrompt = (root) => {
+    const offset = promptRoots.slice(0, promptRoots.indexOf(root)).reduce((total, prompt) => total + placeholderCount(prompt), 0);
+    return (promptBindings[worksheet.dataset.worksheetId] || []).slice(offset, offset + placeholderCount(root));
+  };
   const promptState = (root) => {
     const template = templateFor(root).text;
-    const bindings = promptBindings[worksheet.dataset.worksheetId] || [];
+    const bindings = bindingsForPrompt(root);
     let index = 0;
     let filled = 0;
     const text = template.replace(/【[^】]+】/g, (placeholder) => {
@@ -436,20 +442,21 @@
     if (last !== first) last.node.data = suffix;
   };
   const updatePrompt = () => {
-    document.querySelectorAll("[data-prompt-text]").forEach((root) => {
+    promptRoots.forEach((root) => {
       const template = templateFor(root);
       root.innerHTML = template.html;
       const state = promptState(root);
       const bindings = promptBindings[worksheet.dataset.worksheetId] || [];
+      const localBindings = bindingsForPrompt(root);
       const hasWorksheetConfig = Object.prototype.hasOwnProperty.call(promptBindings, worksheet.dataset.worksheetId);
       root.parentElement.dataset.promptConfigured = String(
         hasWorksheetConfig
-        && bindings.length === state.total
+        && bindings.length === promptRoots.reduce((total, prompt) => total + placeholderCount(prompt), 0)
         && bindings.every(bindingIsConfigured)
       );
       const matches = [...root.textContent.matchAll(/【[^】]+】/g)];
       matches.reverse().forEach((match, reverseIndex) => {
-        const value = bindingValue(bindings[matches.length - reverseIndex - 1]);
+        const value = bindingValue(localBindings[matches.length - reverseIndex - 1]);
         if (value) replaceTextRange(root, match.index, match[0].length, value);
       });
       root.parentElement.dataset.promptStatus = state.total === 0

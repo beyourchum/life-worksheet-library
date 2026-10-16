@@ -7,7 +7,10 @@
     "titleHtml": "把「我想進步」變成一次做得到的練習",
     "question": "當我在課業、工作、興趣或生活技能上卡住時，怎麼不只重複做很多次，而是設計一回有目標、能專注、拿得到回饋，也能剛好多挑戰一點的練習？"
   },
-  "layoutVariants": ["stable-hero-title", "ep32-print-compact"],
+  "layoutVariants": [
+    "stable-hero-title",
+    "ep32-print-compact"
+  ],
   "useComponents": false,
   "pages": [
     {
@@ -28,8 +31,22 @@
     },
     {
       "footer": "做完後留下證據，讓回饋變成下一步。",
-      "bodyHtml": "<div class='section-heading'><span class='section-number'>05</span><h2>做完後，讓回饋變成下一步</h2></div><p>刻意練習不是一次做對，而是每回都留下可用的資訊。完成上一節的一回後，再回來填這一節；若現在還沒時間實作，可以先寫「完成後我要觀察什麼」。</p><div class='question-heading'><h3>我完成後留下的證據是</h3></div><p class='example-note'>例如：完成 3 題，其中 2 題寫出完整步驟；第 3 題卡在判斷公式。</p><div class='answer-field'><label for='ep32-after-evidence'>我的練習證據是：</label><textarea id='ep32-after-evidence' rows='3'></textarea></div><div class='question-heading'><h3>我收到或觀察到的回饋是</h3></div><p class='example-note'>例如：同學指出我公式選對了，但沒有寫清楚單位。</p><div class='answer-field'><label for='ep32-feedback-record'>我的回饋是：</label><textarea id='ep32-feedback-record' rows='3'></textarea></div><div class='question-heading'><h3>下一回我會保留什麼、調整什麼？</h3></div><div class='answer-field'><label for='ep32-after-adjustment-keep'>保留：</label><textarea id='ep32-after-adjustment-keep' rows='2'></textarea></div><div class='answer-field'><label for='ep32-after-adjustment-change'>調整：</label><textarea id='ep32-after-adjustment-change' rows='2'></textarea></div><p class='example-note'>例如：保留 20 分鐘和手機移遠；下一回先獨立判斷公式，再打開公式表核對。</p><aside class='closing final-reminder no-arrow'><p>帶走一個可以開始的版本</p><p>能力不必被「有沒有天分」一次判定。把想進步的方向縮小成一個可觀察的目標，為這一回安排專注條件，事先決定從哪裡取得回饋，再只增加一小格挑戰；做完留下證據，下一次就有東西可以調整。真正有用的練習，不是把自己逼到最累，而是讓每一回都比上一回更清楚。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你已經知道想練習的技能，卻不知道怎麼把它拆成一回可執行的練習，可以複製下方提示詞請 AI 協助整理。送出前請刪除姓名、學校、地點與其他不想分享的資訊；AI 只能根據你填寫的內容提出練習選項，不能替你保證能力會改變，也不能代替老師、教練或其他專業回饋。請保留自己的判斷，選擇符合你的時間、資源與身心狀態的版本。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想練習的技能或活動是【我想練習的是】；我會使用這項技能的情境是【我會在什麼情境使用這項技能】；我目前最想查明的卡點是【我最想先查明的卡點】；我目前看得到的證據是【我目前看得到的證據】；我的目標句是【我的目標句】；我這一回的專注重點是【我這一回要專注在什麼】；我能取得的回饋來源與問題是【我的回饋來源】、【我的回饋問題】；我想增加的一小格挑戰是【我增加的這一小格】；如果卡住，我的縮小條件是【我的暫停或縮小條件】。</p><p>請只根據我提供的內容，幫我整理 3 個不同難度的練習版本。每個版本都請包含：一次練習的具體目標、建議的專注條件、可以取得的回饋與一個回饋問題、只增加一小格的挑戰、卡住時的縮小版本，以及完成後要留下的證據。請保留我原本想練習的技能，不要把「更努力」「花更多時間」當成唯一方案，不要保證我一定會變成專家，也不要猜測我的時間、健康、能力或可用資源。如果資訊不足，請標示「待確認」，最後讓我自己選擇一個版本。</p></div><button class='prompt-copy-button' data-prompt-copy type='button'>複製提示詞</button></aside>"
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>05</span><h2>做完後，讓回饋變成下一步</h2></div><p>刻意練習不是一次做對，而是每回都留下可用的資訊。完成上一節的一回後，再回來填這一節；若現在還沒時間實作，可以先寫「完成後我要觀察什麼」。</p><div class='question-heading'><h3>我完成後留下的證據是</h3></div><p class='example-note'>例如：完成 3 題，其中 2 題寫出完整步驟；第 3 題卡在判斷公式。</p><div class='answer-field'><label for='ep32-after-evidence'>我的練習證據是：</label><textarea id='ep32-after-evidence' rows='3'></textarea></div><div class='question-heading'><h3>我收到或觀察到的回饋是</h3></div><p class='example-note'>例如：同學指出我公式選對了，但沒有寫清楚單位。</p><div class='answer-field'><label for='ep32-feedback-record'>我的回饋是：</label><textarea id='ep32-feedback-record' rows='3'></textarea></div><div class='question-heading'><h3>下一回我會保留什麼、調整什麼？</h3></div><div class='answer-field'><label for='ep32-after-adjustment-keep'>保留：</label><textarea id='ep32-after-adjustment-keep' rows='2'></textarea></div><div class='answer-field'><label for='ep32-after-adjustment-change'>調整：</label><textarea id='ep32-after-adjustment-change' rows='2'></textarea></div><p class='example-note'>例如：保留 20 分鐘和手機移遠；下一回先獨立判斷公式，再打開公式表核對。</p><aside class='closing final-reminder no-arrow'><p>帶走一個可以開始的版本</p><p>能力不必被「有沒有天分」一次判定。把想進步的方向縮小成一個可觀察的目標，為這一回安排專注條件，事先決定從哪裡取得回饋，再只增加一小格挑戰；做完留下證據，下一次就有東西可以調整。真正有用的練習，不是把自己逼到最累，而是讓每一回都比上一回更清楚。</p></aside><aside class=\"closing prompt-intro\"><span class=\"closing-mark\">→</span><h2>AI 幫幫忙</h2><p>如果你已經知道想練習的技能，卻不知道怎麼把它拆成一回可執行的練習，可以複製下方提示詞請 AI 協助整理。送出前請刪除姓名、學校、地點與其他不想分享的資訊；AI 只能根據你填寫的內容提出練習選項，不能替你保證能力會改變，也不能代替老師、教練或其他專業回饋。請保留自己的判斷，選擇符合你的時間、資源與身心狀態的版本。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想練習的技能或活動是【我想練習的是】；我會使用這項技能的情境是【我會在什麼情境使用這項技能】；我目前最想查明的卡點是【我最想先查明的卡點】；我目前看得到的證據是【我目前看得到的證據】；我的目標句是【我的目標句】；我這一回的專注重點是【我這一回要專注在什麼】；我能取得的回饋來源與問題是【我的回饋來源】、【我的回饋問題】；我想增加的一小格挑戰是【我增加的這一小格】；如果卡住，我的縮小條件是【我的暫停或縮小條件】。</p><p>請只根據我提供的內容，幫我整理 3 個不同難度的練習版本。每個版本都請包含：一次練習的具體目標、建議的專注條件、可以取得的回饋與一個回饋問題、只增加一小格的挑戰、卡住時的縮小版本，以及完成後要留下的證據。請保留我原本想練習的技能，不要把「更努力」「花更多時間」當成唯一方案，不要保證我一定會變成專家，也不要猜測我的時間、健康、能力或可用資源。如果資訊不足，請標示「待確認」，最後讓我自己選擇一個版本。</p></div><button class='prompt-copy-button' data-prompt-copy type='button'>複製提示詞</button></aside>"
     }
   ],
-  "fallbackGlyphs": ["穩", "熟", "辨", "練", "憑", "夠", "撐", "酬", "擇", "礙", "錄", "憶", "饋"]
+  "fallbackGlyphs": [
+    "穩",
+    "熟",
+    "辨",
+    "練",
+    "憑",
+    "夠",
+    "撐",
+    "酬",
+    "擇",
+    "礙",
+    "錄",
+    "憶",
+    "饋"
+  ]
 }

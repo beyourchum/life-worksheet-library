@@ -1,5 +1,7 @@
+const { numberedHeadingPattern } = require('./worksheet-heading-check.cjs');
+
 async function worksheetStyleIssues(page) {
-  return page.evaluate(() => {
+  return page.evaluate((numberedPattern) => {
     const issues = [];
     const controls = 'input[type=radio],input[type=checkbox]';
     const questionTextSelector = 'main h1,main h2,main h3,main h4,main h5,main h6,main p,main li,main label,main legend,main th,main td,main dt,main dd,main blockquote,main .section-instruction,main .matrix-label,.answer-field > label';
@@ -62,10 +64,15 @@ async function worksheetStyleIssues(page) {
       if (/（(?:例如|如|像是|比如|舉例|範例|例)：[^）]+）/.test(copy.textContent) && !copy.querySelector('.choice-inline-example'))
         issues.push('選項內的舉例須另起一行並使用灰色小字：' + copy.textContent.trim());
     }
+    for (const heading of document.querySelectorAll('main h2,main h3,main h4,main h5,main h6')) {
+      const copy = heading.cloneNode(true);
+      copy.querySelectorAll('.section-number').forEach(node => node.remove());
+      const text = copy.textContent.trim();
+      if (new RegExp(numberedPattern).test(text))
+        issues.push('標題不應加數字或字母編號（含中文序數）；移除標題前綴，保留獨立 section-number 區塊編號：' + text);
+    }
     for (const heading of document.querySelectorAll('main h3')) {
       const text = heading.textContent.trim();
-      if (/^(?:\d+|[A-Za-z])[.、]\s*/.test(text))
-        issues.push('題目標題不應加數字或字母編號：' + text);
       if (/^(?:情境|例如[：:])/.test(text) && !heading.closest('.question-heading') && !heading.matches('h3.subheading'))
         issues.push('情境或示範標題須使用 h3.subheading：' + text);
       if (heading.matches('h3.subheading') && /^情境[：:]/.test(text))
@@ -110,7 +117,7 @@ async function worksheetStyleIssues(page) {
         issues.push('題型標示混入正文：' + el.textContent.trim());
     }
     return issues;
-  });
+  }, numberedHeadingPattern.source);
 }
 async function inlineInputLayoutIssues(page) {
   return page.evaluate(() => [...document.querySelectorAll('.choice input[type=text].inline-input:not(.compact-input)')]

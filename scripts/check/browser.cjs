@@ -96,7 +96,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
   manifest = read('assets/fonts/worksheet/compact/manifest.json');
   items = read('catalog/worksheets.json');
   if (ep && !items.some((item) => item.ep === ep && item.worksheetUrl)) throw new Error(`${ep}: 索引中沒有可檢查的學習單`);
-  let server, base;
+  let server, base, snapshotUnchanged, snapshotHash;
   let browser;
   const errors = [];
   const record = async (name, fn, scopes = []) => {
@@ -105,7 +105,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
     await recordCheck(name, fn);
   };
   try {
-    ({ server, base } = await start(browserTarget));
+    ({ server, base, snapshotUnchanged, snapshotHash } = await start(browserTarget,{snapshot:args.includes('--built')}));
     browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await record('表格內部溢出、重疊與 EP49 填答回歸', async () => {
@@ -377,12 +377,13 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
           .map((copy) => copy.innerText.trim())
           .filter((text) => /^[A-ZＡ-Ｚ][.．、]\s*/.test(text)));
         assert.deepEqual(prefixedChoices, [], `${item.ep}: 選項文字不得使用 A／B／C 等人工標號`);
-        const promptConfiguration = page.locator('.prompt-quote');
-        assert.equal(
-          await promptConfiguration.getAttribute('data-prompt-configured'),
-          'true',
-          `${item.ep}: AI 提示詞缺少完整的作答欄位對應；請更新 assets/worksheet.js 的 promptBindings`
-        );
+        for (const promptConfiguration of await page.locator('.prompt-quote').all()) {
+          assert.equal(
+            await promptConfiguration.getAttribute('data-prompt-configured'),
+            'true',
+            `${item.ep}: AI 提示詞缺少完整的作答欄位對應；請更新 assets/worksheet.js 的 promptBindings`
+          );
+        }
         assert.deepEqual(await fontIssues(page, item.ep), []);
         const fonts = await withinFontBudget(page, false, item.ep);
         const field = page.locator('textarea:not([readonly]),input[type=text]:not([readonly])').first();
@@ -512,6 +513,10 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
       assert.throws(() => checkPrint(metrics, 'self-test'), /溢出|頁尾/);
     }, ['*']);
     assert.deepEqual(errors, [], 'JavaScript 執行錯誤');
+    if (snapshotHash) await record('建置產物在驗收期間保持一致', async()=>{
+      assert(snapshotUnchanged(),'_site 在驗收期間已變更，請完成建置後重新驗收');
+      return {snapshotHash};
+    },['*']);
   } finally {
     try { if (browser) await browser.close(); }
     finally { if (server) await new Promise((resolve) => server.close(resolve)); }

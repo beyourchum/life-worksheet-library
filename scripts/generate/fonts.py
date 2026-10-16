@@ -4,6 +4,7 @@ Requires fonttools and brotli. Run from any directory; output is deterministic
 for the same source files and tool versions. Original font files stay intact.
 """
 import hashlib
+import copy
 import json
 import sys
 import time
@@ -85,7 +86,7 @@ if requested_scope:
     if (old.get('generatorHash') != generator_hash or old.get('sourceHash') != source_hash
             or old.get('inputs', {}).get('assets/worksheet.js') != text_hash(worksheet_script)):
         raise SystemExit('字型產生器、原始字型或共用 worksheet.js 已改變；請先執行 pnpm run fonts 完成一次全站重建。')
-    manifest = old
+    manifest = copy.deepcopy(old)
     scopes = [(requested_scope, target_file)]
 else:
     manifest = {'generatorHash': generator_hash, 'sourceHash': source_hash, 'inputs': {}, 'scopes': {}}

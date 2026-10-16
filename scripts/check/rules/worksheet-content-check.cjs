@@ -70,13 +70,13 @@ async function worksheetStructureIssues(page, title, ep) {
     const prompts = document.querySelectorAll('main [data-prompt-text]');
     const before = (a, b) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) && !a.contains(b);
     if (endings.length !== 1) issues.push('結尾語須唯一');
-    if (ai.length !== 1 || prompts.length !== 1) issues.push('AI 引導與提示詞須各有一處');
+    if (ai.length !== 1 || prompts.length < 1) issues.push('AI 引導須有一處，並至少有一份提示詞');
     if (endings.length === 1) {
       const ending = endings[0];
       const answers = [...document.querySelectorAll('main input:not([type="hidden"]):not([type="button"]):not([type="submit"]), main textarea, main select')];
       if (answers.some(answer => !before(answer, ending))) issues.push('結尾語須放在所有作答欄位之後');
       if (ai.length === 1 && !before(ending, ai[0])) issues.push('結尾語須放在 AI 引導之前');
-      if (ai.length === 1 && prompts.length === 1 && !before(ai[0], prompts[0])) issues.push('AI 提示詞須放在 AI 引導之後');
+      if (ai.length === 1 && [...prompts].some(prompt => !before(ai[0], prompt))) issues.push('每份 AI 提示詞須放在 AI 引導之後');
     }
     return issues;
   }, { title, ep });

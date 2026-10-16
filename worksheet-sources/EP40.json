@@ -26,7 +26,7 @@
     },
     {
       "footer": "把第一個衝動換成多一個選擇",
-      "bodyHtml": "<aside class='closing final-reminder no-arrow'><p>先停三秒、再決定要不要回答，不代表我失禮；我可以只說自己願意分享的部分，也可以把話題停在這裡。</p><p>下次遇到類似提問時，記得「暫停 → 保留幾種解讀 → 選一個回應」，讓第一個衝動不必替我做最後決定。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你想把剛剛的練習整理成一段更自然的回應，可以複製下方提示詞。送出前請刪除姓名、地點與其他不想分享的私人資料；AI 只能依你提供的內容協助整理，不替你猜測對方動機，也不替你決定要不要回答。</p></aside><p>我想請 AI 協助整理這個敏感提問：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我正在面對的提問是【我想練習的提問】；我第一個直覺反應是【我的直覺反應】；我目前暫時解讀對方可能是【我的暫時解讀】；我願意保留的另一種可能是【我願意保留的另一種可能】；我想回應【我的回應】，因為我想保護【這句話替我保護的界線】。</p><p>請只根據我提供的內容，幫我把回應整理得自然、簡短，保留我的界線；如果資料不足，請標示「待確認」，不要替我補故事、猜測對方的真正動機，或要求我透露不想分享的資訊。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
+      "bodyHtml": "<aside class='closing final-reminder no-arrow'><p>先停三秒、再決定要不要回答，不代表我失禮；我可以只說自己願意分享的部分，也可以把話題停在這裡。</p><p>下次遇到類似提問時，記得「暫停 → 保留幾種解讀 → 選一個回應」，讓第一個衝動不必替我做最後決定。</p></aside><aside class=\"closing prompt-intro\"><span class=\"closing-mark\">→</span><h2>AI 幫幫忙</h2><p>如果你想把剛剛的練習整理成一段更自然的回應，可以複製下方提示詞。送出前請刪除姓名、地點與其他不想分享的私人資料；AI 只能依你提供的內容協助整理，不替你猜測對方動機，也不替你決定要不要回答。</p></aside><p>我想請 AI 協助整理這個敏感提問：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我正在面對的提問是【我想練習的提問】；我第一個直覺反應是【我的直覺反應】；我目前暫時解讀對方可能是【我的暫時解讀】；我願意保留的另一種可能是【我願意保留的另一種可能】；我想回應【我的回應】，因為我想保護【這句話替我保護的界線】。</p><p>請只根據我提供的內容，幫我把回應整理得自然、簡短，保留我的界線；如果資料不足，請標示「待確認」，不要替我補故事、猜測對方的真正動機，或要求我透露不想分享的資訊。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
     }
   ],
   "fallbackGlyphs": [

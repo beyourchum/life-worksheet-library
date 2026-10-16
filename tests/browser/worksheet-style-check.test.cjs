@@ -97,6 +97,13 @@ async function testWorksheetStyles(page) {
   assert.deepEqual(numberedHtmlHeadings('<h2><span>01</span>整理情境</h2><h3>選一個</h3>'), []);
   assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 1. 選一個\n\n### 2、整理下一步\n\n### B、娛樂'), ['1. 選一個', '2、整理下一步', 'B、娛樂']);
   assert.deepEqual(numberedMarkdownHeadings('## 01 整理情境\n\n### 選一個'), []);
+  for (const prefix of ['一、', '二、', '（一）', '1.', 'A、']) {
+    for (const tag of ['h2', 'h3', 'h4', 'h5', 'h6'])
+      assert((await check(`<${tag}><em>${prefix}</em>整理情境</${tag}>`)).some(x => x.includes('不應加數字或字母編號')));
+  }
+  assert((await check('<h2><span class="section-number">01</span>一、整理情境</h2>')).some(x => x.includes('不應加數字或字母編號')));
+  assert.deepEqual(await check('<div class="section-heading"><span class="section-number">01</span><h2>整理情境</h2></div><p>每週一、兩次</p>'), []);
+  assert.deepEqual(await check('<h2><span class="section-number">01</span>整理情境</h2><h3>一個可以嘗試的方法</h3>'), []);
   assert((await check('<div class="subheading">情境：朋友臨時約吃飯</div>')).some(x => x.includes('灰綠底活動標題')));
   assert((await check(group)).some(x => x.includes('缺少題目')));
   assert((await check(heading.replace('<span class="answer-mode">單選</span>', '') + group)).some(x => x.includes('題型標示')));

@@ -4,12 +4,20 @@
   "videoTitle": "當堅持超出成本│放棄也是成長的重要技能",
   "hero": {
     "kicker": "當堅持超出成本",
-    "titleHtml": "從硬撐到<em>策略性轉向</em>",
+    "titleHtml": "想放下又怕是逃避，怎麼<em>判斷要停下或調整</em>？",
     "question": "明知道方向不適合，卻因為投入成本或別人的期待而不敢放手時，我怎麼判斷該停下、調整，還是繼續？"
   },
   "layoutVariants": [],
   "useComponents": false,
-  "fallbackGlyphs": ["熬", "嘲", "犧", "牲", "綱", "膝", "驟"],
+  "fallbackGlyphs": [
+    "熬",
+    "嘲",
+    "犧",
+    "牲",
+    "綱",
+    "膝",
+    "驟"
+  ],
   "pages": [
     {
       "footer": "先把核心目標和不適合的做法分開",
@@ -33,7 +41,7 @@
     },
     {
       "footer": "帶走一個判斷，並在七天內試一個小步驟",
-      "bodyHtml": "<h3 class='subheading'>我想帶走的一個判斷與下一步</h3><div class='answer-field'><label for='ep29-w6-insight'>我現在對「堅持或放棄」多了一個看法：</label><textarea id='ep29-w6-insight' rows='3'></textarea></div><p class='example-note'>例如：停止一個沒效果的方法，不等於放棄想完成的目標。</p><div class='answer-field'><label for='ep29-w6-step'>我在接下來七天內會做的第一個小步驟是：</label><textarea id='ep29-w6-step' rows='3'></textarea></div><p class='example-note'>例如：今晚把報告的逐字稿改成一頁提綱，並請組員聽我說明一次。</p><div class='answer-field'><label for='ep29-w6-proof'>我會用什麼證據知道自己有做到？</label><textarea id='ep29-w6-proof' rows='3'></textarea></div><p class='example-note'>例如：我留下提綱、練習日期，以及自己能否不看稿說出三個重點的紀錄。</p><aside class='closing final-reminder no-arrow'><p>放棄不等於放棄自己。當方向、方法或成本已經改變時，可以先停下來分辨事實與壓力，保留真正重要的目標，再用一個小範圍的調整測試下一步。微調不是不夠努力，而是讓努力重新對準值得前進的地方。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你已經完成上面的判斷，卻想把想法整理成一份「微放棄行動卡」，可以複製下方提示詞。送出前請刪除姓名、學校、地點、健康資訊和其他不想分享的個人資料；AI 只能協助整理你提供的內容，不替你做永久決定，也不替你診斷身心狀況。請用自己的需求、客觀條件與必要的專業建議核對結果。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我正在投入的事情是【我正在投入的事情】；我原本想達成的核心目標是【我的核心目標】；我想停止或改變的具體做法是【我想停止或改變的具體做法】。</p><p>我目前看到的具體事實是【我遇到的具體事實】；我能調整、確認或求助的部分是【我能調整或確認的部分】；這個決定受到的外界聲音是【外界聲音與影響】；我看到的主要訊號與成本是【我的訊號與成本】；我的暫定結論是【我的暫定結論】；我的微放棄計畫是【我的微放棄計畫】；我會在【重新判斷時間】重新檢查。</p><p>請扮演一位「決策整理教練」，只根據我提供的內容，幫我整理一張「微放棄行動卡」，包含：</p><ul><li>我想保留的核心目標</li><li>我先放下的做法或安排</li><li>支持目前判斷的事實與仍待確認的資訊</li><li>一個可以在小範圍試行的下一步</li><li>試行期間要觀察的成本、結果或身心訊號</li><li>重新判斷的時間與問題</li></ul><p>請把「改變方法」「暫停一段時間」「轉向另一個方向」分開寫，不要把停止一種做法直接解讀成放棄自己。不要替我補造事實、猜測他人的想法、做醫療或心理診斷，也不要要求我公開這個決定；如果資訊不足，請標示「待確認」。</p></div><button class='prompt-copy-button' data-prompt-copy type='button'>複製提示詞</button></aside>"
+      "bodyHtml": "<h3 class='subheading'>我想帶走的一個判斷與下一步</h3><div class='answer-field'><label for='ep29-w6-insight'>我現在對「堅持或放棄」多了一個看法：</label><textarea id='ep29-w6-insight' rows='3'></textarea></div><p class='example-note'>例如：停止一個沒效果的方法，不等於放棄想完成的目標。</p><div class='answer-field'><label for='ep29-w6-step'>我在接下來七天內會做的第一個小步驟是：</label><textarea id='ep29-w6-step' rows='3'></textarea></div><p class='example-note'>例如：今晚把報告的逐字稿改成一頁提綱，並請組員聽我說明一次。</p><div class='answer-field'><label for='ep29-w6-proof'>我會用什麼證據知道自己有做到？</label><textarea id='ep29-w6-proof' rows='3'></textarea></div><p class='example-note'>例如：我留下提綱、練習日期，以及自己能否不看稿說出三個重點的紀錄。</p><aside class='closing final-reminder no-arrow'><p>放棄不等於放棄自己。當方向、方法或成本已經改變時，可以先停下來分辨事實與壓力，保留真正重要的目標，再用一個小範圍的調整測試下一步。微調不是不夠努力，而是讓努力重新對準值得前進的地方。</p></aside><aside class=\"closing prompt-intro\"><span class=\"closing-mark\">→</span><h2>AI 幫幫忙</h2><p>如果你已經完成上面的判斷，卻想把想法整理成一份「微放棄行動卡」，可以複製下方提示詞。送出前請刪除姓名、學校、地點、健康資訊和其他不想分享的個人資料；AI 只能協助整理你提供的內容，不替你做永久決定，也不替你診斷身心狀況。請用自己的需求、客觀條件與必要的專業建議核對結果。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我正在投入的事情是【我正在投入的事情】；我原本想達成的核心目標是【我的核心目標】；我想停止或改變的具體做法是【我想停止或改變的具體做法】。</p><p>我目前看到的具體事實是【我遇到的具體事實】；我能調整、確認或求助的部分是【我能調整或確認的部分】；這個決定受到的外界聲音是【外界聲音與影響】；我看到的主要訊號與成本是【我的訊號與成本】；我的暫定結論是【我的暫定結論】；我的微放棄計畫是【我的微放棄計畫】；我會在【重新判斷時間】重新檢查。</p><p>請扮演一位「決策整理教練」，只根據我提供的內容，幫我整理一張「微放棄行動卡」，包含：</p><ul><li>我想保留的核心目標</li><li>我先放下的做法或安排</li><li>支持目前判斷的事實與仍待確認的資訊</li><li>一個可以在小範圍試行的下一步</li><li>試行期間要觀察的成本、結果或身心訊號</li><li>重新判斷的時間與問題</li></ul><p>請把「改變方法」「暫停一段時間」「轉向另一個方向」分開寫，不要把停止一種做法直接解讀成放棄自己。不要替我補造事實、猜測他人的想法、做醫療或心理診斷，也不要要求我公開這個決定；如果資訊不足，請標示「待確認」。</p></div><button class='prompt-copy-button' data-prompt-copy type='button'>複製提示詞</button></aside>"
     }
   ]
 }

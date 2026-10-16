@@ -31,8 +31,19 @@
     },
     {
       "footer": "帶走一個在安心裡前進的版本",
-      "bodyHtml": "<div class='section-heading'><span class='section-number'>05</span><h2>帶走一個在安心裡前進的版本</h2></div><p>請把前面的答案整理成一個下次可以直接使用的版本。</p><div class='answer-field'><label for='ep36-w5-direction'>我想前進的方向是：</label><textarea id='ep36-w5-direction' rows='2'></textarea></div><p class='example-note'>例如：在課堂上清楚完成一場五分鐘報告。</p><div class='answer-field'><label for='ep36-w5-resources'>我現在可以使用的資源是：</label><textarea id='ep36-w5-resources' rows='2'></textarea></div><p class='example-note'>例如：已經知道題目、能使用圖書館，也有同學願意聽我練習。</p><div class='answer-field'><label for='ep36-w5-action'>我這週先做的最小一步是：</label><textarea id='ep36-w5-action' rows='2'></textarea></div><p class='example-note'>例如：週三晚餐後列出三個重點，並錄一段一分鐘的說明。</p><div class='answer-field'><label for='ep36-w5-start'>我會怎麼知道自己已經開始：</label><textarea id='ep36-w5-start' rows='2'></textarea></div><p class='example-note'>例如：留下報告大綱和一個錄音檔，不要求一次做到完整。</p><div class='answer-field'><label for='ep36-w5-pressure'>如果這一步變得太有壓力，我會：</label><textarea id='ep36-w5-pressure' rows='2'></textarea></div><p class='example-note'>例如：先只寫三個重點，改在隔天再決定要不要錄音或找同學練習。</p><aside class='closing final-reminder no-arrow'><p>舒適圈不是成長的終點，也不是一定要逃離的地方。先確認自己需要的安全感、展現方式與愉快感，再把想去的方向拆成能承受、能觀察、能調整的小步驟；穩定地向前，也是一種真正的成長。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你已經知道想前進的方向，卻還不確定怎麼把它拆成適合自己的路線，可以複製下方提示詞請 AI 協助整理。送出前請刪除姓名、地點、聯絡方式與其他不想分享的私人資料；也請檢查建議是否符合你的時間、身體狀況、經濟條件與實際責任。AI 只能協助整理可能的步驟，不把舒適或不舒適當成診斷，不替你決定最後要不要前進。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想前進的方向是【我想前進的方向】；我目前擁有、可以支持我的資源是【我目前擁有的資源】；我近期想完成的短期目標是【我近期想完成的事情】；我想先採取的最小一步是【我這週先做的最小一步】；我預計在【我需要的時間、地點或支持】開始；如果壓力太大，我可以改成【如果這一步變得太有壓力，我會】。</p><p>請根據我提供的內容，幫我整理 3 條循序漸進的行動路線。每條路線都請包含：第一個小步驟、下一步如何增加一點挑戰、我可以保留的安全感／表達方式／愉快感條件，以及壓力太大時的縮小版本。請保留我原本想前進的方向，不要把「跳出舒適圈」當成唯一正解，也不要要求我靠羞愧、過度勉強或犧牲休息來完成。請不要猜測我的時間、健康、家庭、收入或能力，不要把焦慮或舒適圈當成醫療診斷；如果資訊不足，請標示「待確認」，最後讓我自己選擇一條路線。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>05</span><h2>帶走一個在安心裡前進的版本</h2></div><p>請把前面的答案整理成一個下次可以直接使用的版本。</p><div class='answer-field'><label for='ep36-w5-direction'>我想前進的方向是：</label><textarea id='ep36-w5-direction' rows='2'></textarea></div><p class='example-note'>例如：在課堂上清楚完成一場五分鐘報告。</p><div class='answer-field'><label for='ep36-w5-resources'>我現在可以使用的資源是：</label><textarea id='ep36-w5-resources' rows='2'></textarea></div><p class='example-note'>例如：已經知道題目、能使用圖書館，也有同學願意聽我練習。</p><div class='answer-field'><label for='ep36-w5-action'>我這週先做的最小一步是：</label><textarea id='ep36-w5-action' rows='2'></textarea></div><p class='example-note'>例如：週三晚餐後列出三個重點，並錄一段一分鐘的說明。</p><div class='answer-field'><label for='ep36-w5-start'>我會怎麼知道自己已經開始：</label><textarea id='ep36-w5-start' rows='2'></textarea></div><p class='example-note'>例如：留下報告大綱和一個錄音檔，不要求一次做到完整。</p><div class='answer-field'><label for='ep36-w5-pressure'>如果這一步變得太有壓力，我會：</label><textarea id='ep36-w5-pressure' rows='2'></textarea></div><p class='example-note'>例如：先只寫三個重點，改在隔天再決定要不要錄音或找同學練習。</p><aside class='closing final-reminder no-arrow'><p>舒適圈不是成長的終點，也不是一定要逃離的地方。先確認自己需要的安全感、展現方式與愉快感，再把想去的方向拆成能承受、能觀察、能調整的小步驟；穩定地向前，也是一種真正的成長。</p></aside><aside class=\"closing prompt-intro\"><span class=\"closing-mark\">→</span><h2>AI 幫幫忙</h2><p>如果你已經知道想前進的方向，卻還不確定怎麼把它拆成適合自己的路線，可以複製下方提示詞請 AI 協助整理。送出前請刪除姓名、地點、聯絡方式與其他不想分享的私人資料；也請檢查建議是否符合你的時間、身體狀況、經濟條件與實際責任。AI 只能協助整理可能的步驟，不把舒適或不舒適當成診斷，不替你決定最後要不要前進。</p></aside><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我想前進的方向是【我想前進的方向】；我目前擁有、可以支持我的資源是【我目前擁有的資源】；我近期想完成的短期目標是【我近期想完成的事情】；我想先採取的最小一步是【我這週先做的最小一步】；我預計在【我需要的時間、地點或支持】開始；如果壓力太大，我可以改成【如果這一步變得太有壓力，我會】。</p><p>請根據我提供的內容，幫我整理 3 條循序漸進的行動路線。每條路線都請包含：第一個小步驟、下一步如何增加一點挑戰、我可以保留的安全感／表達方式／愉快感條件，以及壓力太大時的縮小版本。請保留我原本想前進的方向，不要把「跳出舒適圈」當成唯一正解，也不要要求我靠羞愧、過度勉強或犧牲休息來完成。請不要猜測我的時間、健康、家庭、收入或能力，不要把焦慮或舒適圈當成醫療診斷；如果資訊不足，請標示「待確認」，最後讓我自己選擇一條路線。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
     }
   ],
-  "fallbackGlyphs": ["伐", "滯", "嘗", "綱", "借", "愉", "愧", "勉", "犧", "牲"]
+  "fallbackGlyphs": [
+    "伐",
+    "滯",
+    "嘗",
+    "綱",
+    "借",
+    "愉",
+    "愧",
+    "勉",
+    "犧",
+    "牲"
+  ]
 }

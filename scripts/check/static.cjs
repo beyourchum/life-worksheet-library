@@ -3,7 +3,8 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const { createHash } = require('node:crypto');
-const { numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
+const { headingText, markdownTitleIssues, numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
+const { promptMarkupIssues } = require('./rules/prompt-markup-check.cjs');
 process.chdir(path.join(__dirname, '../..'));
 const args = process.argv.slice(2).filter((arg) => arg !== '--');
 if (args.length > 1 || (args.length === 1 && !/^EP\d+$/i.test(args[0])))
@@ -39,8 +40,13 @@ check(Array.isArray(worksheetLayouts.variants) && new Set(worksheetLayouts.varia
 require('../../tests/unit/worksheet-html-generator.test.cjs');
 require('../../tests/unit/publish-files.test.cjs');
 require('../../tests/unit/scoped-static.test.cjs');
+require('../../tests/unit/worksheet-heading-check.test.cjs');
+require('../../tests/unit/prompt-markup-check.test.cjs');
+require('../../tests/unit/scoped-fonts.test.cjs');
 const reportTests = require('node:child_process').spawnSync(process.execPath, ['tests/unit/report.test.cjs'], { stdio: 'inherit', shell: false });
 check(!reportTests.error && reportTests.status === 0, '驗收報告負向測試失敗');
+const snapshotTests = require('node:child_process').spawnSync(process.execPath, ['tests/unit/server-snapshot.test.cjs'], {stdio:'inherit',shell:false});
+check(!snapshotTests.error && snapshotTests.status===0,'建置產物固定版本與變更偵測測試失敗');
 if (!ep || fs.existsSync(`worksheet-sources/${ep}.json`)) {
   try { require('../generate/worksheet-html.cjs').generate({ ep, check: true }); } catch (error) { errors.push(error.message); }
 }
@@ -171,6 +177,7 @@ for (const item of items) {
   if (item.worksheetUrl && !fs.existsSync(file)) { errors.push(`${item.ep}: 缺少頁面`); continue; }
   if (item.worksheetUrl) {
   const html = read(file);
+  for (const issue of promptMarkupIssues(html)) errors.push(`${item.ep}: ${issue}`);
   for (const issue of videoEmbedIssues(html, item)) errors.push(issue);
   const requiredParts = [
     /<strong>學習目標：<\/strong>\s*[^<\s]/,
@@ -207,7 +214,7 @@ for (const item of items) {
   }
   const correctedFile = `content/${item.ep}/${item.ep}_corrected.md`;
   const numberedHtml = numberedHtmlHeadings(html);
-  check(numberedHtml.length === 0, `${item.ep}: 題目或活動小標題不應加數字或字母編號：${numberedHtml.join('、')}`);
+  check(numberedHtml.length === 0, `${item.ep}: 標題不應加數字或字母編號（含中文序數）：${numberedHtml.join('、')}；請修正有效來源，保留獨立 section-number 區塊編號後重新產生 HTML`);
   if (process.env.GITHUB_ACTIONS !== 'true') {
     for (const role of ['source', 'corrected']) {
       const sourceFile = `content/${item.ep}/${item.ep}_${role}.md`;
@@ -217,11 +224,10 @@ for (const item of items) {
   if (fs.existsSync(correctedFile)) {
     const md = read(correctedFile);
     const numberedMarkdown = numberedMarkdownHeadings(md);
-    check(numberedMarkdown.length === 0, `${correctedFile}: 題目或活動小標題不應加數字或字母編號：${numberedMarkdown.join('、')}`);
+    check(numberedMarkdown.length === 0, `${correctedFile}: 標題不應加數字或字母編號（含中文序數）：${numberedMarkdown.join('、')}；請移除標題前綴，保留 01、02……區塊編號`);
     check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);
-    const hasCanonicalTitle = md.split(/\r?\n/).includes(`# ${item.ep}｜${item.title}`);
-    const hasLegacyTitle = md.includes(item.title);
-    check(hasCanonicalTitle || hasLegacyTitle, `${correctedFile}: 定稿標題與索引不一致，請核對標題並保留原稿標題於來源資料`);
+    for (const issue of markdownTitleIssues(md, item.title, item.ep))
+      errors.push(`${correctedFile}: ${issue}，請核對標題並保留原稿標題於來源資料`);
     for (const label of ['學習目標', '使用說明', 'AI 幫幫忙'])
       check(md.includes(label), `${item.ep}: 修訂稿缺少${label}`);
     const mdIntroStart = md.search(/學習目標[：:]/);
@@ -230,7 +236,10 @@ for (const item of items) {
     check(!/(?:適用對象|目標對象|建議年級|預備知識|建議時間)[：:]/.test(mdIntro), `${item.ep}: 修訂稿開頭只能保留學習目標與使用說明，不得另列適用對象等前置欄位`);
     check(/(?:<!--\s*final-reminder\s*-->\s*(?:>\s*\S|\r?\n)|^## 結尾\s+\S)/m.test(md), `${item.ep}: 修訂稿缺少結尾`);
   }
-  check(html.includes(`<title>${item.ep}｜${item.title}</title>`), `${item.ep}: 頁面標題與索引不一致`);
+  const documentTitles = [...html.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/gi)];
+  check(documentTitles.length === 1 && headingText(documentTitles[0][1]) === headingText(`${item.ep}｜${item.title}`), `${item.ep}: 頁面標題與索引不一致`);
+  const mainTitles = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1\s*>/gi)];
+  check(mainTitles.length === 1 && headingText(mainTitles[0][1]) === String(item.title).replace(/\s+/g, ''), `${item.ep}: 學習單須有唯一 h1 且主標與索引一致`);
   check(html.includes(`data-worksheet-id="${item.ep}"`), `${item.ep}: 暫存識別碼不一致`);
   const pageCategories = [...html.matchAll(/<header class="page-meta"><strong>[^<]+<\/strong><span>([^<]+)<\/span>/g)].map((m) => m[1]);
   check(pageCategories.length > 0 && pageCategories.every((x) => x === item.category), `${item.ep}: 頁面分類與索引不一致`);

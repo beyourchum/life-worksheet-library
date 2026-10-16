@@ -1,6 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { videoRequirement, youtubeId } = require('../check/rules/video-policy.cjs');
+const { headingText, numberedHtmlHeadings } = require('../check/rules/worksheet-heading-check.cjs');
+const { promptMarkupIssues } = require('../check/rules/prompt-markup-check.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const readJson = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
@@ -24,12 +26,21 @@ function validateSource(source, catalogItem, variants, videoExceptions = []) {
   if (source.version !== 1) errors.push('version 必須是 1');
   if (source.ep !== catalogItem.ep) errors.push('ep 與 catalog/worksheets.json 不一致');
   for (const key of ['kicker', 'titleHtml', 'question']) if (!String(source.hero?.[key] || '').trim()) errors.push(`hero.${key} 不可空白`);
+  if (headingText(source.hero?.titleHtml) !== String(catalogItem.title || '').replace(/\s+/g, ''))
+    errors.push('hero.titleHtml 文字與 catalog/worksheets.json 的 title 不一致；請同步學習單主標，影片原名保留在 videoTitle 與頁尾');
   if (/<(?!\/?em\b)[^>]+>/i.test(source.hero?.titleHtml || '') || /<em\b[^>]*\s(?:style|on\w+)\s*=/i.test(source.hero?.titleHtml || ''))
     errors.push('hero.titleHtml 只允許使用無屬性的 <em> 強調標記');
   if (!Array.isArray(source.pages) || !source.pages.length) errors.push('pages 至少需要一頁');
+  if (source.calculator !== undefined) {
+    if (!['planning-buffer', 'heart-rate'].includes(source.calculator?.name)) errors.push('calculator.name 必須對應共用元件 planning-buffer 或 heart-rate');
+    if (source.calculator?.layout !== undefined && typeof source.calculator.layout !== 'boolean') errors.push('calculator.layout 必須是布林值');
+    if (!source.useComponents) errors.push('calculator 必須搭配 useComponents 載入共用互動');
+  }
   if (source.fallbackGlyphs !== undefined && (!Array.isArray(source.fallbackGlyphs) || source.fallbackGlyphs.some((glyph) => String(glyph).length !== 1)))
     errors.push('fallbackGlyphs 必須是單一字元陣列');
   for (const [index, page] of (source.pages || []).entries()) {
+    const numbered = numberedHtmlHeadings(String(page.bodyHtml || ''));
+    if (numbered.length) errors.push(`pages[${index}].bodyHtml 標題含序數：${numbered.join('、')}；請移除標題前綴，保留獨立 section-number 區塊編號`);
     if (!String(page.bodyHtml || '').trim()) errors.push(`pages[${index}].bodyHtml 不可空白`);
     if (!String(page.footer || '').trim()) errors.push(`pages[${index}].footer 不可空白`);
     if (/<(?:style|script)\b/i.test(page.bodyHtml || '') || /\sstyle\s*=/i.test(page.bodyHtml || ''))
@@ -51,6 +62,8 @@ function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
   const variantAttribute = source.layoutVariants?.length
     ? ` data-layout-variant="${source.layoutVariants.map(escapeHtml).join(' ')}"`
     : '';
+  const calculatorAttribute = source.calculator
+    ? ` data-calculator="${escapeHtml(source.calculator.name)}"${source.calculator.layout ? ' data-calculator-layout' : ''}` : '';
   const componentCss = source.useComponents ? '<link rel="stylesheet" href="../../assets/worksheet-components.css">' : '';
   const componentJs = source.useComponents ? '\n<script src="../../assets/worksheet-components.js" defer></script>' : '';
   const pages = source.pages.map((page, index) => {
@@ -63,9 +76,11 @@ function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
       bodyHtml = bodyHtml.replaceAll(String(replacement.from), String(replacement.to));
     }
     bodyHtml += source.contentSyncHtml?.[index] || '';
+    const numbered = numberedHtmlHeadings(bodyHtml);
+    if (numbered.length) throw new Error(`${source.ep}: pages[${index}] 套用 textReplacements／contentSyncHtml 後標題含序數：${numbered.join('、')}；請移除標題前綴，保留獨立 section-number 區塊編號`);
     return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
   }).join('\n');
-  return normalize(`<!doctype html>
+  const rendered = normalize(`<!doctype html>
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
@@ -78,13 +93,18 @@ ${componentCss}
 </head>
 <body>
 <div class="toolbar" aria-label="學習單工具"><nav class="worksheet-nav" aria-label="學習單導覽"><a href="../../index.html">返回內容索引</a><a data-video-link hidden target="_blank" rel="noopener noreferrer">觀看影片</a><span data-video-status hidden>影片連結無法載入，請返回內容索引。</span></nav><button class="toolbar-button primary" data-print type="button">列印／另存 PDF</button><div class="toolbar-details"><div class="draft-info"><span class="save-status" aria-live="polite" data-save-status>尚未填寫</span><p class="draft-hint">作答僅保留於目前分頁，關閉前請先列印或另存 PDF。</p></div><button class="toolbar-button clear-button" id="clear-draft" data-clear type="button" disabled>清除作答</button></div></div>
-<main class="worksheet" data-worksheet-id="${escapeHtml(source.ep)}"${variantAttribute}>
+<main class="worksheet" data-worksheet-id="${escapeHtml(source.ep)}"${variantAttribute}${calculatorAttribute}>
 ${pages}
 </main>
 <script src="../../assets/worksheet.js" defer></script>${componentJs}
 </body>
 </html>
 `);
+  if (rendered.includes('prompt-intro')) {
+    const issues = promptMarkupIssues(rendered);
+    if (issues.length) throw new Error(`${source.ep}: AI 區結構錯誤：\n- ${issues.join('\n- ')}`);
+  }
+  return rendered;
 }
 
 function sourceFiles(ep) {
