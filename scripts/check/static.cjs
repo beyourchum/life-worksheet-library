@@ -5,6 +5,7 @@ const vm = require('node:vm');
 const { createHash } = require('node:crypto');
 const { headingText, markdownTitleIssues, numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
 const { promptMarkupIssues } = require('./rules/prompt-markup-check.cjs');
+const { controlMarkupIssues } = require('./rules/control-markup-check.cjs');
 process.chdir(path.join(__dirname, '../..'));
 const args = process.argv.slice(2).filter((arg) => arg !== '--');
 if (args.length > 1 || (args.length === 1 && !/^EP\d+$/i.test(args[0])))
@@ -38,6 +39,7 @@ for (const key of ['pageSize', 'capacityTestEntries'])
 check(Array.isArray(worksheetLayouts.variants) && new Set(worksheetLayouts.variants).size === worksheetLayouts.variants.length,
   'worksheet-layouts.json: variants 必須是無重複陣列');
 require('../../tests/unit/worksheet-html-generator.test.cjs');
+require('../../tests/unit/control-markup-check.test.cjs');
 require('../../tests/unit/publish-files.test.cjs');
 require('../../tests/unit/scoped-static.test.cjs');
 require('../../tests/unit/worksheet-heading-check.test.cjs');
@@ -177,6 +179,7 @@ for (const item of items) {
   if (item.worksheetUrl && !fs.existsSync(file)) { errors.push(`${item.ep}: 缺少頁面`); continue; }
   if (item.worksheetUrl) {
   const html = read(file);
+  for (const issue of controlMarkupIssues(html)) errors.push(`${file}: ${issue}`);
   for (const issue of promptMarkupIssues(html)) errors.push(`${item.ep}: ${issue}`);
   for (const issue of videoEmbedIssues(html, item)) errors.push(issue);
   const requiredParts = [

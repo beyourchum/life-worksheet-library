@@ -3,6 +3,7 @@ const path = require('node:path');
 const { videoRequirement, youtubeId } = require('../check/rules/video-policy.cjs');
 const { headingText, numberedHtmlHeadings } = require('../check/rules/worksheet-heading-check.cjs');
 const { promptMarkupIssues } = require('../check/rules/prompt-markup-check.cjs');
+const { controlMarkupIssues } = require('../check/rules/control-markup-check.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const readJson = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
@@ -39,6 +40,7 @@ function validateSource(source, catalogItem, variants, videoExceptions = []) {
   if (source.fallbackGlyphs !== undefined && (!Array.isArray(source.fallbackGlyphs) || source.fallbackGlyphs.some((glyph) => String(glyph).length !== 1)))
     errors.push('fallbackGlyphs 必須是單一字元陣列');
   for (const [index, page] of (source.pages || []).entries()) {
+    for (const issue of controlMarkupIssues(page.bodyHtml)) errors.push(`pages[${index}].bodyHtml：${issue}`);
     const numbered = numberedHtmlHeadings(String(page.bodyHtml || ''));
     if (numbered.length) errors.push(`pages[${index}].bodyHtml 標題含序數：${numbered.join('、')}；請移除標題前綴，保留獨立 section-number 區塊編號`);
     if (!String(page.bodyHtml || '').trim()) errors.push(`pages[${index}].bodyHtml 不可空白`);
@@ -58,7 +60,17 @@ function validateSource(source, catalogItem, variants, videoExceptions = []) {
 
 function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
   validateSource(source, catalogItem, variants, videoExceptions);
-  const total = source.pages.length;
+  const renderedPages = [];
+  for (const page of source.pages) {
+    let bodyHtml = String(page.bodyHtml || '');
+    for (const replacement of source.textReplacements || []) {
+      if (replacement.page !== source.pages.indexOf(page)) continue;
+      bodyHtml = bodyHtml.replaceAll(String(replacement.from), String(replacement.to));
+    }
+    const chunks = bodyHtml.split("<div data-page-split='before'></div>");
+    for (const chunk of chunks) renderedPages.push({ ...page, bodyHtml: chunk });
+  }
+  const total = renderedPages.length;
   const variantAttribute = source.layoutVariants?.length
     ? ` data-layout-variant="${source.layoutVariants.map(escapeHtml).join(' ')}"`
     : '';
@@ -66,19 +78,17 @@ function renderWorksheet(source, catalogItem, variants, videoExceptions = []) {
     ? ` data-calculator="${escapeHtml(source.calculator.name)}"${source.calculator.layout ? ' data-calculator-layout' : ''}` : '';
   const componentCss = source.useComponents ? '<link rel="stylesheet" href="../../assets/worksheet-components.css">' : '';
   const componentJs = source.useComponents ? '\n<script src="../../assets/worksheet-components.js" defer></script>' : '';
-  const pages = source.pages.map((page, index) => {
+  const pages = renderedPages.map((page, index) => {
     const number = String(index + 1).padStart(2, '0');
     const video = catalogItem.videoUrl ? `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${youtubeId(catalogItem.videoUrl)}" title="${escapeHtml(source.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>` : '';
-    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${applyFallbackGlyphs(escapeHtml(source.hero.kicker), source.fallbackGlyphs)}</p><h1>${source.hero.titleHtml}</h1><div class="hero-copy"><p class="hero-question">${applyFallbackGlyphs(escapeHtml(source.hero.question), source.fallbackGlyphs)}</p></div></div>${video}` : '';
+    const hero = index === 0 ? `<div class="worksheet-hero"><p class="hero-kicker">${applyFallbackGlyphs(escapeHtml(source.hero.kicker), source.fallbackGlyphs)}</p><h1>${applyFallbackGlyphs(source.hero.titleHtml, source.fallbackGlyphs)}</h1><div class="hero-copy"><p class="hero-question">${applyFallbackGlyphs(escapeHtml(source.hero.question), source.fallbackGlyphs)}</p></div></div>${video}` : '';
     let bodyHtml = String(page.bodyHtml || '');
-    for (const replacement of source.textReplacements || []) {
-      if (replacement.page !== index) continue;
-      bodyHtml = bodyHtml.replaceAll(String(replacement.from), String(replacement.to));
-    }
     bodyHtml += source.contentSyncHtml?.[index] || '';
+    const controlIssues = controlMarkupIssues(bodyHtml);
+    if (controlIssues.length) throw new Error(`${source.ep}: pages[${index}] 套用 textReplacements／contentSyncHtml 後欄位樣式錯誤：\n- ${controlIssues.join('\n- ')}`);
     const numbered = numberedHtmlHeadings(bodyHtml);
     if (numbered.length) throw new Error(`${source.ep}: pages[${index}] 套用 textReplacements／contentSyncHtml 後標題含序數：${numbered.join('、')}；請移除標題前綴，保留獨立 section-number 區塊編號`);
-    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(page.footer)}</span></footer></article>`;
+    return `<article class="page worksheet-page" aria-label="第 ${index + 1} 頁"><header class="page-meta"><strong>${escapeHtml(source.ep)}</strong><span>${escapeHtml(catalogItem.category)}</span><span class="page-count">${number} / ${String(total).padStart(2, '0')}</span></header>${hero}${applyFallbackGlyphs(normalizeBodyHtml(bodyHtml), source.fallbackGlyphs)}<footer class="page-footer"><strong>${escapeHtml(source.ep)}</strong><span>${applyFallbackGlyphs(escapeHtml(page.footer), source.fallbackGlyphs)}</span></footer></article>`;
   }).join('\n');
   const rendered = normalize(`<!doctype html>
 <html lang="zh-Hant">
@@ -93,6 +103,7 @@ ${componentCss}
 </head>
 <body>
 <div class="toolbar" aria-label="學習單工具"><nav class="worksheet-nav" aria-label="學習單導覽"><a href="../../index.html">返回內容索引</a><a data-video-link hidden target="_blank" rel="noopener noreferrer">觀看影片</a><span data-video-status hidden>影片連結無法載入，請返回內容索引。</span></nav><button class="toolbar-button primary" data-print type="button">列印／另存 PDF</button><div class="toolbar-details"><div class="draft-info"><span class="save-status" aria-live="polite" data-save-status>尚未填寫</span><p class="draft-hint">作答僅保留於目前分頁，關閉前請先列印或另存 PDF。</p></div><button class="toolbar-button clear-button" id="clear-draft" data-clear type="button" disabled>清除作答</button></div></div>
+<aside class="worksheet-use-notice" aria-label="作答與保存說明"><p>本網站不會將作答上傳或儲存至後台，可以安心從自己的問題開始填寫，另存 PDF 後和信任的人討論。</p><p>作答只暫存於目前分頁；按「清除作答」即可刪除本分頁暫存。已下載的檔案請自行保管；複製至外部 AI 的內容由該服務處理。</p></aside>
 <main class="worksheet" data-worksheet-id="${escapeHtml(source.ep)}"${variantAttribute}${calculatorAttribute}>
 ${pages}
 </main>

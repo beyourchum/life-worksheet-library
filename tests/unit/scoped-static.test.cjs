@@ -44,6 +44,7 @@ assert.equal(baseline.exitCode, 0, `單集不得因其他集數缺稿而失敗�
 for (const [change, expected] of [
   [({ item }) => { item.videoUrl = ''; }, /缺少影片連結/],
   [({ html }) => html.replace('<main ', '<main style="color:red" '), /不得使用頁面內嵌樣式/],
+  [({ html }) => html.replace('</main>', '<input class="inline-answer" id="ep71-bad-container"></main>'), /worksheets\/EP71\/index.html: 欄位 ep71-bad-container[\s\S]*容器樣式/],
   [({ html }) => html.replace('<main ', '<main data-layout-variant="unknown-audit" '), /未登錄的版式變體/],
   [({ html }) => html.replace(/class="page-count">\d+ \/ \d+</, 'class="page-count">99 \/ 99<'), /頁碼與實際頁數/],
   [({ html }) => html.replace('<h2>', '<h2>一、'), /EP71: 標題不應加數字或字母編號（含中文序數）/],

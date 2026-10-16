@@ -37,20 +37,35 @@ class TextCollector(HTMLParser):
         super().__init__()
         self.text = []
         self.ignored = 0
+        self.system_fallback = 0
+        self.heading = False
+        self.heading_text = []
 
     def handle_starttag(self, tag, attrs):
+        if tag == 'h1':
+            self.heading = True
         if tag in ('script', 'style'):
             self.ignored += 1
-        self.text.extend(value for key, value in attrs
-                         if key in ('placeholder', 'aria-label', 'value') and value)
+        attributes = dict(attrs)
+        if tag == 'span' and 'glyph-system-fallback' in attributes.get('class', '').split():
+            self.system_fallback += 1
+        if not self.system_fallback:
+            self.text.extend(value for key, value in attrs
+                             if key in ('placeholder', 'aria-label', 'value') and value)
 
     def handle_endtag(self, tag):
+        if tag == 'h1':
+            self.heading = False
         if tag in ('script', 'style'):
             self.ignored -= 1
+        if tag == 'span' and self.system_fallback:
+            self.system_fallback -= 1
 
     def handle_data(self, data):
-        if not self.ignored:
+        if not self.ignored and not self.system_fallback:
             self.text.append(data)
+            if self.heading:
+                self.heading_text.append(data)
 
 
 families = [
@@ -110,6 +125,13 @@ for scope, file in scopes:
         continue
     source_text = ''.join(parser.text) + script.read_text(encoding='utf-8')
     characters = {name: set(map(ord, source_text)) | set(range(32, 127)) for name, *_ in families}
+    # Worksheet display type is used by the hero title and non-Han closing marks.
+    # Body copy does not need a second copy in the display font. Bare fixtures
+    # without a title retain the general collection used by scoped generation.
+    if scope != 'home' and parser.heading_text:
+        display_text = ''.join(parser.heading_text) + ''.join(
+            character for character in source_text if not 0x3400 <= ord(character) <= 0x9fff)
+        characters['glow-800'] = set(map(ord, display_text)) | set(range(32, 127))
     selected_families = families[:1] if scope == 'home' else families
     destination = OUTPUT / scope
     destination.mkdir(exist_ok=True)

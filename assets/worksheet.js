@@ -94,6 +94,66 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP23: [
+      ["[name=ep23-w1-situation]", "#ep23-w1-situation-other-text", "#ep23-w1-situation-text"],
+      ["#ep23-w1-fact"],
+      ["#ep23-w2-original"],
+      ["#ep23-w2-known"],
+      ["#ep23-w2-unknown", "#ep23-w2-unrecoverable"],
+      ["#ep23-w2-available"],
+      ["#ep23-w1-feeling", "#ep23-w1-intensity"],
+      ["[name=ep23-w3-value]", "#ep23-w3-value-other-text", "#ep23-w3-reminder", "#ep23-w3-value-clue", "#ep23-w3-next-clue"],
+      ["#ep23-w4-accept"],
+      ["#ep23-w4-if", "#ep23-w4-at-least", "#ep23-w4-remember"],
+      ["#ep23-w5-goal", "#ep23-w5-when", "#ep23-w5-step", "#ep23-w5-support", "#ep23-w5-backup", "#ep23-w5-proof", "[name=ep23-w5-way]", "#ep23-w5-way-other-text"]
+    ],
+    EP19: [
+      ["[name=ep19-w1-situation]", "#ep19-w1-situation-other-text", "#ep19-w1-context"],
+      ["#ep19-w1-fact"],
+      ["#ep19-w1-expectation", "#ep19-w1-gap"],
+      ["#ep19-w1-feeling", "#ep19-w1-impact"],
+      ["[name=ep19-w2-clue]", "#ep19-w2-clue-other-text", "#ep19-w2-selected", "#ep19-w2-judgment", "#ep19-w2-evidence"],
+      ["#ep19-w2-pending", "#ep19-w2-rewrite"],
+      ["#ep19-w3-difficulty", "#ep19-w3-action", "#ep19-w3-ability", "[name=ep19-w3-belief]", "#ep19-w3-belief-other-text", "#ep19-w3-selected", "#ep19-w3-proof"],
+      ["#ep19-w3-support-info", "#ep19-w3-support-ask"],
+      ["#ep19-w4-cycle-minutes", "#ep19-w4-cycle-scope", "#ep19-w4-cycle-practice", "#ep19-w4-cycle-feedback", "#ep19-w4-cycle-stuck", "#ep19-w4-small"],
+      ["#ep19-w5-target", "#ep19-w5-when", "#ep19-w5-first", "#ep19-w5-stop", "#ep19-w5-resource", "#ep19-w5-evidence", "#ep19-w5-backup", "#ep19-w5-review", "#ep19-w5-action", "#ep19-w5-check", "#ep19-w5-adjust"]
+    ],
+    EP21: [
+      ["[name=ep21-w1-scene]", "#ep21-w1-scene-other-text", "#ep21-w1-scene-detail"],
+      ["#ep21-w1-event", "#ep21-w1-frequency"],
+      ["#ep21-w1-resources", "#ep21-w1-signals"],
+      ["[name=ep21-w1-stress]", "#ep21-w1-reason"],
+      ["[name=ep21-w2-type]", "#ep21-w2-evidence"],
+      ["#ep21-w2-chain-ability", "#ep21-w2-chain-emotion", "#ep21-w2-chain-identity"],
+      ["#ep21-w3-capacity", "#ep21-w3-offer", "#ep21-w3-stop", "#ep21-w3-cannot", "#ep21-w3-alternative", "#ep21-w3-if-then"],
+      ["#ep21-w4-ack", "#ep21-w4-limit", "#ep21-w4-question", "#ep21-w4-sentence"],
+      ["#ep21-w5-worry", "[name=ep21-w5-evidence]"],
+      ["[name=ep21-w5-value]", "#ep21-w5-value-other-text", "#ep21-w5-support", "#ep21-w5-card-resource", "#ep21-w5-card-boundary", "#ep21-w5-card-alternative", "#ep21-w5-card-when", "#ep21-w5-card-safety", "#ep21-w5-card-proof", "[name=ep21-w5-action]", "#ep21-w5-action-other-text"]
+    ],
+    EP22: [
+      ["#ep22-w2-challenge"],
+      ["[name=ep22-w1-mindset]", "#ep22-w1-mindset-other-text"],
+      ["#ep22-w1-evidence", "#ep22-w1-clue"],
+      ["[name=ep22-w2-own]", "#ep22-w2-own-other-text", "#ep22-w2-responsible"],
+      ["#ep22-w2-deadline", "#ep22-w2-output", "#ep22-w2-frequency", "#ep22-w2-proof"],
+      ["#ep22-w3-path-a", "#ep22-w3-support-a", "#ep22-w3-path-b", "#ep22-w3-support-b"],
+      ["#ep22-w3-obstacle", "#ep22-w3-ifthen"],
+      ["#ep22-w3-confidence", "#ep22-w3-confidence-reason", "#ep22-w3-plus-one"],
+      ["#ep22-w4-path", "#ep22-w4-when", "#ep22-w4-action", "#ep22-w4-prepare", "#ep22-w4-proof", "#ep22-w4-backup", "#ep22-w4-experiment"]
+    ],
+    EP24: [
+      ["#ep24-w1-context"],
+      ["#ep24-w1-trigger"],
+      ["#ep24-w1-state"],
+      ["#ep24-w1-appraisal"],
+      ["[name=ep24-w2-type]", "#ep24-w2-original"],
+      ["#ep24-w3-need"],
+      ["#ep24-w3-impact"],
+      ["[name=ep24-w4-strategy]", "#ep24-w4-action"],
+      ["#ep24-w5-message"],
+      ["#ep24-w5-proof"]
+    ],
     EP28: [["#ep28-task"], ["#ep28-standard"], ["[name=ep28-benefit]"], ["[name=ep28-cost]"], ["[name=ep28-evaluation-axis]"], ["[name=ep28-type-reflection]"], ["[data-limited-choice='ep28-good-enough-criteria']"], ["#ep28-time-boundary"], ["#ep28-next-action"], ["#ep28-restart-condition"]],
     EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
     EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
@@ -134,6 +194,22 @@
       ["#ep27-w4-event-1", "#ep27-w4-feeling-1", "#ep27-w4-action-1", "#ep27-w4-need-1", "#ep27-w4-event-2", "#ep27-w4-feeling-2", "#ep27-w4-action-2", "#ep27-w4-need-2", "#ep27-w4-insight", "#ep27-w4-uncertain"],
       ["[name=ep27-w5-channel]", "#ep27-w5-fact", "#ep27-w5-invite", "#ep27-w5-script", "#ep27-w5-script-invite", "#ep27-w5-reminder"],
       ["#ep27-w6-moment", "#ep27-w6-event", "#ep27-w6-evidence", "[name=ep27-w6-step]", "#ep27-w6-time", "#ep27-w6-proof"]
+    ],
+    EP20: [
+      ["[name=ep20-w1-situation]", "#ep20-w1-context"],
+      ["#ep20-w1-fact"],
+      ["#ep20-w1-interpretation"],
+      ["#ep20-w1-feeling"],
+      ["#ep20-w1-need"],
+      ["#ep20-w2-invest", "#ep20-w2-person", "#ep20-w2-place", "#ep20-w2-opportunity", "#ep20-w2-existing"],
+      ["#ep20-w2-explore"],
+      ["#ep20-w3-value"],
+      ["#ep20-w3-expectation"],
+      ["#ep20-w3-conditions"],
+      ["#ep20-w3-known", "#ep20-w3-unknown"],
+      ["[data-limited-choice='ep20-w3-criteria']", "#ep20-w3-priority"],
+      ["#ep20-w4-stay-support", "#ep20-w4-stay-cost", "#ep20-w4-stay-test", "#ep20-w4-cross-support", "#ep20-w4-cross-cost", "#ep20-w4-cross-test", "#ep20-w4-change-support", "#ep20-w4-change-cost", "#ep20-w4-change-test"],
+      ["#ep20-w5-question", "#ep20-w5-time", "#ep20-w5-action", "#ep20-w5-person", "#ep20-w5-limit", "#ep20-w5-backup", "#ep20-w5-evidence"]
     ],
     EP25: [["#ep25-w1-task"], ["#ep25-w1-deadline"], ["#ep25-w1-stuck"], ["[name=ep25-w2-type]"], ["#ep25-w2-worry"], ["[name=ep25-w3-direction]"], ["#ep25-w4-hours"], ["#ep25-w4-goal"], ["#ep25-w5-step", "#ep25-w5-when"], ["#ep25-w5-proof", "#ep25-w5-check"]],
     EP47: [["#ep47-w1-event"], ["#ep47-w1-goal"], ["#ep47-w2-other-point", "#ep47-w2-unclear"], ["[name=ep47-w1-worry]", "#ep47-w1-worry-other-text"], ["[name=ep47-w2-method]", "#ep47-w2-method-other-text"]],
@@ -315,6 +391,24 @@
       ["#ep118-review-time"],
       ["#ep118-update-basis"],
       ["#ep118-alternative"]
+    ],
+    EP120: [
+      ["#ep120-relationship-type"],
+      ["#ep120-situation"],
+      ["#ep120-feeling"],
+      ["#ep120-score-total"],
+      ["#ep120-most-concerning"],
+      ["#ep120-basic-need"],
+      ["#ep120-review-deadline"],
+      ["#ep120-criterion"],
+      ["#ep120-protective-action"]
+    ],
+    EP119: [
+      ["#ep119-context"],
+      ["[name=ep119-focus]", "#ep119-focus-other-text", "#ep119-focus-note", "#ep119-focus-return"],
+      ["#ep119-impact"],
+      ["[name=ep119-need]", "#ep119-need-other-text", "#ep119-priority"],
+      ["#ep119-boundary-limit"]
     ]
   };
   const scoreTotal = worksheet.querySelector("[data-score-total]");
@@ -489,9 +583,20 @@
   };
   const updateScore = () => {
     if (!scoreTotal) return;
-    const total = [...worksheet.querySelectorAll("input[data-score]:checked")]
+    const scoredControls = [...worksheet.querySelectorAll("input[data-score]")];
+    const dimensions = [...new Set(scoredControls.map((control) => control.dataset.scoreDimension).filter(Boolean))];
+    const selectedDimensions = new Set(scoredControls.filter((control) => control.checked)
+      .map((control) => control.dataset.scoreDimension).filter(Boolean));
+    const complete = dimensions.length === 0 || dimensions.every((dimension) => selectedDimensions.has(dimension));
+    const total = scoredControls.filter((control) => control.checked)
       .reduce((sum, control) => sum + Number(control.dataset.score), 0);
-    scoreTotal.value = total ? String(total) : "";
+    scoreTotal.value = complete && total ? String(total) : "";
+    const scoreStatus = worksheet.querySelector("[data-score-status]");
+    if (scoreStatus && dimensions.length > 0) {
+      scoreStatus.textContent = complete
+        ? `五個面向已完成，總分為 ${total} 分。`
+        : `目前已完成 ${selectedDimensions.size}／${dimensions.length} 個面向；完成五題後會顯示總分。`;
+    }
   };
   const initScoreSums = () => {
     scoreSumGroups.forEach(({ total: totalSelector, sources }) => {

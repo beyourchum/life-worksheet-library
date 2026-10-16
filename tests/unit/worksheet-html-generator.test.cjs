@@ -18,6 +18,19 @@ const source = {
   ]
 };
 const html = renderWorksheet(source, item, ['wide-other-input']);
+const oldEp19 = require('node:fs').readFileSync(require('node:path').join(__dirname, '../fixtures/ep19-inline-answer.html'), 'utf8');
+const ep19Source = JSON.parse(require('node:fs').readFileSync('worksheet-sources/EP19.json', 'utf8'));
+const ep19Item = JSON.parse(require('node:fs').readFileSync('catalog/worksheets.json', 'utf8')).find(entry => entry.ep === 'EP19');
+const layoutVariants = JSON.parse(require('node:fs').readFileSync('config/worksheet-layouts.json', 'utf8')).variants;
+assert.doesNotThrow(() => renderWorksheet(ep19Source, ep19Item, layoutVariants));
+const ep19Regression = structuredClone(ep19Source);
+ep19Regression.pages[3].bodyHtml = oldEp19;
+assert.throws(() => renderWorksheet(ep19Regression, ep19Item, layoutVariants), /EP19[\s\S]*pages\[3\]\.bodyHtml[\s\S]*ep19-w4-cycle-minutes[\s\S]*容器樣式/);
+assert.throws(() => renderWorksheet({ ...source, pages: [{ bodyHtml: oldEp19, footer: 'x' }] }, item, ['wide-other-input']), /EP1[\s\S]*pages\[0\]\.bodyHtml[\s\S]*ep19-w4-cycle-minutes[\s\S]*容器樣式/);
+for (const addition of [
+  { textReplacements: [{ page: 0, from: '完成測試。', to: '<input class="inline-answer" id="replacement-bad">' }] },
+  { contentSyncHtml: ['<input class="inline-answer" id="sync-bad">'] },
+]) assert.throws(() => renderWorksheet({ ...source, ...addition }, item, ['wide-other-input']), /EP1[\s\S]*套用 textReplacements／contentSyncHtml 後欄位樣式錯誤[\s\S]*容器樣式/);
 assert(html.includes('<title>EP1｜測試學習單</title>'));
 assert.throws(() => renderWorksheet({ ...source, hero: { ...source.hero, titleHtml: '舊主標' } }, item, ['wide-other-input']), /hero.titleHtml 文字與 catalog/);
 const escapedTitle = renderWorksheet({ ...source, hero: { ...source.hero, titleHtml: '測試<em> &amp; &#x63d0;醒</em>' } }, { ...item, title: '測試 & 提醒' }, ['wide-other-input']);

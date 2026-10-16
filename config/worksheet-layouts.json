@@ -2,12 +2,18 @@
   "variants": [
     "wide-other-input",
     "stacked-mobile-accent",
+    "stacked-hero-accent",
     "stable-hero-title",
+    "hero-system-fallback",
+    "prompt-system-fallback",
     "tighter-print-field-gaps",
+    "ep21-print-compact",
+    "ep24-print-compact",
     "ep31-print-compact",
     "ep26-print-compact",
     "ep30-print-compact",
     "ep32-print-compact",
+    "ep119-print-compact",
     "stacked-comparison-options",
     "single-column-comparison-options",
     "ep36-see-table",
@@ -17,6 +23,8 @@
     "ep37-print-compact",
     "ep42-print-compact",
     "ep28-comparison-table",
+    "four-column-writing-table",
+    "ep20-print-compact",
     "ep94-print-compact"
   ]
 }

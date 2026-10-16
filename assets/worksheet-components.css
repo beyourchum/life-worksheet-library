@@ -13,21 +13,16 @@
 .selection-status { margin: .6rem 0; color: var(--green); font-family: system-ui, sans-serif; }
 .choice:has([data-limited-choice]:disabled) { opacity: .55; }
 .comparison-table { width: 100%; margin: 1rem 0; }
-.comparison-table table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .9em; }
-.comparison-table th:first-child { width: 20%; }
-.comparison-table th:nth-child(2) { width: 34%; }
-.comparison-table th:nth-child(3) { width: 46%; }
 .comparison-table.four-column-table th:first-child { width: 18%; }
 .comparison-table.four-column-table th:nth-child(2) { width: 52%; }
 .comparison-table.four-column-table th:nth-child(3),
 .comparison-table.four-column-table th:nth-child(4) { width: 15%; }
-.comparison-table th,
-.comparison-table td { padding: .7rem .25rem; border: 1px solid #aab9b1; text-align: center; }
-.comparison-table th { background: var(--soft-green); }
-.comparison-table input { width: 1.2rem; height: 1.2rem; accent-color: var(--green); }
+.comparison-table.four-column-writing-table th:first-child { width: 20%; }
+.comparison-table.four-column-writing-table th:nth-child(2),
+.comparison-table.four-column-writing-table th:nth-child(3),
+.comparison-table.four-column-writing-table th:nth-child(4) { width: 26.666%; }
 .comparison-table label { display: inline-flex; align-items: center; gap: .2rem; max-width: 100%; line-height: 1.35; vertical-align: middle; }
 .comparison-table label > span[aria-hidden="true"] { display: none; }
-.comparison-table td:nth-child(2) { white-space: nowrap; }
 .comparison-table [data-ranking-target] { display: block; }
 .comparison-table .matrix-options { justify-content: center; }
 .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table td {
@@ -70,6 +65,9 @@
   min-width: 0;
 }
 @media screen and (max-width: 720px) {
+  .worksheet[data-layout-variant~="stacked-comparison-options"] table.comparison-table,
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table table { display: block; width: 100%; }
+  .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table colgroup { display: none; }
   .worksheet[data-layout-variant~="stacked-comparison-options"] .comparison-table thead {
     position: absolute;
     width: 1px;

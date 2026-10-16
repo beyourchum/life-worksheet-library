@@ -3,6 +3,7 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 const { start } = require('./server.cjs');
+const { controlLayoutIssues } = require('./rules/control-layout-check.cjs');
 const { runReported } = require('./report.cjs');
 const { validateEndingPolicy, worksheetEndingResults } = require('./rules/final-reminder-check.cjs');
 const root = path.resolve(__dirname, '../..');
@@ -116,6 +117,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
     await record('題型、填寫欄與句中範例負向測試', async () => {
       const fixture = await browser.newPage();
       try { await require('../../tests/browser/worksheet-style-check.test.cjs').testWorksheetStyles(fixture); }
+      finally { await fixture.close(); }
+    }, ['*']);
+    await record('EP19 容器樣式誤用、句中斷行與獨立欄位回歸', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/control-layout-check.test.cjs').testControlLayouts(fixture, base); }
       finally { await fixture.close(); }
     }, ['*']);
     await record('AI 綁定缺欄、空白理由與無效 selector 負向測試', async () => {
@@ -369,6 +375,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         const worksheetStyleRules = require('./rules/worksheet-style-check.cjs');
         assert.deepEqual(await worksheetStyleRules.worksheetStyleIssues(page), []);
         assert.deepEqual(await worksheetStyleRules.inlineInputLayoutIssues(page), []);
+        assert.deepEqual(await controlLayoutIssues(page), [], `${item.ep}: 桌面欄位樣式與句中排版`);
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 桌面 AI 標題排版`);
         assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page, policy.choices.maxCompactCharacters), []);
         assert.deepEqual(await require('./rules/worksheet-content-check.cjs').worksheetStructureIssues(page, item.title, item.ep), []);
@@ -404,11 +411,13 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         await page.screenshot({ path: path.join(output, item.ep + '-desktop.png'), fullPage: true });
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        assert.deepEqual(await controlLayoutIssues(page), [], `${item.ep}: 手機欄位樣式與句中排版`);
         if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在手機版不可見`);
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 手機 AI 標題排版`);
         assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(page), [], `${item.ep}: 表格內部排版`);
         await page.screenshot({ path: path.join(output, item.ep + '-mobile.png'), fullPage: true });
         await page.emulateMedia({ media: 'print' });
+        assert.deepEqual(await controlLayoutIssues(page), [], `${item.ep}: 列印欄位樣式與句中排版`);
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 列印 AI 標題排版`);
         assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(page), [], `${item.ep}: 表格內部排版`);
         const metrics = await printMetrics(page);
@@ -425,6 +434,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
           await fallback.route('**/*.woff2', (route) => route.abort());
           await fallback.goto(base + '/' + item.worksheetUrl);
           await fallback.emulateMedia({ media: 'print' });
+          assert.deepEqual(await controlLayoutIssues(fallback), [], `${item.ep}: 備援字型列印欄位樣式與句中排版`);
           assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(fallback), [], `${item.ep}: 備援字型 AI 標題排版`);
           assert.deepEqual(await require('./rules/table-layout-check.cjs').tableLayoutIssues(fallback), [], `${item.ep}: 備援字型表格內部排版`);
           const metrics = await printMetrics(fallback);
