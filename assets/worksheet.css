@@ -1067,6 +1067,31 @@ p { margin: .6rem 0; }
   .worksheet[data-layout-variant~="ep42-print-compact"] > article:nth-of-type(3) .answer-field textarea {
     min-height: 4.5rem;
   }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) {
+    font-size: .94em;
+    line-height: 1.18;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) > p {
+    margin: .35rem 0;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) .subheading {
+    margin: 1mm 0 .8mm;
+    padding: .6mm 1.5mm;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) .answer-field {
+    margin-top: 1.2mm;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) .answer-field > label {
+    margin-bottom: .6mm;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) .example-note {
+    margin: .15rem 0 .3rem;
+  }
+  .worksheet[data-layout-variant~="ep94-print-compact"] > article:nth-of-type(4) .prompt-quote {
+    margin-top: 1mm;
+    padding-top: .3mm;
+    padding-bottom: .3mm;
+  }
 }
 
 /* EP117: keep each sentence stem beside its writable blank. */

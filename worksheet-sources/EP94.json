@@ -7,7 +7,7 @@
     "titleHtml": "為生活留一個<em>備案</em>",
     "question": "遇到作業、金錢或時間出狀況時，我能怎麼預留彈性？"
   },
-  "layoutVariants": [],
+  "layoutVariants": ["ep94-print-compact"],
   "useComponents": true,
   "calculator": {"name":"planning-buffer","layout":true},
   "pages": [
