@@ -6,6 +6,7 @@ const { createHash } = require('node:crypto');
 const { headingText, markdownTitleIssues, numberedHtmlHeadings, numberedMarkdownHeadings } = require('./rules/worksheet-heading-check.cjs');
 const { promptMarkupIssues } = require('./rules/prompt-markup-check.cjs');
 const { controlMarkupIssues } = require('./rules/control-markup-check.cjs');
+const { experiencePromptIssues } = require('./rules/experience-prompt-check.cjs');
 process.chdir(path.join(__dirname, '../..'));
 const args = process.argv.slice(2).filter((arg) => arg !== '--');
 if (args.length > 1 || (args.length === 1 && !/^EP\d+$/i.test(args[0])))
@@ -44,6 +45,7 @@ require('../../tests/unit/publish-files.test.cjs');
 require('../../tests/unit/scoped-static.test.cjs');
 require('../../tests/unit/worksheet-heading-check.test.cjs');
 require('../../tests/unit/prompt-markup-check.test.cjs');
+require('../../tests/unit/experience-prompt-check.test.cjs');
 require('../../tests/unit/scoped-fonts.test.cjs');
 const reportTests = require('node:child_process').spawnSync(process.execPath, ['tests/unit/report.test.cjs'], { stdio: 'inherit', shell: false });
 check(!reportTests.error && reportTests.status === 0, '驗收報告負向測試失敗');
@@ -179,6 +181,7 @@ for (const item of items) {
   if (item.worksheetUrl && !fs.existsSync(file)) { errors.push(`${item.ep}: 缺少頁面`); continue; }
   if (item.worksheetUrl) {
   const html = read(file);
+  for (const issue of experiencePromptIssues(html)) errors.push(`${file}: ${issue}`);
   for (const issue of controlMarkupIssues(html)) errors.push(`${file}: ${issue}`);
   for (const issue of promptMarkupIssues(html)) errors.push(`${item.ep}: ${issue}`);
   for (const issue of videoEmbedIssues(html, item)) errors.push(issue);
@@ -226,6 +229,7 @@ for (const item of items) {
   }
   if (fs.existsSync(correctedFile)) {
     const md = read(correctedFile);
+    for (const issue of experiencePromptIssues(md, 'markdown')) errors.push(`${correctedFile}: ${issue}`);
     const numberedMarkdown = numberedMarkdownHeadings(md);
     check(numberedMarkdown.length === 0, `${correctedFile}: 標題不應加數字或字母編號（含中文序數）：${numberedMarkdown.join('、')}；請移除標題前綴，保留 01、02……區塊編號`);
     check(!/^publication_status:\s*pending-reassignment\s*$/m.test(md), `${item.ep}: 學習單待重新分配，不得恢復至公開索引；先完成影片教學對應核對`);

@@ -2,17 +2,31 @@
   "version": 1,
   "ep": "EP120",
   "videoTitle": "迴避型依附就是爛人？有原因，不代表沒責任｜五個問題判斷關係值不值得等待",
-  "fallbackGlyphs": ["值", "清", "熬", "憂", "咎", "碌", "勉", "蝕", "昧", "措"],
+  "fallbackGlyphs": [
+    "值",
+    "清",
+    "熬",
+    "憂",
+    "咎",
+    "碌",
+    "勉",
+    "蝕",
+    "昧",
+    "措"
+  ],
   "hero": {
     "kicker": "練習評估親密關係的健康度",
     "titleHtml": "一段關係值得等待嗎？先看清楚再決定",
     "question": "當對方因壓力疏遠、失聯或反覆承諾時，我可以怎麼評估關係是否健康，並保留自己的選擇？"
   },
-  "layoutVariants": [],
+  "layoutVariants": [
+    "stacked-mobile-closing-sections",
+    "stable-hero-title"
+  ],
   "useComponents": false,
   "pages": [
     {
-      "bodyHtml": "<p><strong>學習目標：</strong>把「對方有原因」和「我是否要繼續承擔」分開思考，從最低資訊、可預測性、決策選擇權、承諾與實際行動、基本需要與界線五個面向，評估一段關係是否值得繼續等待。</p><p><strong>使用說明：</strong>先勾選目前看見的情況，再依五個面向各自評分。評分不是替對方貼標籤，也不是診斷依附類型；它只幫你整理關係裡可觀察的資訊。最後寫下期限、判準與保護行動，讓等待不變成沒有期限的停留。沒有相關經驗時，可以使用假設案例。</p><div class=\"section-heading\"><span class=\"section-number\">01</span><h2>先辨認：哪些情況正在讓我一直等待？</h2></div><p>請勾選目前符合你經驗的描述。這些描述不是用來判定誰是「好人」或「爛人」，而是幫你找出需要確認的地方。</p><div class=\"question-heading\"><h3>我目前看到哪些情況？</h3><span class=\"answer-mode\">可複選</span></div><div class=\"choices choices-stacked\"><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"壓力時疏遠或失聯\"><span>對方遇到壓力時突然疏遠、失聯，讓我不知道發生什麼事。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"模糊承諾\"><span>對方說「等我準備好就會回來」，卻沒有說何時重新聯絡或會做什麼。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"需求被推回\"><span>我表達需求時，對方以「你太黏」或「我需要自由」回應，讓我不敢再問。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"承諾沒有行動\"><span>對方多次說會改變或會回來，但實際上沒有穩定、可觀察的行動。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"假設案例\"><span>以上都不符合；我只是想用一個假設案例練習。</span></label></div><p class=\"example-note\">例如：我勾選「壓力時疏遠或失聯」「模糊承諾」和「承諾沒有行動」，因為對方工作忙時會一週不回訊息，只說需要空間，卻沒有約定何時再聯絡。</p><div class=\"section-heading\"><span class=\"section-number\">02</span><h2>五個面向：關係裡有沒有足夠的資訊與選擇？</h2></div><div class=\"question-heading\"><h3>最低資訊原則：對方有沒有說清楚現在發生什麼事？</h3><span class=\"answer-mode\">單選</span></div><p>最低資訊不是要求對方隨時報備，而是我至少能知道對方狀態、需要多少空間，以及何時會重新聯絡。</p><div class=\"choices choices-stacked\"><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"1\" data-score=\"1\" data-score-dimension=\"information\"><span>1 分：會說明自己遇到什麼狀況、目前能做到什麼，以及何時會再聯絡；如果改變也會主動更新。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"2\" data-score=\"2\" data-score-dimension=\"information\"><span>2 分：大致說明自己的狀況和需要，但偶爾漏掉期限或讓你猜測下一步。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"3\" data-score=\"3\" data-score-dimension=\"information\"><span>3 分：只說「最近很累」「需要空間」等概括理由，沒有說明影響或何時再聯絡，需要你反覆追問。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"4\" data-score=\"4\" data-score-dimension=\"information\"><span>4 分：用模糊理由要求你等待，沒有提供足夠資訊，也不願意一起確認你需要知道的基本事項。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"5\" data-score=\"5\" data-score-dimension=\"information\"><span>5 分：毫無預警地消失、拒絕提供任何基本資訊，或反覆讓你在完全不知道狀況下等待。</span></label></div>",
+      "bodyHtml": "<p><strong>學習目標：</strong>把「對方有原因」和「我是否要繼續承擔」分開思考，從最低資訊、可預測性、決策選擇權、承諾與實際行動、基本需要與界線五個面向，評估一段關係是否值得繼續等待。</p><p><strong>使用說明：</strong>先勾選目前看見的情況，再依五個面向各自評分。評分不是替對方貼標籤，也不是診斷依附類型；它只幫你整理關係裡可觀察的資訊。最後寫下期限、判準與保護行動，讓等待不變成沒有期限的停留。</p><div class=\"section-heading\"><span class=\"section-number\">01</span><h2>先辨認：哪些情況正在讓我一直等待？</h2></div><p>請勾選目前符合你經驗的描述。這些描述不是用來判定誰是「好人」或「爛人」，而是幫你找出需要確認的地方。</p><div class=\"question-heading\"><h3>我目前看到哪些情況？</h3><span class=\"answer-mode\">可複選</span></div><div class=\"choices choices-stacked\"><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"壓力時疏遠或失聯\"><span>對方遇到壓力時突然疏遠、失聯，讓我不知道發生什麼事。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"模糊承諾\"><span>對方說「等我準備好就會回來」，卻沒有說何時重新聯絡或會做什麼。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"需求被推回\"><span>我表達需求時，對方以「你太黏」或「我需要自由」回應，讓我不敢再問。</span></label><label class=\"choice\"><input type=\"checkbox\" name=\"ep120-observation\" value=\"承諾沒有行動\"><span>對方多次說會改變或會回來，但實際上沒有穩定、可觀察的行動。</span></label></div><p class=\"example-note\">例如：我勾選「壓力時疏遠或失聯」「模糊承諾」和「承諾沒有行動」，因為對方工作忙時會一週不回訊息，只說需要空間，卻沒有約定何時再聯絡。</p><div class=\"section-heading\"><span class=\"section-number\">02</span><h2>五個面向：關係裡有沒有足夠的資訊與選擇？</h2></div><div class=\"question-heading\"><h3>最低資訊原則：對方有沒有說清楚現在發生什麼事？</h3><span class=\"answer-mode\">單選</span></div><p>最低資訊不是要求對方隨時報備，而是我至少能知道對方狀態、需要多少空間，以及何時會重新聯絡。</p><div class=\"choices choices-stacked\"><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"1\" data-score=\"1\" data-score-dimension=\"information\"><span>1 分：會說明自己遇到什麼狀況、目前能做到什麼，以及何時會再聯絡；如果改變也會主動更新。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"2\" data-score=\"2\" data-score-dimension=\"information\"><span>2 分：大致說明自己的狀況和需要，但偶爾漏掉期限或讓你猜測下一步。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"3\" data-score=\"3\" data-score-dimension=\"information\"><span>3 分：只說「最近很累」「需要空間」等概括理由，沒有說明影響或何時再聯絡，需要你反覆追問。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"4\" data-score=\"4\" data-score-dimension=\"information\"><span>4 分：用模糊理由要求你等待，沒有提供足夠資訊，也不願意一起確認你需要知道的基本事項。</span></label><label class=\"choice\"><input type=\"radio\" name=\"ep120-score-information\" value=\"5\" data-score=\"5\" data-score-dimension=\"information\"><span>5 分：毫無預警地消失、拒絕提供任何基本資訊，或反覆讓你在完全不知道狀況下等待。</span></label></div>",
       "footer": "辨認關係中的資訊與等待"
     },
     {

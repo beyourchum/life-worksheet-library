@@ -18,6 +18,18 @@ const source = {
   ]
 };
 const html = renderWorksheet(source, item, ['wide-other-input']);
+for (const addition of [
+  { pages: [{ bodyHtml: '<p>沒有相關經驗時，可以使用假設案例。</p>', footer: '第一頁' }] },
+  { contentSyncHtml: ['<p>沒有相關經驗時，可以使用假設案例。</p>'] },
+  { textReplacements: [{ page: 0, from: '完成測試。', to: '可用假設案例作答。' }] },
+]) assert.throws(() => renderWorksheet({ ...source, ...addition }, item, ['wide-other-input']), /替代自身經驗提示/);
+const combinedPrompt = {
+  ...source,
+  pages: [{ bodyHtml: '<p>沒有相關經驗時，可以使用範例。</p>', footer: '第一頁' }],
+  textReplacements: [{ page: 0, from: '範例', to: '假設案例' }],
+};
+assert.throws(() => renderWorksheet(combinedPrompt, item, ['wide-other-input']), /產生後經驗提示不通過/);
+assert(renderWorksheet({ ...source, fallbackGlyphs: ['假'], pages: [{ bodyHtml: '<p>這是假設檢驗的知識判斷題。</p>', footer: '第一頁' }] }, item, ['wide-other-input']).includes('glyph-system-fallback'));
 const oldEp19 = require('node:fs').readFileSync(require('node:path').join(__dirname, '../fixtures/ep19-inline-answer.html'), 'utf8');
 const ep19Source = JSON.parse(require('node:fs').readFileSync('worksheet-sources/EP19.json', 'utf8'));
 const ep19Item = JSON.parse(require('node:fs').readFileSync('catalog/worksheets.json', 'utf8')).find(entry => entry.ep === 'EP19');

@@ -44,6 +44,7 @@ assert.equal(baseline.exitCode, 0, `單集不得因其他集數缺稿而失敗�
 for (const [change, expected] of [
   [({ item }) => { item.videoUrl = ''; }, /缺少影片連結/],
   [({ html }) => html.replace('<main ', '<main style="color:red" '), /不得使用頁面內嵌樣式/],
+  [({ html }) => html.replace('</main>', '<p>沒有相關經驗時，可以使用假設案例。</p></main>'), /worksheets\/EP71\/index.html: 替代自身經驗提示/],
   [({ html }) => html.replace('</main>', '<input class="inline-answer" id="ep71-bad-container"></main>'), /worksheets\/EP71\/index.html: 欄位 ep71-bad-container[\s\S]*容器樣式/],
   [({ html }) => html.replace('<main ', '<main data-layout-variant="unknown-audit" '), /未登錄的版式變體/],
   [({ html }) => html.replace(/class="page-count">\d+ \/ \d+</, 'class="page-count">99 \/ 99<'), /頁碼與實際頁數/],
@@ -54,6 +55,9 @@ for (const [change, expected] of [
   assert.equal(result.exitCode, 1);
   assert.match(result.errors, expected);
 }
+const experienceDraft = checkFixture(undefined, text => `${text}\n若不想使用自己的經驗，可以沿用 W1 的假設情境。`);
+assert.equal(experienceDraft.exitCode, 1);
+assert.match(experienceDraft.errors, /content\/EP71\/EP71_corrected.md: 替代自身經驗提示/);
 const numberedDraft = checkFixture(undefined, (text) => text.replace('## 活動', '## 一、活動'));
 assert.equal(numberedDraft.exitCode, 1);
 assert.match(numberedDraft.errors, /content\/EP71\/EP71_corrected.md: 標題不應加數字或字母編號（含中文序數）/);

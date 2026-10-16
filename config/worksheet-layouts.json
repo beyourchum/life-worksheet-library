@@ -2,6 +2,8 @@
   "variants": [
     "wide-other-input",
     "stacked-mobile-accent",
+    "stacked-mobile-inline-inputs",
+    "stacked-mobile-closing-sections",
     "stacked-hero-accent",
     "stable-hero-title",
     "hero-system-fallback",

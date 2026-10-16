@@ -4,6 +4,7 @@ const { videoRequirement, youtubeId } = require('../check/rules/video-policy.cjs
 const { headingText, numberedHtmlHeadings } = require('../check/rules/worksheet-heading-check.cjs');
 const { promptMarkupIssues } = require('../check/rules/prompt-markup-check.cjs');
 const { controlMarkupIssues } = require('../check/rules/control-markup-check.cjs');
+const { experiencePromptIssues, sourceExperiencePromptIssues } = require('../check/rules/experience-prompt-check.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const readJson = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
@@ -24,6 +25,7 @@ const applyFallbackGlyphs = (html, glyphs = []) => {
 
 function validateSource(source, catalogItem, variants, videoExceptions = []) {
   const errors = [];
+  errors.push(...sourceExperiencePromptIssues(source));
   if (source.version !== 1) errors.push('version 必須是 1');
   if (source.ep !== catalogItem.ep) errors.push('ep 與 catalog/worksheets.json 不一致');
   for (const key of ['kicker', 'titleHtml', 'question']) if (!String(source.hero?.[key] || '').trim()) errors.push(`hero.${key} 不可空白`);
@@ -115,6 +117,8 @@ ${pages}
     const issues = promptMarkupIssues(rendered);
     if (issues.length) throw new Error(`${source.ep}: AI 區結構錯誤：\n- ${issues.join('\n- ')}`);
   }
+  const experienceIssues = experiencePromptIssues(rendered);
+  if (experienceIssues.length) throw new Error(`${source.ep}: 產生後經驗提示不通過：\n- ${experienceIssues.join('\n- ')}`);
   return rendered;
 }
 
