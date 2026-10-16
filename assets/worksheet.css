@@ -1182,6 +1182,10 @@ p { margin: .6rem 0; }
   .worksheet[data-layout-variant~="ep119-print-compact"] > article:nth-of-type(3) .subheading {
     margin: 1mm 0;
   }
+  .worksheet[data-layout-variant~="ep119-print-compact"] > article:nth-of-type(3) {
+    font-size: .98em;
+    line-height: 1.08;
+  }
   .worksheet[data-layout-variant~="ep119-print-compact"] > article:nth-of-type(3) table th,
   .worksheet[data-layout-variant~="ep119-print-compact"] > article:nth-of-type(3) table td {
     padding-top: .5mm;
