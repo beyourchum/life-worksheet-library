@@ -263,6 +263,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
       try { await require('../../tests/browser/ep99-interactions.test.cjs').testEp99Interactions(fixture, base); }
       finally { await fixture.close(); }
     });
+    await record('EP70 與 EP100 互斥複選、重選、暫存與清除', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/exclusive-choices.test.cjs').testExclusiveChoices(fixture, base); }
+      finally { await fixture.close(); }
+    });
     await record('首頁延遲搜尋、字型預算與手機版', async () => {
       const requests = [];
       page.on('request', (request) => requests.push(request.url()));

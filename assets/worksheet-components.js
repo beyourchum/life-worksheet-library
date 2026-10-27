@@ -16,6 +16,22 @@
   const put = (id, value) => { field(id).value = value ?? ''; };
   const ceilMinutes = value => Math.ceil(value - 1e-9);
 
+  function initExclusiveChoices() {
+    worksheet.querySelectorAll('.choices:has([data-exclusive-choice])').forEach(group => {
+      const choices = [...group.querySelectorAll('input[type="checkbox"]')];
+      const reconcile = selected => {
+        if (!selected?.checked) return;
+        choices.forEach(input => {
+          if (input !== selected && (selected.hasAttribute('data-exclusive-choice') || input.hasAttribute('data-exclusive-choice')))
+            input.checked = false;
+        });
+      };
+      reconcile(choices.find(input => input.checked && input.hasAttribute('data-exclusive-choice')));
+      group.addEventListener('input', event => reconcile(event.target), true);
+      group.addEventListener('change', event => reconcile(event.target), true);
+    });
+  }
+
   function initLegacyReveals() {
     const update = () => worksheet.querySelectorAll('[data-reveal-when]').forEach(node => {
       const source = worksheet.querySelector(node.dataset.revealWhen);
@@ -177,6 +193,7 @@
 
   initLegacyReveals();
   initChoiceLimits();
+  initExclusiveChoices();
   worksheet.querySelectorAll('[data-ranking]').forEach(initRanking);
   initCalculators();
   worksheet.querySelectorAll('.choices').forEach(group => {

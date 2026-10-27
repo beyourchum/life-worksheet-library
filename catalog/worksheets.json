@@ -4187,5 +4187,107 @@
     },
     "worksheetUrl": "worksheets/EP120/",
     "videoUrl": "https://youtu.be/zng7b5YoEaw?si=dhUzLtkgJHw3WuFO"
+  },
+  {
+    "ep": "EP98",
+    "title": "拆開工作內容，找出適合自己的部分",
+    "summary": "科系常見的工作和我的偏好不同時，還有哪些工作內容或相關職位值得探索？",
+    "category": "找到自己的特質與使用方式",
+    "searchTerms": {
+      "situations": [
+        "科系和興趣不合",
+        "不知道適合什麼工作",
+        "職業測驗結果和科系不同"
+      ],
+      "feelings": [
+        "迷惘",
+        "自我懷疑"
+      ],
+      "decisions": [
+        "拆解工作內容",
+        "找出適合自己的工作環境"
+      ],
+      "phrases": [
+        "選錯專業",
+        "職業興趣測驗",
+        "科系出路"
+      ],
+      "concepts": [
+        "RIASEC",
+        "職涯探索",
+        "工作契合度"
+      ]
+    },
+    "worksheetUrl": "worksheets/EP98/",
+    "videoUrl": "https://www.youtube.com/watch?v=RSO3fv21spo"
+  },
+  {
+    "ep": "EP100",
+    "title": "想做卻沒開始，我卡在哪裡？",
+    "summary": "讓我停在原地的，是不願付出的代價、擔心的結果，還是還沒具備的條件？",
+    "category": "找到自己的特質與使用方式",
+    "searchTerms": {
+      "situations": [
+        "有方向卻沒開始",
+        "想轉職卻猶豫",
+        "不知道卡住的原因"
+      ],
+      "feelings": [
+        "猶豫",
+        "焦慮"
+      ],
+      "decisions": [
+        "區分代價風險與阻礙",
+        "選出現階段最在乎的條件"
+      ],
+      "phrases": [
+        "選擇困難",
+        "想做卻不敢",
+        "釐清困難"
+      ],
+      "concepts": [
+        "代價",
+        "風險",
+        "阻礙",
+        "條件取捨"
+      ]
+    },
+    "worksheetUrl": "worksheets/EP100/",
+    "videoUrl": "https://www.youtube.com/watch?v=mcT71rLSoEk"
+  },
+  {
+    "ep": "EP70",
+    "title": "手機是在幫我放鬆，還是讓我更難回到日常？",
+    "summary": "當面對面聊天、等待訊息或遇到不開心的事時，我通常怎麼使用手機？下一次可以試什麼小動作？",
+    "category": "面對資訊與誘惑，做出自主判斷",
+    "searchTerms": {
+      "situations": [
+        "下課只想滑手機",
+        "一直等同學回訊息",
+        "在學校不開心就滑手機"
+      ],
+      "feelings": [
+        "心煩",
+        "慌張",
+        "怕錯過"
+      ],
+      "decisions": [
+        "試著面對面互動",
+        "選一件不用手機的活動",
+        "向老師開口求助"
+      ],
+      "phrases": [
+        "從網路回到現實",
+        "手機與日常生活"
+      ],
+      "concepts": [
+        "FOMO",
+        "JOMO",
+        "離線活動",
+        "校園互動"
+      ]
+    },
+    "worksheetUrl": "worksheets/EP70/",
+    "videoUrl": "https://www.youtube.com/watch?v=UTLsZctmy1M"
   }
 ]

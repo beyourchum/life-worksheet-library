@@ -94,6 +94,9 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP70: [["#ep70-action"], ["#ep70-offline"]],
+    EP100: [["#ep100-goal"], ["[name=ep100-cost]", "#ep100-cost-other-text", "[name=ep100-risk]", "#ep100-risk-other-text", "[name=ep100-barrier]", "#ep100-barrier-other-text"], ["#ep100-cost-answer", "#ep100-risk-answer", "#ep100-barrier-answer"], ["[name=ep100-stuck]", "#ep100-stuck-detail"], ["#ep100-condition-1", "#ep100-condition-2", "#ep100-condition-3"], ["[name=ep100-priority]"]],
+    EP98: [["#ep98-major", "[name=ep98-typical]", "#ep98-typical-info"], ["[name=ep98-test]", "#ep98-test-status"], ["[name=ep98-self]", "#ep98-self-evidence"], ["#ep98-job", "[name=ep98-tasks]", "#ep98-tasks-other-text", "#ep98-task-evidence"], ["[name=ep98-environment]", "#ep98-environment-other-text"], ["#ep98-fit", "#ep98-related", "#ep98-related-fit"]],
     EP23: [
       ["[name=ep23-w1-situation]", "#ep23-w1-situation-other-text", "#ep23-w1-situation-text"],
       ["#ep23-w1-fact"],
