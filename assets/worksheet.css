@@ -148,6 +148,13 @@ button:hover { background: #28755b66; }
 .worksheet[data-layout-variant~="hero-subheading"] .worksheet-hero h1 { font-family: var(--font-subheading); }
 .worksheet[data-layout-variant~="stable-hero-title"] .worksheet-hero h1 { min-height: 2em; font-size: clamp(2.1rem, 7vw, 3.5rem); }
 .worksheet[data-layout-variant~="hero-system-fallback"] .worksheet-hero h1 em { font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif !important; }
+.worksheet[data-layout-variant~="ep18-stable-first-page"] { font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif; }
+.worksheet[data-layout-variant~="ep18-stable-first-page"] .worksheet-hero h1 { font-family: var(--font-heading); }
+.worksheet[data-layout-variant~="ep18-stable-first-page"] .worksheet-hero h1 em { display: block; }
+body:has(.worksheet[data-layout-variant~="ep18-stable-first-page"]) .toolbar,
+body:has(.worksheet[data-layout-variant~="ep18-stable-first-page"]) .worksheet-use-notice { font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif; }
+body:has(.worksheet[data-layout-variant~="ep18-stable-first-page"]) .worksheet-nav [data-video-link][hidden] { display: inline; visibility: hidden; }
+body:has(.worksheet[data-layout-variant~="ep18-stable-first-page"]) .worksheet-nav [data-video-link]:not([hidden]) { visibility: visible; }
 .worksheet[data-layout-variant~="prompt-system-fallback"] .prompt-quote { font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif !important; }
 @media screen {
   .worksheet[data-layout-variant~="stacked-hero-accent"] .worksheet-hero h1 { text-wrap: balance; }
@@ -303,6 +310,22 @@ p { margin: .6rem 0; }
 }
 .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) .section-heading:last-of-type { break-before: page; page-break-before: always; }
 @media print {
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) {
+    font-size: .78em;
+  }
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) .worksheet-hero h1 {
+    font-size: 24pt;
+  }
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) .comparison-table {
+    font-size: .8em;
+  }
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) {
+    padding-bottom: 9.5mm;
+  }
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) .comparison-table th,
+  .worksheet[data-layout-variant~="ep15-print-compact"] > article:nth-of-type(1) .comparison-table td {
+    padding: .7mm .7mm;
+  }
   .worksheet[data-worksheet-id="EP82"] > article:nth-of-type(4) { font-size: .86em; }
   .worksheet[data-worksheet-id="EP61"] > article:nth-of-type(4) { font-size: .86em; }
   .worksheet[data-worksheet-id="EP61"] > article:nth-of-type(4) .answer-field textarea { min-height: 12mm; }

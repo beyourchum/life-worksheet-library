@@ -94,6 +94,13 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP16: [
+      ["#ep16-w2-fact"],
+      ["#ep16-w2-inference"],
+      ["#ep16-w3-existing", "#ep16-w3-common", "#ep16-w3-when", "#ep16-w3-support"],
+      ["#ep16-w4-opening"],
+      ["#ep16-w4-next"]
+    ],
     EP70: [["#ep70-action"], ["#ep70-offline"]],
     EP100: [["#ep100-goal"], ["[name=ep100-cost]", "#ep100-cost-other-text", "[name=ep100-risk]", "#ep100-risk-other-text", "[name=ep100-barrier]", "#ep100-barrier-other-text"], ["#ep100-cost-answer", "#ep100-risk-answer", "#ep100-barrier-answer"], ["[name=ep100-stuck]", "#ep100-stuck-detail"], ["#ep100-condition-1", "#ep100-condition-2", "#ep100-condition-3"], ["[name=ep100-priority]"]],
     EP98: [["#ep98-major", "[name=ep98-typical]", "#ep98-typical-info"], ["[name=ep98-test]", "#ep98-test-status"], ["[name=ep98-self]", "#ep98-self-evidence"], ["#ep98-job", "[name=ep98-tasks]", "#ep98-tasks-other-text", "#ep98-task-evidence"], ["[name=ep98-environment]", "#ep98-environment-other-text"], ["#ep98-fit", "#ep98-related", "#ep98-related-fit"]],
@@ -121,6 +128,16 @@
       ["#ep19-w3-support-info", "#ep19-w3-support-ask"],
       ["#ep19-w4-cycle-minutes", "#ep19-w4-cycle-scope", "#ep19-w4-cycle-practice", "#ep19-w4-cycle-feedback", "#ep19-w4-cycle-stuck", "#ep19-w4-small"],
       ["#ep19-w5-target", "#ep19-w5-when", "#ep19-w5-first", "#ep19-w5-stop", "#ep19-w5-resource", "#ep19-w5-evidence", "#ep19-w5-backup", "#ep19-w5-review", "#ep19-w5-action", "#ep19-w5-check", "#ep19-w5-adjust"]
+    ],
+    EP15: [
+      ["[name=ep15-w1-main]", "#ep15-w1-main-other-text", "#ep15-w1-context"],
+      ["#ep15-w1-fact", "#ep15-w1-interpretation", "#ep15-w1-feeling", "#ep15-w1-need"],
+      ["#ep15-w2-reminder-direct", "#ep15-w2-reminder-private", "#ep15-w2-reminder-rewrite"],
+      ["#ep15-w3-context", "#ep15-w3-stuck", "#ep15-w3-question"],
+      ["#ep15-w3-rewrite-doubt", "#ep15-w3-rewrite-context", "#ep15-w3-rewrite-question", "#ep15-w3-opening", "#ep15-w3-final-question"],
+      ["[name=ep15-w4-r1]", "#ep15-w4-r1-confirm", "[name=ep15-w4-r2]", "#ep15-w4-r2-confirm", "[name=ep15-w4-r3]", "#ep15-w4-r3-confirm", "[name=ep15-w4-r4]", "#ep15-w4-r4-confirm"],
+      ["#ep15-w4-channel-1", "#ep15-w4-help-1", "#ep15-w4-channel-2", "#ep15-w4-help-2", "#ep15-w4-channel-3", "#ep15-w4-help-3"],
+      ["#ep15-w5-target", "#ep15-w5-source", "#ep15-w5-opening", "#ep15-w5-channel", "#ep15-w5-backup", "#ep15-w5-proof", "[name=ep15-w5-support]", "#ep15-w5-choice", "#ep15-w5-reminder"]
     ],
     EP21: [
       ["[name=ep21-w1-scene]", "#ep21-w1-scene-other-text", "#ep21-w1-scene-detail"],
@@ -405,6 +422,15 @@
       ["#ep120-review-deadline"],
       ["#ep120-criterion"],
       ["#ep120-protective-action"]
+    ],
+    EP18: [
+      ["#ep18-w2-situation", "#ep18-w2-question"],
+      ["#ep18-w2-known"],
+      ["#ep18-w2-stuck"],
+      ["#ep18-w2-request"],
+      ["#ep18-w3-helper-answer", "#ep18-w3-channel", "#ep18-w3-time", "#ep18-w3-backup"],
+      ["#ep18-w4-opening", "#ep18-w4-context", "#ep18-w4-stuck", "#ep18-w4-request", "#ep18-w4-closing", "#ep18-w4-message", "#ep18-w4-retry-answer"],
+      ["#ep18-w5-problem", "#ep18-w5-helper", "#ep18-w5-channel", "#ep18-w5-time", "#ep18-w5-check", "#ep18-w5-backup", "#ep18-w5-evidence", "#ep18-w5-selftalk", "#ep18-w5-adjust"]
     ],
     EP119: [
       ["#ep119-context"],
