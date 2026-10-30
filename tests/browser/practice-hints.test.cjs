@@ -8,15 +8,19 @@ async function testPracticeHints(page, base) {
   assert.equal(await hints.locator('[open]').count(), 0);
   assert.equal(await page.locator('.prompt-quote').getAttribute('data-prompt-configured'), 'true');
   assert.equal((await prompt.innerText()).match(/【[^】]+】/g).length, 4);
-  const { worksheetContentIssues } = require('../../scripts/check/rules/worksheet-content-check.cjs');
+  const { worksheetContentIssues, worksheetContentIssuesFromMarkdown } = require('../../scripts/check/rules/worksheet-content-check.cjs');
   assert.deepEqual(await worksheetContentIssues(page, 'EP127'), [], '收合內容仍須與有效稿雙向一致');
-  const hintParagraph = hints.nth(0).locator('p').first();
-  const originalHint = await hintParagraph.textContent();
-  await hintParagraph.evaluate(node => { node.textContent = '錯誤的隱藏提示內容'; });
-  const corrupted = await worksheetContentIssues(page, 'EP127');
-  assert(corrupted.some(issue => issue.includes('HTML 文字未出現在修訂稿')), '不得忽略提示中無據新增的文字');
-  assert(corrupted.some(issue => issue.includes('修訂稿文字未出現在 HTML')), '不得忽略收合提示中的漏文');
-  await hintParagraph.evaluate((node, text) => { node.textContent = text; }, originalHint);
+  const contentFixture = await page.context().browser().newPage();
+  try {
+    const markdown = '可見題目\n\n接話提示\n\n原始隱藏提示內容';
+    await contentFixture.setContent('<main><p>可見題目</p><details data-practice-hint><summary>接話提示</summary><p>原始隱藏提示內容</p></details></main>');
+    const contentIssues = () => worksheetContentIssuesFromMarkdown(contentFixture, markdown, 'practice-hint-fixture.md');
+    assert.deepEqual(await contentIssues(), [], '獨立測試資料的收合內容須與有效稿一致');
+    await contentFixture.locator('details p').evaluate(node => { node.textContent = '錯誤的隱藏提示內容'; });
+    const corrupted = await contentIssues();
+    assert(corrupted.some(issue => issue.includes('HTML 文字未出現在修訂稿')), '不得忽略提示中無據新增的文字');
+    assert(corrupted.some(issue => issue.includes('修訂稿文字未出現在 HTML')), '不得忽略收合提示中的漏文');
+  } finally { await contentFixture.close(); }
   for (let i=0; i<4; i++) {
     await page.locator(`#ep127-reply-${i+1}`).fill(`接話練習${i+1}：想了解課堂的不同部分。`);
     await hints.nth(i).locator('summary').click();

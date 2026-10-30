@@ -40,6 +40,10 @@ async function worksheetContentIssues(page, ep) {
   const file = `content/${ep}/${ep}_corrected.md`;
   if (!fs.existsSync(file)) return process.env.GITHUB_ACTIONS === 'true' ? [] : [`${file}: 缺少修訂稿，請查來源後完成同步`];
   const md = fs.readFileSync(file, 'utf8');
+  return worksheetContentIssuesFromMarkdown(page, md, file);
+}
+
+async function worksheetContentIssuesFromMarkdown(page, md, file) {
   const blocks = await page.locator('main h1,main h2,main h3,main h4,main p,main li,main label,main th,main td').evaluateAll((elements) =>
     elements.map((element) => element.matches('label')
       ? element.querySelector('input[data-content-label]')?.dataset.contentLabel || element.textContent
@@ -84,4 +88,4 @@ async function worksheetStructureIssues(page, title, ep) {
     return issues;
   }, { title, ep });
 }
-module.exports = { worksheetContentIssues, missingText, missingMarkdownText, markdownTextUnits, worksheetStructureIssues };
+module.exports = { worksheetContentIssues, worksheetContentIssuesFromMarkdown, missingText, missingMarkdownText, markdownTextUnits, worksheetStructureIssues };
