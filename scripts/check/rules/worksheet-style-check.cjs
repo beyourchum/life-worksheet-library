@@ -138,6 +138,11 @@ async function inlineInputLayoutIssues(page) {
 }
 async function choiceLayoutIssues(page, maximumCompactChoiceLength) {
   return page.evaluate((maximumCompactChoiceLength) => {
+    if (window.matchMedia('screen and (max-width: 720px)').matches) {
+      return [...document.querySelectorAll('.choices.choices-compact')]
+        .filter(group => getComputedStyle(group).gridTemplateColumns.split(/\s+/).length > 1)
+        .map(group => '手機短選項須使用單欄：' + (group.querySelector('input')?.id || '未命名選項組'));
+    }
     if (window.innerWidth < 700) return [];
     const issues = [];
     for (const group of document.querySelectorAll('.choices:not(.choices-stacked)')) {

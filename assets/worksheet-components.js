@@ -2,6 +2,25 @@
   const worksheet = document.querySelector('.worksheet');
   if (!worksheet) return;
 
+  const practiceHints = [...worksheet.querySelectorAll('details[data-practice-hint]')];
+  if (practiceHints.length) {
+    let beforePrint;
+    window.addEventListener('beforeprint', () => {
+      if (!beforePrint) beforePrint = practiceHints.map(hint => hint.open);
+      practiceHints.forEach(hint => { hint.open = true; });
+    });
+    window.addEventListener('afterprint', () => {
+      if (!beforePrint) return;
+      practiceHints.forEach((hint, index) => { hint.open = beforePrint[index]; });
+      beforePrint = undefined;
+    });
+    document.querySelector('[data-clear]')?.addEventListener('click', () => {
+      const hasAnswers = [...worksheet.querySelectorAll('input,textarea')].some(control =>
+        ['checkbox', 'radio'].includes(control.type) ? control.checked : control.value !== '');
+      if (!hasAnswers) practiceHints.forEach(hint => { hint.open = false; });
+    });
+  }
+
   const field = id => document.getElementById(id);
   const numericValue = input => input && input.value !== '' && input.validity.valid
     && Number.isFinite(input.valueAsNumber) && Math.abs(input.valueAsNumber) <= Number.MAX_SAFE_INTEGER
@@ -197,7 +216,8 @@
   worksheet.querySelectorAll('[data-ranking]').forEach(initRanking);
   initCalculators();
   worksheet.querySelectorAll('.choices').forEach(group => {
-    const previous = group.previousElementSibling;
+    let previous = group.previousElementSibling;
+    while (previous?.matches('p,.example-note,.answer-field,.choices')) previous = previous.previousElementSibling;
     if (previous?.matches('.question-heading')) return;
     const heading = document.createElement('div');
     heading.className = 'question-heading';

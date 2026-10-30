@@ -416,6 +416,7 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
         await page.screenshot({ path: path.join(output, item.ep + '-desktop.png'), fullPage: true });
         await page.setViewportSize({ width: 390, height: 844 });
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        assert.deepEqual(await worksheetStyleRules.choiceLayoutIssues(page, policy.choices.maxCompactCharacters), [], `${item.ep}: 手機短選項須為單欄`);
         assert.deepEqual(await controlLayoutIssues(page), [], `${item.ep}: 手機欄位樣式與句中排版`);
         if (item.videoUrl) assert.equal(await page.locator('.video-embed iframe').isVisible(), true, `${item.ep}: 頁面內影片播放器在手機版不可見`);
         assert.deepEqual(await require('./rules/prompt-intro-layout-check.cjs').promptIntroLayoutIssues(page), [], `${item.ep}: 手機 AI 標題排版`);
@@ -470,6 +471,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
       try { await require('../../tests/browser/ep44-score-sums.test.cjs').testEp44ScoreSums(calculator, base); }
       finally { await calculator.close(); }
     }, ['EP44']);
+    await record('接話提示展開、紙本提示與條件作答代入', async () => {
+      const practice = await browser.newPage();
+      try { await require('../../tests/browser/practice-hints.test.cjs').testPracticeHints(practice, base); }
+      finally { await practice.close(); }
+    }, ['EP127']);
     await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
       const prompt = await browser.newPage();
       try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base, ep); }

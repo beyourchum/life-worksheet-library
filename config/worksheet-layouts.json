@@ -10,6 +10,7 @@
     "ep15-print-compact",
     "hero-system-fallback",
     "prompt-system-fallback",
+    "compact-ai-prompts",
     "tighter-print-field-gaps",
     "ep21-print-compact",
     "ep24-print-compact",
@@ -29,6 +30,7 @@
     "ep28-comparison-table",
     "four-column-writing-table",
     "ep20-print-compact",
-    "ep94-print-compact"
+    "ep94-print-compact",
+    "balanced-print-hero-title"
   ]
 }

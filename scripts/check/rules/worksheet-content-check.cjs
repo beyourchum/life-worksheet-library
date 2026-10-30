@@ -46,9 +46,12 @@ async function worksheetContentIssues(page, ep) {
       : element.textContent)
       .filter(text => !/先前暫存|紙本作答/.test(text)));
   const pageText = await page.locator('main').innerText();
+  // Collapsed practice hints are intentionally available after the learner answers.
+  // Validate their complete content as well as the initially visible worksheet.
+  const practiceText = await page.locator('main details[data-practice-hint]').allTextContents();
   return [
     ...missingText(md, blocks).map(text => `${file}: HTML 文字未出現在修訂稿，請逐段核對：${text.trim()}`),
-    ...missingMarkdownText(md, pageText).map(text => `${file}: 修訂稿文字未出現在 HTML，請逐段核對：${text.trim()}`),
+    ...missingMarkdownText(md, [pageText, ...practiceText].join('\n')).map(text => `${file}: 修訂稿文字未出現在 HTML，請逐段核對：${text.trim()}`),
   ];
 }
 function missingText(md, blocks) {

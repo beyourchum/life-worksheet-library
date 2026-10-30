@@ -150,5 +150,20 @@ async function testWorksheetStyles(page) {
   assert((await choiceLayoutIssues(page, maximumCompactChoiceLength)).some(x => x.includes('choices-stacked')));
   await page.locator('.choices').evaluate((group) => group.classList.add('choices-stacked'));
   assert.deepEqual(await choiceLayoutIssues(page, maximumCompactChoiceLength), []);
+
+  // EP123: the compact selector must not override the mobile single column.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setContent(`<style>
+    .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+    .choices.choices-compact{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media screen and (max-width:720px){.choices{grid-template-columns:1fr}}
+  </style><main>${heading}<div class="choices choices-compact"><label class="choice"><input id="mobile-first" type="radio" name="mobile">散步</label><label class="choice"><input type="radio" name="mobile">看書</label></div></main>`);
+  assert((await choiceLayoutIssues(page, maximumCompactChoiceLength)).some(x => x.includes('手機短選項須使用單欄')));
+  await page.addStyleTag({path:'assets/worksheet.css'});
+  assert.deepEqual(await choiceLayoutIssues(page, maximumCompactChoiceLength), []);
+  await page.emulateMedia({ media: 'print' });
+  assert.equal(await page.locator('.choices-compact').evaluate(group => getComputedStyle(group).gridTemplateColumns.split(/\s+/).length), 3);
+  await page.emulateMedia({ media: 'screen' });
+  await page.setViewportSize({ width: 1280, height: 900 });
 }
 module.exports = { testWorksheetStyles };

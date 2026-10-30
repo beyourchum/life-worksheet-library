@@ -94,12 +94,74 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP127: [
+      ["#ep127-occasion"],
+      ["#ep127-shared-context"],
+      ["[name=ep127-topic-school]", "#ep127-school-other", "[name=ep127-topic-activity]", "#ep127-activity-other", "[name=ep127-topic-weather]", "#ep127-weather-other", "[name=ep127-topic-transport]", "#ep127-transport-other", "[name=ep127-topic-task]", "#ep127-task-other", "#ep127-topic-other", "#ep127-topic-other-opening"],
+      ["[name=ep127-private-topics]", "#ep127-private-other"]
+    ],
+    EP108: [
+      ["#fan-subject"],
+      ["#fan-participation"],
+      ["#fan-meaning"],
+      ["[name=fan-position]"],
+      ["#newcomer-behavior"],
+      ["#newcomer-basis"],
+      ["#newcomer-judgment"],
+      ["#newcomer-feeling"],
+      ["#newcomer-concern"],
+      ["#veteran-behavior"],
+      ["#veteran-basis"],
+      ["#veteran-judgment"],
+      ["#veteran-feeling"],
+      ["#veteran-concern"],
+      ["[name=reflection-event]"],
+      ["[name=reflection-source]"],
+      ["#reflection-evidence"],
+      ["#mutual-practice"],
+      ["#next-action"]
+    ],
+    EP125: [
+      ["#ep125-decision"],
+      ["#ep125-worry"],
+      ["#ep125-deadline"],
+      ["#ep125-reverse-action"],
+      ["#ep125-recovery-time"],
+      ["#ep125-own-cost"],
+      ["#ep125-affected-person"],
+      ["#ep125-others-cost"],
+      ["#ep125-repeat-cost"],
+      ["[name=ep125-reversibility]"],
+      ["#ep125-missing-info"],
+      ["#ep125-info-source"],
+      ["#ep125-change-condition"],
+      ["#ep125-wait-gain"],
+      ["#ep125-wait-cost"],
+      ["#ep125-next-action"],
+      ["#ep125-action-budget"],
+      ["#ep125-review-time"]
+    ],
+    EP14: [
+      ["[name=ep14-w1-situation]", "#ep14-w1-situation-other-text", "#ep14-w1-situation-answer", "#ep14-w1-time-place", "#ep14-w1-task", "#ep14-w1-first-action", "#ep14-w1-feeling", "#ep14-w1-impact"],
+      ["[name=ep14-w1-stress]", "#ep14-w1-stress-other-text", "#ep14-w1-stress-answer", "#ep14-w1-stress-pending"],
+      ["[name^=ep14-w2-signal]", "#ep14-w2-signal-other-text", "#ep14-w2-earliest-1", "#ep14-w2-earliest-1-evidence", "#ep14-w2-earliest-2", "#ep14-w2-earliest-2-evidence", "#ep14-w2-earliest-3", "#ep14-w2-earliest-3-evidence", "#ep14-w2-earliest-reminder"],
+      ["[name=ep14-w3-pause]", "#ep14-w3-pause-other-text", "#ep14-w3-pause-answer", "#ep14-w3-pause-condition", "#ep14-w3-pause-trigger"],
+      ["[name=ep14-w3-script]", "#ep14-w3-script-answer"],
+      ["#ep14-w4-earliest", "#ep14-w4-known-facts", "#ep14-w4-confirm-info", "#ep14-w4-first-step", "#ep14-w4-confirm-message", "#ep14-w4-help", "[name=ep14-w4-response]", "#ep14-w4-response-impact", "#ep14-w4-response-result"],
+      ["#ep14-w5-card-signal", "#ep14-w5-card-stress", "#ep14-w5-card-pause", "#ep14-w5-card-script", "#ep14-w5-card-help", "#ep14-w5-card-evidence", "#ep14-w5-next-action", "#ep14-w5-review"]
+    ],
     EP16: [
       ["#ep16-w2-fact"],
       ["#ep16-w2-inference"],
       ["#ep16-w3-existing", "#ep16-w3-common", "#ep16-w3-when", "#ep16-w3-support"],
       ["#ep16-w4-opening"],
       ["#ep16-w4-next"]
+    ],
+    EP17: [
+      ["[name=ep17-w1-main]", "#ep17-w1-main-other-text", "[name=ep17-w1-response]", "#ep17-w1-response-other-text", "[name=ep17-w1-direction]", "#ep17-w1-direction-other-text"],
+      ["#ep17-w2-due", "#ep17-w2-internal", "#ep17-w2-task", "#ep17-w2-report", "#ep17-w2-pending", "[name=ep17-w2-method]", "#ep17-w2-method-other-text"],
+      ["#ep17-w3-fact", "#ep17-w3-need", "#ep17-w3-next", "#ep17-w3-help", "#ep17-w3-message"],
+      ["#ep17-w4-goal", "#ep17-w4-criteria", "[name=ep17-w4-method]", "#ep17-w4-option1", "#ep17-w4-option1-benefit", "#ep17-w4-option1-risk", "#ep17-w4-option1-choice", "#ep17-w4-option2", "#ep17-w4-option2-benefit", "#ep17-w4-option2-risk", "#ep17-w4-option2-choice"]
     ],
     EP70: [["#ep70-action"], ["#ep70-offline"]],
     EP100: [["#ep100-goal"], ["[name=ep100-cost]", "#ep100-cost-other-text", "[name=ep100-risk]", "#ep100-risk-other-text", "[name=ep100-barrier]", "#ep100-barrier-other-text"], ["#ep100-cost-answer", "#ep100-risk-answer", "#ep100-barrier-answer"], ["[name=ep100-stuck]", "#ep100-stuck-detail"], ["#ep100-condition-1", "#ep100-condition-2", "#ep100-condition-3"], ["[name=ep100-priority]"]],
@@ -138,6 +200,25 @@
       ["[name=ep15-w4-r1]", "#ep15-w4-r1-confirm", "[name=ep15-w4-r2]", "#ep15-w4-r2-confirm", "[name=ep15-w4-r3]", "#ep15-w4-r3-confirm", "[name=ep15-w4-r4]", "#ep15-w4-r4-confirm"],
       ["#ep15-w4-channel-1", "#ep15-w4-help-1", "#ep15-w4-channel-2", "#ep15-w4-help-2", "#ep15-w4-channel-3", "#ep15-w4-help-3"],
       ["#ep15-w5-target", "#ep15-w5-source", "#ep15-w5-opening", "#ep15-w5-channel", "#ep15-w5-backup", "#ep15-w5-proof", "[name=ep15-w5-support]", "#ep15-w5-choice", "#ep15-w5-reminder"]
+    ],
+    EP13: [
+      ["#ep13-w3-role"],
+      ["#ep13-w3-channel"],
+      ["#ep13-w2-fact", "#ep13-w3-known"],
+      ["#ep13-w2-question", "#ep13-w3-unknown"],
+      ["[name=ep13-w3-goal]", "#ep13-w3-goal-answer"],
+      ["#ep13-w3-style"],
+      ["#ep13-w3-opening"],
+      ["#ep13-w3-question"],
+      ["#ep13-w3-next"],
+      ["#ep13-w2-fact"],
+      ["#ep13-w2-feeling"],
+      ["#ep13-w2-interpretation"],
+      ["#ep13-w2-need"],
+      ["#ep13-w2-request"],
+      ["#ep13-w3-opening", "#ep13-w3-question", "#ep13-w3-next"],
+      ["#ep13-w4-unanswered"],
+      ["#ep13-w4-opening", "#ep13-w4-question", "#ep13-w4-next", "#ep13-w5-next"]
     ],
     EP21: [
       ["[name=ep21-w1-scene]", "#ep21-w1-scene-other-text", "#ep21-w1-scene-detail"],
@@ -412,6 +493,40 @@
       ["#ep118-update-basis"],
       ["#ep118-alternative"]
     ],
+    EP126: [
+      ["#q1-content"],
+      ["#q2-activity"],
+      ["#q2-first-step"]
+    ],
+    EP123: [
+      ["#ep123-situation"],
+      ["#ep123-fact"],
+      ["#ep123-worst"],
+      ["#ep123-ordinary"],
+      ["#ep123-best"],
+      ["#ep123-impulse"],
+      ["[name=ep123-can-pause]"],
+      ["#ep123-pause-plan"],
+      ["#ep123-next-action"],
+      ["#ep123-review-time"]
+    ],
+    EP122: [
+      ["#ep122-next-time"],
+      ["#ep122-duty"],
+      ["#ep122-duty-time"],
+      ["#ep122-action"],
+      ["#ep122-reason"],
+      ["#ep122-cue"],
+      ["#ep122-adjust"]
+    ],
+    EP121: [
+      ["#ep121-situation"],
+      ["#ep121-observation"],
+      ["#ep121-impact"],
+      ["#ep121-proposal"],
+      ["#ep121-review-time"],
+      ["#ep121-review-focus"]
+    ],
     EP120: [
       ["#ep120-relationship-type"],
       ["#ep120-situation"],
@@ -476,10 +591,10 @@
       update();
     });
   };
-  initExclusiveChoices();
   const normalize = (value) => value.replace(/\s+/g, " ").trim();
   const answerFor = (control) => {
     if (!control || control.disabled) return "";
+    if (control.dataset.answerWhenChecked && !worksheet.querySelector(control.dataset.answerWhenChecked)?.checked) return "";
     if (control.type === "checkbox" || control.type === "radio") {
       if (!control.checked) return "";
       if (control.value && control.value !== "on") return normalize(control.value);
@@ -719,6 +834,7 @@
     })
     .catch(() => { document.querySelector('[data-video-status]').hidden = false; });
   restore();
+  initExclusiveChoices();
   updateClearButton();
   updateScore();
   updateScoreSums();

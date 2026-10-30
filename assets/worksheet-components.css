@@ -197,3 +197,12 @@
   .comparison-table th,
   .comparison-table td { padding: 3mm 1mm; }
 }
+details[data-practice-hint] { margin: .6rem 0 1rem; border-left: 3px solid #a7bbae; padding: .5rem .75rem; }
+details[data-practice-hint] > summary { cursor: pointer; color: #365447; font-weight: 700; }
+details[data-practice-hint] > p { margin: .5rem 0; }
+@media print {
+  details[data-practice-hint] { margin: 1mm 0 2mm; padding: 1mm 2mm; break-inside: avoid; }
+  details[data-practice-hint]::details-content { display: block; content-visibility: visible; }
+  details[data-practice-hint] > summary { list-style: none; cursor: default; }
+  details[data-practice-hint] > summary::-webkit-details-marker { display: none; }
+}
