@@ -17,6 +17,7 @@
     "build": "node scripts/build/site.cjs",
     "check:browser": "node scripts/check/browser.cjs --built",
     "verify": "node scripts/check/run.cjs",
+    "盤點學習單": "node scripts/local/inventory.cjs --details",
     "check": "pnpm run check:static",
     "test": "pnpm run verify"
   },
