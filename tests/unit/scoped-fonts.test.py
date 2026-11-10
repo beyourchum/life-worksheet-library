@@ -53,4 +53,11 @@ with tempfile.TemporaryDirectory(prefix='worksheet-scoped-fonts-', dir=work) as 
         assert 0x4e00 in font['characters'], 'Scoped generation must include newly added text'
     assert after['inputs']['worksheets/EP1/index.html'] != before['inputs']['worksheets/EP1/index.html']
     assert after['scopes']['EP2'] == before['scopes']['EP2'], 'Other scopes must stay unchanged'
+    (root / 'worksheets/EP1/index.html').write_text('<h1>A</h1><p>\u4e00</p>', encoding='utf8')
+    result = subprocess.run([sys.executable, str(script), '--scope', 'EP1'], cwd=root, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    display = json.loads(manifest_file.read_text(encoding='utf8'))['scopes']['EP1']['fonts']
+    assert 65 in display['glow-800']['characters'], 'Display font must retain the title'
+    assert 0x4e00 not in display['glow-800']['characters'], 'Body-only Han glyphs must not inflate the display font'
+    assert 0x4e00 in display['genyo-400']['characters'], 'Body font must retain the paragraph'
 print('Scoped font regeneration includes new characters and preserves other scopes.')

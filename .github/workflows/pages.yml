@@ -21,6 +21,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
       - uses: pnpm/action-setup@v5
       - run: pnpm install --frozen-lockfile
       - name: Install font build dependencies
