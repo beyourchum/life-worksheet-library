@@ -141,6 +141,11 @@
       ["#ep125-action-budget"],
       ["#ep125-review-time"]
     ],
+    EP116: [
+      ["#ep116-most-time"],
+      ["#ep116-gap"],
+      ["#ep116-existing"]
+    ],
     EP14: [
       ["[name=ep14-w1-situation]", "#ep14-w1-situation-other-text", "#ep14-w1-situation-answer", "#ep14-w1-time-place", "#ep14-w1-task", "#ep14-w1-first-action", "#ep14-w1-feeling", "#ep14-w1-impact"],
       ["[name=ep14-w1-stress]", "#ep14-w1-stress-other-text", "#ep14-w1-stress-answer", "#ep14-w1-stress-pending"],
