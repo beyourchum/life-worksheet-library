@@ -94,6 +94,10 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP124: [
+      ["[name=ep124-next-choice]", "#ep124-next-other"],
+      ["#ep124-next"]
+    ],
     EP127: [
       ["#ep127-occasion"],
       ["#ep127-shared-context"],
