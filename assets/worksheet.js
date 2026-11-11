@@ -94,6 +94,15 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP12: [
+      ["#ep12-environment"],
+      ["[name=ep12-reaction]", "#ep12-reaction-other"],
+      ["[name=ep12-obstacle]", "#ep12-obstacle-other"],
+      ["[name=ep12-method]"],
+      ["#ep12-opening"], ["#ep12-intro"],
+      ["#ep12-permission"], ["#ep12-closing"],
+      ["#ep12-time"], ["#ep12-place"], ["#ep12-person"], ["#ep12-action"]
+    ],
     EP124: [
       ["[name=ep124-next-choice]", "#ep124-next-other"],
       ["#ep124-next"]
