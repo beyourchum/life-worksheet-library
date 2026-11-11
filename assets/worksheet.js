@@ -94,6 +94,7 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP11: [["#ep11-topic"], ["[name=ep11-worry]", "#ep11-worry-other"], ["[name=ep11-evidence]"], ["#ep11-acknowledge"], ["#ep11-need"], ["#ep11-plan"], ["#ep11-contact-time"], ["#ep11-contact-content"], ["#ep11-change"], ["#ep11-space"]],
     EP12: [
       ["#ep12-environment"],
       ["[name=ep12-reaction]", "#ep12-reaction-other"],
