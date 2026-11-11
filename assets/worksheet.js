@@ -94,6 +94,14 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP10: [
+      ["#ep10-impact"], ["#ep10-action"], ["#ep10-benefit"],
+      ["#ep10-cost"], ["#ep10-reason"], ["#ep10-next-response"],
+      ["#ep10-need"], ["#ep10-person"], ["#ep10-request"],
+      ["#ep10-request-time"], ["#ep10-backup"], ["#ep10-area"],
+      ["#ep10-step"], ["#ep10-start-time"], ["#ep10-place"],
+      ["#ep10-done"], ["#ep10-fallback"], ["#ep10-review-time"]
+    ],
     EP11: [["#ep11-topic"], ["[name=ep11-worry]", "#ep11-worry-other"], ["[name=ep11-evidence]"], ["#ep11-acknowledge"], ["#ep11-need"], ["#ep11-plan"], ["#ep11-contact-time"], ["#ep11-contact-content"], ["#ep11-change"], ["#ep11-space"]],
     EP12: [
       ["#ep12-environment"],

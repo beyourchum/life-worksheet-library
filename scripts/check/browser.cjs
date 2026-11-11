@@ -476,6 +476,11 @@ runReported(reportFile, { target: args.includes('--built') ? 'built' : 'source',
       try { await require('../../tests/browser/practice-hints.test.cjs').testPracticeHints(practice, base); }
       finally { await practice.close(); }
     }, ['EP127']);
+    await record('EP10 感受互斥、逐欄提示詞、暫存與清除', async () => {
+      const fixture = await browser.newPage();
+      try { await require('../../tests/browser/ep10-interactions.test.cjs').testEp10Interactions(fixture, base); }
+      finally { await fixture.close(); }
+    }, ['EP10']);
     await record('AI 提示詞自動代入文字、選項並保留未作答提示', async () => {
       const prompt = await browser.newPage();
       try { await require('../../tests/browser/prompt-autofill.test.cjs').testPromptAutofill(prompt, base, ep); }
