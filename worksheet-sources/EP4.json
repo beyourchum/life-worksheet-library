@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "ep": "EP4",
+  "videoTitle": "愛情問題天天都多│大學生的戀愛追求必修課（下）",
+  "hero": {
+    "kicker": "在喜歡裡保留自己的需要與界線",
+    "titleHtml": "好愛他，還要一直委屈自己嗎？",
+    "question": "當我很在乎一個人，卻開始一直改變自己、壓下感受或害怕說不時，我可以怎麼分辨哪些是願意調整，哪些已經讓我失去自己？"
+  },
+  "layoutVariants": [
+    "stable-hero-title"
+  ],
+  "useComponents": false,
+  "pages": [
+    {
+      "footer": "先看見我在哪裡開始縮小自己。",
+      "bodyHtml": "<p><strong>學習目標：</strong>從一個真實的關係情境出發，分辨我想要的關係需要、我願意協商的調整，以及我不想用關係交換的界線，最後整理一段能說清楚需要與界線的話，以及一個下一步。</p><p><strong>使用說明：</strong>花約 10–15 分鐘完成。請沿著「看見我改變了什麼 → 分辨需要與界線 → 判斷這次調整的代價 → 整理下一步」完成；每一題都以同一個關係情境為對象。答案沒有固定標準，但要能回到你實際遇到的互動與選擇；如果目前沒有對應經驗，請如實填寫「尚未遇到」或「尚未辨認」，不要替自己編造一段關係。</p><div class='section-heading'><span class='section-number'>01</span><h2>看見我在哪裡開始縮小自己</h2></div><div class='question-heading'><h3>我想練習的關係情境是</h3><span class='answer-mode'>先寫一個實際情境</span></div><p>請寫下一個實際發生、正在發生，或你最近反覆想到的互動。先不要急著判斷誰對誰錯。</p><div class='answer-field'><label for='ep4-situation'>我的情境是：</label><textarea id='ep4-situation' rows='3'></textarea></div><p class='example-note'>例如：我和交往對象約好週末見面，但他臨時希望我取消原本和朋友的聚會。</p><div class='question-heading'><h3>在這個情境裡，我做了什麼改變或讓步？</h3><span class='answer-mode'>寫一個具體行動</span></div><p>不要只寫「我很委屈」，先寫出你實際做了什麼。</p><div class='answer-field'><label for='ep4-change'>我改變或讓步的是：</label><textarea id='ep4-change' rows='3'></textarea></div><p class='example-note'>例如：我取消和朋友的約，改成配合對方臨時改的時間。</p><div class='question-heading'><h3>這個改變讓我出現什麼感受或反應？</h3><span class='answer-mode'>可寫情緒或後續反應</span></div><p>可以寫情緒、身體反應，或後來對對方說了什麼。</p><div class='answer-field'><label for='ep4-feeling'>我的感受或反應是：</label><textarea id='ep4-feeling' rows='3'></textarea></div><p class='example-note'>例如：當下說沒關係，回家後卻一直焦慮，覺得自己好像不答應就會失去對方。</p>"
+    },
+    {
+      "footer": "分清楚我需要什麼，也分清楚我想保留什麼。",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>02</span><h2>分清楚我需要什麼、想保留什麼</h2></div><p>喜歡一個人，不等於所有需求都要一樣，也不等於要用放棄自己的生活來證明在乎。以下勾選的是整理角度，不是替你或對方貼標籤。</p><div class='question-heading'><h3>在這段關係裡，我希望被怎麼對待？</h3><span class='answer-mode'>可複選</span></div><div class='choices choices-stacked'><label class='choice'><input name='ep4-need' type='checkbox' value='我的感受可以被聽見，不必先證明自己有道理'><span>我的感受可以被聽見，不必先證明自己有道理</span></label><label class='choice'><input name='ep4-need' type='checkbox' value='雙方可以把期待說清楚，而不是要我自己猜'><span>雙方可以把期待說清楚，而不是要我自己猜</span></label><label class='choice'><input name='ep4-need' type='checkbox' value='我的時間、朋友、興趣或獨處需要被尊重'><span>我的時間、朋友、興趣或獨處需要被尊重</span></label><label class='choice'><input name='ep4-need' type='checkbox' value='我可以說不，對方也願意聽我說明原因'><span>我可以說不，對方也願意聽我說明原因</span></label><label class='choice'><input name='ep4-need' type='checkbox' value='關係中的改變由雙方一起討論，不是只有我一直配合'><span>關係中的改變由雙方一起討論，不是只有我一直配合</span></label><label class='choice other-choice'><span class='choice-toggle'><input name='ep4-need' type='checkbox' value='其他：' data-content-label='其他：'><span>其他：</span></span><input class='other-input' id='ep4-need-other-text' type='text' aria-label='其他希望被對待的方式'></label><label class='choice'><input name='ep4-need' type='checkbox' value='尚未辨認'><span>尚未辨認</span></label></div><div class='question-heading'><h3>我想保留的界線是什麼？</h3><span class='answer-mode'>可複選</span></div><div class='choices choices-stacked'><label class='choice'><input name='ep4-boundary' type='checkbox' value='不用放棄重要的人際關係或生活安排來換取安心'><span>不用放棄重要的人際關係或生活安排來換取安心</span></label><label class='choice'><input name='ep4-boundary' type='checkbox' value='不接受嘲笑、貶低、威脅或用分手逼我答應'><span>不接受嘲笑、貶低、威脅或用分手逼我答應</span></label><label class='choice'><input name='ep4-boundary' type='checkbox' value='身體接觸、訊息往來與見面頻率要有雙方同意'><span>身體接觸、訊息往來與見面頻率要有雙方同意</span></label><label class='choice'><input name='ep4-boundary' type='checkbox' value='我可以保留自己的想法，不必為了討好而假裝同意'><span>我可以保留自己的想法，不必為了討好而假裝同意</span></label><label class='choice'><input name='ep4-boundary' type='checkbox' value='我需要一段時間想清楚，再回答重要的要求'><span>我需要一段時間想清楚，再回答重要的要求</span></label><label class='choice other-choice'><span class='choice-toggle'><input name='ep4-boundary' type='checkbox' value='其他：' data-content-label='其他：'><span>其他：</span></span><input class='other-input' id='ep4-boundary-other-text' type='text' aria-label='其他想保留的界線'></label><label class='choice'><input name='ep4-boundary' type='checkbox' value='尚未辨認'><span>尚未辨認</span></label></div><div class='answer-field'><label for='ep4-need-statement'>我最想先說清楚的一項需要或界線是：</label><textarea id='ep4-need-statement' rows='3'></textarea></div><p class='example-note'>例如：我需要保留和朋友相處的時間，也希望臨時改約前先一起討論。</p>"
+    },
+    {
+      "footer": "先判斷這次調整的代價，再決定要談什麼。",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>03</span><h2>判斷這次是調整，還是正在消耗我</h2></div><p>調整不一定是委屈；差別可以從「我是否能選擇、代價是否可承受、對方是否也願意一起調整」開始看。這一題不是要替關係下最後結論，而是幫你決定下一個要談清楚的地方。</p><div class='answer-field'><label for='ep4-negotiable'>我願意協商的調整是：</label><textarea id='ep4-negotiable' rows='3'></textarea></div><p class='example-note'>例如：如果對方臨時需要陪伴，我可以改約朋友，但希望至少提前告訴我原因，也一起找新的時間。</p><div class='answer-field'><label for='ep4-cost'>如果我一直這樣配合，可能付出的代價是：</label><textarea id='ep4-cost' rows='3'></textarea></div><p class='example-note'>例如：我會越來越不敢安排自己的生活，表面答應，心裡卻累積不滿。</p><div class='question-heading'><h3>目前對方是否也願意理解或調整？</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input type='radio' name='ep4-reciprocity' value='已經有具體討論，對方也有提出可以一起做的改變'><span>已經有具體討論，對方也有提出可以一起做的改變</span></label><label class='choice'><input type='radio' name='ep4-reciprocity' value='我還不知道，因為我們沒有把這件事說清楚'><span>我還不知道，因為我們沒有把這件事說清楚</span></label><label class='choice'><input type='radio' name='ep4-reciprocity' value='我曾說過，但對方反覆忽略、嘲笑或要求我證明在乎'><span>我曾說過，但對方反覆忽略、嘲笑或要求我證明在乎</span></label><label class='choice'><input type='radio' name='ep4-reciprocity' value='這次是我自己的選擇，還沒有涉及對方要求'><span>這次是我自己的選擇，還沒有涉及對方要求</span></label><label class='choice'><input type='radio' name='ep4-reciprocity' value='尚未辨認'><span>尚未辨認</span></label></div><div class='question-heading'><h3>依照前面的答案，我現在最需要的是</h3><span class='answer-mode'>單選</span></div><div class='choices choices-stacked'><label class='choice'><input type='radio' name='ep4-judgment' value='可以調整'><span><strong>可以調整：</strong>這個改變有範圍，我也能保留自己的需要。<small class='choice-inline-example'>例如：我願意偶爾改約，但不必每次都取消自己的安排。</small></span></label><label class='choice'><input type='radio' name='ep4-judgment' value='需要說清楚'><span><strong>需要說清楚：</strong>我還缺少對方的回應，不能只靠猜測決定要不要繼續退讓。<small class='choice-inline-example'>例如：我想先說明我的安排，再和對方一起找可行時間。</small></span></label><label class='choice'><input type='radio' name='ep4-judgment' value='需要停看聽'><span><strong>需要停看聽：</strong>這個改變讓我持續害怕、失去生活，或對方沒有尊重我說不的權利。<small class='choice-inline-example'>例如：我先找信任的人整理狀況，不在被施壓時立刻答應。</small></span></label></div><div class='answer-field'><label for='ep4-judgment-reason'>我這樣判斷的原因是：</label><textarea id='ep4-judgment-reason' rows='3'></textarea></div><p class='example-note'>例如：我願意偶爾改約，但如果每次都只能由我取消原本的安排，我就需要先談彼此都能接受的方式。</p>"
+    },
+    {
+      "footer": "把需要與界線說出來，留住下一步。",
+      "bodyHtml": "<div class='section-heading'><span class='section-number'>04</span><h2>把需要與界線說出來，留住下一步</h2></div><p>請把前面的整理組成一段可以對對方說的話。重點不是說服對方一定要照做，而是讓自己的需要、請求與可協商範圍變得清楚。</p><div class='answer-field'><label for='ep4-need-message'>我想讓對方知道的是：</label><textarea id='ep4-need-message' rows='3'></textarea></div><p class='example-note'>例如：我很在乎我們的關係，也願意一起調整，但最近我常常取消自己的安排，事後覺得很不安。</p><div class='answer-field'><label for='ep4-request'>我的具體請求是：</label><textarea id='ep4-request' rows='3'></textarea></div><p class='example-note'>例如：下次需要改約時，可以先告訴我原因，也一起找一個不影響彼此重要安排的時間嗎？</p>"
+    },
+    {
+      "footer": "保留自己，不等於不在乎這段關係。",
+      "bodyHtml": "<div class='answer-field'><label for='ep4-negotiation'>我願意一起討論的調整是：</label><textarea id='ep4-negotiation' rows='4'></textarea></div><p class='example-note'>例如：我可以偶爾配合臨時變動，但不會每次都取消和朋友的約；如果真的很急，我們可以先用訊息確認，再約時間談。</p><div class='answer-field'><label for='ep4-next-step'>我的下一步是：</label><textarea id='ep4-next-step' rows='3'></textarea></div><p class='example-note'>例如：下次遇到臨時改約時，先說出我的原安排，再提出兩個可以討論的時間，不在焦慮時立刻答應。</p><aside class='closing final-reminder no-arrow'><p>喜歡一個人，可以讓我願意理解與調整；但一段關係不該要求我用失去朋友、壓下感受或放棄說不的權利來證明自己值得被愛。</p><p>先辨認我需要什麼，再把能協商的部分說清楚；如果對方持續用威脅、貶低或強迫回應我的界線，這就是需要停下來尋求支持的重要訊號。</p></aside><aside class='closing prompt-intro'><span class='closing-mark'>→</span><h2>AI 幫幫忙</h2><p>如果你想把剛剛的整理變成一段比較自然的說法，可以複製下方提示詞。AI 只能協助整理你已經寫下的內容，不替你猜對方的動機、不判定對方是否愛你，也不替你決定要不要繼續這段關係。</p></aside><p>我想請 AI 協助整理一段尊重雙方的說法：</p><aside class='prompt-quote'><div class='prompt-copy-text' data-prompt-text><p>我正在整理一段關係中的溝通：我的情境是<span data-prompt-field='ep4-situation'>【我想練習的關係情境】</span>；我做過的改變或讓步是<span data-prompt-field='ep4-change'>【我改變或讓步的是】</span>；我想保留的需要或界線是<span data-prompt-field='ep4-need-statement'>【我最想先說清楚的一項需要或界線】</span>；我判斷目前<span data-prompt-field='ep4-judgment'>【我現在最需要的是】</span>；我想讓對方知道<span data-prompt-field='ep4-need-message'>【我想讓對方知道的是】</span>；我的具體請求是<span data-prompt-field='ep4-request'>【我的具體請求是】</span>；我願意一起討論的調整是<span data-prompt-field='ep4-negotiation'>【我願意一起討論的調整是】</span>；我的下一步是<span data-prompt-field='ep4-next-step'>【我的下一步】</span>。請只根據這些內容，幫我整理成一段尊重雙方、清楚表達需要與界線的說法，以及一句不帶威脅的收尾；不要把我的猜測寫成事實，不要建議我用委屈、控制或威脅換取關係。如果資料不足，請標示「待確認」，不要替我補故事或替我做最後決定。</p></div><button class='prompt-copy-button' type='button' data-prompt-copy>複製提示詞</button></aside>"
+    }
+  ],
+  "textReplacements": [
+    {
+      "page": 0,
+      "from": "<p>不要只寫「我很委屈」，先寫出你實際做了什麼。</p>",
+      "to": "<p>請寫一個具體行動，不只寫「我很委屈」。</p>"
+    },
+    {
+      "page": 0,
+      "from": "分辨我想要的關係需要、我願意協商的調整，以及我不想用關係交換的界線",
+      "to": "分辨「我想要的關係需要」「我願意協商的調整」與「我不想用關係交換的界線」"
+    },
+    {
+      "page": 2,
+      "from": "<div class='answer-field'><label for='ep4-negotiable'>",
+      "to": "<div class='question-heading'><h3>我願意協商的調整是</h3><span class='answer-mode'>寫出可協商範圍</span></div><p>請寫一個有範圍、可以再討論的做法。</p><div class='answer-field'><label for='ep4-negotiable'>"
+    },
+    {
+      "page": 2,
+      "from": "我願意協商的調整是：",
+      "to": "我願意協商的是："
+    },
+    {
+      "page": 2,
+      "from": "<div class='answer-field'><label for='ep4-cost'>",
+      "to": "<div class='question-heading'><h3>如果我一直這樣配合，可能付出的代價是</h3><span class='answer-mode'>寫出可能影響</span></div><p>請寫對時間、情緒、生活、人際或自我感受的影響。</p><div class='answer-field'><label for='ep4-cost'>"
+    },
+    {
+      "page": 2,
+      "from": "如果我一直這樣配合，可能付出的代價是：",
+      "to": "我的代價是："
+    },
+    {
+      "page": 2,
+      "from": "</strong>這個改變有範圍",
+      "to": "</strong> 這個改變有範圍"
+    },
+    {
+      "page": 2,
+      "from": "</strong>我還缺少對方的回應",
+      "to": "</strong> 我還缺少對方的回應"
+    },
+    {
+      "page": 2,
+      "from": "</strong>這個改變讓我持續害怕",
+      "to": "</strong> 這個改變讓我持續害怕"
+    },
+    {
+      "page": 2,
+      "from": "<small class='choice-inline-example'>例如：我願意偶爾改約，但不必每次都取消自己的安排。</small>",
+      "to": ""
+    },
+    {
+      "page": 2,
+      "from": "<small class='choice-inline-example'>例如：我想先說明我的安排，再和對方一起找可行時間。</small>",
+      "to": ""
+    },
+    {
+      "page": 2,
+      "from": "<small class='choice-inline-example'>例如：我先找信任的人整理狀況，不在被施壓時立刻答應。</small>",
+      "to": ""
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='我的感受可以被聽見，不必先證明自己有道理'>",
+      "to": "<input id='ep4-need-1' name='ep4-need' type='checkbox' value='我的感受可以被聽見，不必先證明自己有道理'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='雙方可以把期待說清楚，而不是要我自己猜'>",
+      "to": "<input id='ep4-need-2' name='ep4-need' type='checkbox' value='雙方可以把期待說清楚，而不是要我自己猜'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='我的時間、朋友、興趣或獨處需要被尊重'>",
+      "to": "<input id='ep4-need-3' name='ep4-need' type='checkbox' value='我的時間、朋友、興趣或獨處需要被尊重'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='我可以說不，對方也願意聽我說明原因'>",
+      "to": "<input id='ep4-need-4' name='ep4-need' type='checkbox' value='我可以說不，對方也願意聽我說明原因'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='關係中的改變由雙方一起討論，不是只有我一直配合'>",
+      "to": "<input id='ep4-need-5' name='ep4-need' type='checkbox' value='關係中的改變由雙方一起討論，不是只有我一直配合'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='其他：' data-content-label='其他：'>",
+      "to": "<input id='ep4-need-6' name='ep4-need' type='checkbox' value='其他：' data-content-label='其他：'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-need' type='checkbox' value='尚未辨認'>",
+      "to": "<input id='ep4-need-7' name='ep4-need' type='checkbox' value='尚未辨認'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='不用放棄重要的人際關係或生活安排來換取安心'>",
+      "to": "<input id='ep4-boundary-1' name='ep4-boundary' type='checkbox' value='不用放棄重要的人際關係或生活安排來換取安心'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='不接受嘲笑、貶低、威脅或用分手逼我答應'>",
+      "to": "<input id='ep4-boundary-2' name='ep4-boundary' type='checkbox' value='不接受嘲笑、貶低、威脅或用分手逼我答應'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='身體接觸、訊息往來與見面頻率要有雙方同意'>",
+      "to": "<input id='ep4-boundary-3' name='ep4-boundary' type='checkbox' value='身體接觸、訊息往來與見面頻率要有雙方同意'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='我可以保留自己的想法，不必為了討好而假裝同意'>",
+      "to": "<input id='ep4-boundary-4' name='ep4-boundary' type='checkbox' value='我可以保留自己的想法，不必為了討好而假裝同意'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='我需要一段時間想清楚，再回答重要的要求'>",
+      "to": "<input id='ep4-boundary-5' name='ep4-boundary' type='checkbox' value='我需要一段時間想清楚，再回答重要的要求'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='其他：' data-content-label='其他：'>",
+      "to": "<input id='ep4-boundary-6' name='ep4-boundary' type='checkbox' value='其他：' data-content-label='其他：'>"
+    },
+    {
+      "page": 1,
+      "from": "<input name='ep4-boundary' type='checkbox' value='尚未辨認'>",
+      "to": "<input id='ep4-boundary-7' name='ep4-boundary' type='checkbox' value='尚未辨認'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-reciprocity' value='已經有具體討論，對方也有提出可以一起做的改變'>",
+      "to": "<input id='ep4-reciprocity-1' type='radio' name='ep4-reciprocity' value='已經有具體討論，對方也有提出可以一起做的改變'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-reciprocity' value='我還不知道，因為我們沒有把這件事說清楚'>",
+      "to": "<input id='ep4-reciprocity-2' type='radio' name='ep4-reciprocity' value='我還不知道，因為我們沒有把這件事說清楚'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-reciprocity' value='我曾說過，但對方反覆忽略、嘲笑或要求我證明在乎'>",
+      "to": "<input id='ep4-reciprocity-3' type='radio' name='ep4-reciprocity' value='我曾說過，但對方反覆忽略、嘲笑或要求我證明在乎'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-reciprocity' value='這次是我自己的選擇，還沒有涉及對方要求'>",
+      "to": "<input id='ep4-reciprocity-4' type='radio' name='ep4-reciprocity' value='這次是我自己的選擇，還沒有涉及對方要求'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-reciprocity' value='尚未辨認'>",
+      "to": "<input id='ep4-reciprocity-5' type='radio' name='ep4-reciprocity' value='尚未辨認'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-judgment' value='可以調整'>",
+      "to": "<input id='ep4-judgment-1' type='radio' name='ep4-judgment' value='可以調整'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-judgment' value='需要說清楚'>",
+      "to": "<input id='ep4-judgment-2' type='radio' name='ep4-judgment' value='需要說清楚'>"
+    },
+    {
+      "page": 2,
+      "from": "<input type='radio' name='ep4-judgment' value='需要停看聽'>",
+      "to": "<input id='ep4-judgment-3' type='radio' name='ep4-judgment' value='需要停看聽'>"
+    },
+    {
+      "page": 3,
+      "from": "<div class='answer-field'><label for='ep4-need-message'>",
+      "to": "<p>先說明你在乎的關係，以及這件事對你的影響。</p><div class='answer-field'><label for='ep4-need-message'>"
+    },
+    {
+      "page": 3,
+      "from": "我想讓對方知道的是：",
+      "to": "我想說："
+    },
+    {
+      "page": 3,
+      "from": "<div class='answer-field'><label for='ep4-request'>",
+      "to": "<div class='question-heading'><h3>我希望對方怎麼做？</h3><span class='answer-mode'>寫一個具體請求</span></div><p>請提出一個具體、可回應的請求，不要只寫「請對我好一點」。</p><div class='answer-field'><label for='ep4-request'>"
+    },
+    {
+      "page": 3,
+      "from": "我的具體請求是：",
+      "to": "我的請求是："
+    },
+    {
+      "page": 4,
+      "from": "<div class='answer-field'><label for='ep4-negotiation'>",
+      "to": "<div class='question-heading'><h3>我願意一起討論的調整是</h3><span class='answer-mode'>寫出可協商範圍</span></div><p>寫出你可以接受的範圍，以及你不想再用委屈交換的部分。</p><div class='answer-field'><label for='ep4-negotiation'>"
+    },
+    {
+      "page": 4,
+      "from": "我願意一起討論的調整是：",
+      "to": "我願意討論："
+    },
+    {
+      "page": 4,
+      "from": "<div class='answer-field'><label for='ep4-next-step'>",
+      "to": "<div class='question-heading'><h3>我接下來要做的一步是</h3><span class='answer-mode'>寫一個近期行動</span></div><p>請寫一個在近期做得到、能讓你更清楚自己選擇的行動。</p><div class='answer-field'><label for='ep4-next-step'>"
+    },
+    {
+      "page": 4,
+      "from": "<p>我想請 AI 協助整理一段尊重雙方的說法：</p>",
+      "to": ""
+    },
+    {
+      "page": 4,
+      "from": "；我判斷目前<span",
+      "to": "；我判斷目前需要<span"
+    },
+    {
+      "page": 4,
+      "from": "【我的具體請求是】",
+      "to": "【我的請求是】"
+    },
+    {
+      "page": 4,
+      "from": "【我願意一起討論的調整是】",
+      "to": "【我願意討論】"
+    }
+  ]
+}
