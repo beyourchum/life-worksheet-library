@@ -308,7 +308,7 @@
     ],
     EP28: [["#ep28-task"], ["#ep28-standard"], ["[name=ep28-benefit]"], ["[name=ep28-cost]"], ["[name=ep28-evaluation-axis]"], ["[name=ep28-type-reflection]"], ["[data-limited-choice='ep28-good-enough-criteria']"], ["#ep28-time-boundary"], ["#ep28-next-action"], ["#ep28-restart-condition"]],
     EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
-    EP4: [["#ep4-situation"], ["#ep4-change"], ["#ep4-need-statement"], ["#ep4-judgment"], ["#ep4-need-message"], ["#ep4-request"], ["#ep4-negotiation"], ["#ep4-next-step"]],
+    EP4: [["#ep4-situation"], ["#ep4-change"], ["#ep4-need-statement"], ["[name=ep4-judgment]"], ["#ep4-need-message"], ["#ep4-request"], ["#ep4-negotiation"], ["#ep4-next-step"]],
     EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
     EP39: [["#ep39-target"], ["#ep39-situation"], ["#ep39-my-action"], ["#ep39-my-intention"], ["[name=ep39-possible-need]"], ["#ep39-action-plan"], ["#ep39-check-in"]],
     EP38: [["#ep38-habit"], ["#ep38-outcome"], ["[name=ep38-barrier]"], ["#ep38-cue-when"], ["#ep38-cue-where"], ["#ep38-cue-action"], ["#ep38-temptation"], ["#ep38-attraction-plan"], ["#ep38-easy-version"], ["#ep38-environment-change"], ["#ep38-reward"], ["#ep38-recovery"]],
