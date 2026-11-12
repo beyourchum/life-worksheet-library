@@ -94,6 +94,30 @@
   });
   const controls = [...worksheet.querySelectorAll("input, textarea")];
   const promptBindings = {
+    EP1: [["#ep1-core-feeling"], ["#ep1-specific-feeling"], ["#ep1-event"], ["#ep1-thought"]],
+    EP2: [
+      ["#ep2-w1-context"],
+      ["[name=ep2-w1-label]", "#ep2-w1-reason"],
+      ["#ep2-w2-body", "#ep2-w2-mind", "#ep2-w2-behavior", "#ep2-w2-action"],
+      ["#ep2-w3-original"],
+      ["#ep2-w3-fact", "#ep2-w3-unknown"],
+      ["#ep2-w4-method", "#ep2-w4-when", "#ep2-w4-observe"],
+      ["#ep2-w5-action", "#ep2-w5-when", "#ep2-w5-support", "#ep2-w5-proof"]
+    ],
+    EP3: [
+      ["[name=ep3-w1-situation]", "#ep3-w1-situation-other-text"],
+      ["[name=ep3-w2-method]", "#ep3-w2-method-other-text"],
+      ["#ep3-w3-action"],
+      ["#ep3-w3-boundary"]
+    ],
+    EP6: [
+      ["[name=ep6-w1-q1]", "#ep6-w1-q1-other-text"],
+      ["[name=ep6-w1-q2]", "#ep6-w1-q2-other-text"],
+      ["#ep6-w2-q5-work", "#ep6-w2-q5-deadline"],
+      ["#ep6-w2-q5-priority"],
+      ["#ep6-w3-action", "#ep6-w3-when"],
+      ["#ep6-w3-reminder"]
+    ],
     EP10: [
       ["#ep10-impact"], ["#ep10-action"], ["#ep10-benefit"],
       ["#ep10-cost"], ["#ep10-reason"], ["#ep10-next-response"],
@@ -284,6 +308,7 @@
     ],
     EP28: [["#ep28-task"], ["#ep28-standard"], ["[name=ep28-benefit]"], ["[name=ep28-cost]"], ["[name=ep28-evaluation-axis]"], ["[name=ep28-type-reflection]"], ["[data-limited-choice='ep28-good-enough-criteria']"], ["#ep28-time-boundary"], ["#ep28-next-action"], ["#ep28-restart-condition"]],
     EP42: [["#ep42-w1-context"], ["#ep42-w2-trait"], ["#ep42-w2-experience"], ["#ep42-w2-action"], ["#ep42-w2-skill"], ["#ep42-w2-target"], ["#ep42-w2-use"]],
+    EP4: [["#ep4-situation"], ["#ep4-change"], ["#ep4-need-statement"], ["#ep4-judgment"], ["#ep4-need-message"], ["#ep4-request"], ["#ep4-negotiation"], ["#ep4-next-step"]],
     EP40: [["#ep40-practice-question"], ["[name=ep40-reaction]", "#ep40-intuitive-answer"], ["[name=ep40-interpretation]"], ["#ep40-interpretation-note"], ["#ep40-response"], ["#ep40-boundary"]],
     EP39: [["#ep39-target"], ["#ep39-situation"], ["#ep39-my-action"], ["#ep39-my-intention"], ["[name=ep39-possible-need]"], ["#ep39-action-plan"], ["#ep39-check-in"]],
     EP38: [["#ep38-habit"], ["#ep38-outcome"], ["[name=ep38-barrier]"], ["#ep38-cue-when"], ["#ep38-cue-where"], ["#ep38-cue-action"], ["#ep38-temptation"], ["#ep38-attraction-plan"], ["#ep38-easy-version"], ["#ep38-environment-change"], ["#ep38-reward"], ["#ep38-recovery"]],
@@ -450,6 +475,15 @@
       ["#ep50-w3-name"],
       ["#ep50-w4-first"],
       ["#ep50-w4-support"]
+    ],
+    EP5: [
+      ["#ep5-ai-industry-unit"],
+      ["#ep5-ai-work-content"],
+      ["[name=ep5-w1-concern]", "#ep5-w1-concern-other-text"],
+      ["#ep5-w1-reason"],
+      ["#ep5-w3-today-action"],
+      ["#ep5-w3-today-when-where"],
+      ["#ep5-w3-today-done"]
     ],
     EP51: [
       ["#ep51-w1-question", "[name=ep51-w1-question-category]", "#ep51-w1-question-other-text"],
