@@ -106,7 +106,7 @@
     ],
     EP3: [
       ["[name=ep3-w1-situation]", "#ep3-w1-situation-other-text"],
-      ["[name=ep3-w2-method]", "#ep3-w2-method-other-text"],
+      ["[name=ep3-w2-method]"],
       ["#ep3-w3-action"],
       ["#ep3-w3-boundary"]
     ],
